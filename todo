@@ -1,0 +1,22 @@
+1000 reserveringen ophalen, niet 10
+
+stuur offerte (maak pagina, stuur mail met pdf..)
+acties advies 'staat al 2 dagen op status sent.., you should call or you haven't heard from this client in 1 month, maybe call them for an update? 'ignore'..)
+
+on load, get new reservations and update info and res_status from s2m into db.
+then set all reservations without 'success or failed' from yesterday or earlier to status_sales = success, all cancellations would be failures.
+this is done for analytic purposes later.
+
+make the view user based. all filters, all actions. all reservations belong to an organisation, but show who's edited last, and make sure 2 people can't work on the same res.
+
+
+
+
+-------wannahaves
+show 'revisions' to see who sent that offer...
+grove stats 'annuleringsratio, omzet vs budget, etc...'.
+filters logischer weergeven
+
+-------just an idea
+#save bootstrap and run from local in stead of web? not sure, only if speed needs improvements...
+filteren op groepsgroottes?
