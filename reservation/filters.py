@@ -1,3 +1,5 @@
+import datetime
+
 #filters for list of reservations
 
 def filter_res_status_attention(element):
@@ -9,8 +11,18 @@ def filter_res_status_final(element):
 def filter_res_status_cancelled(element):
     return element.res_status == '3'
 
+#i dont want to see:
+# people touched today
+#i do want to see:
+#people untouched ever
+#people touched not today
+
 def filter_res_touchedtoday(element):
-    return element.res_untouched == 'yes'
+    today = datetime.date.today()
+    if element.res_last_action_taken == today:
+        return element.res_untouched != 'no'
+    else:
+        return element.res_untouched =='yes' or element.res_untouched == 'no'
 
 def filter_res_status_sales_1(element):
     return element.res_status_sales != '1'

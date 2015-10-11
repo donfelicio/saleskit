@@ -136,8 +136,8 @@ def listall(request):
 def home(request):
    
    #we want to show:
-   #Reservation x has not been processed
-   #res x's last action (to next step in sales) was 1 day ago. 
+   #res x's last action (to next step in sales) was 1 day ago.
+   # so in filters show everything that was touched x days ago...
    #remind me tomorrow button - never show me this one again (change status_sales to success)
    #send offer.. (change status_sales to offer sent)   
    #after action 'last_action_date' is today..
@@ -169,7 +169,7 @@ def home(request):
    reservation = []
    no_res = ''
    if res_list:
-      reservation = res_list[1]
+      reservation = res_list[0]
    else:
       no_res = True
 

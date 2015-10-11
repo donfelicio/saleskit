@@ -1,4 +1,10 @@
-1000 reserveringen ophalen, niet 10
+met prio top to bottom:
+
+fix admin css op heroku
+?http://stackoverflow.com/questions/10308985/django-on-heroku-broken-admin-static-files
+
+
+afmaken view home. Test of reserveringen die zijn aangeraakt maar niet vandaag getoond worden.
 
 stuur offerte (maak pagina, stuur mail met pdf..)
 acties advies 'staat al 2 dagen op status sent.., you should call or you haven't heard from this client in 1 month, maybe call them for an update? 'ignore'..)
@@ -9,8 +15,10 @@ this is done for analytic purposes later.
 
 make the view user based. all filters, all actions. all reservations belong to an organisation, but show who's edited last, and make sure 2 people can't work on the same res.
 
+DNS subdomein fixen naar heroku
 
 
+1000 reserveringen ophalen, niet 10
 
 -------wannahaves
 show 'revisions' to see who sent that offer...
@@ -20,3 +28,10 @@ filters logischer weergeven
 -------just an idea
 #save bootstrap and run from local in stead of web? not sure, only if speed needs improvements...
 filteren op groepsgroottes?
+
+Hoe te pushen
+###
+git add .
+git commit -m "bericht"
+git push heroku master
+heroku open
