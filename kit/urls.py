@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
-from django.conf.urls.static import static
+
 
 urlpatterns = [
     url(r'^$', 'reservation.views.home', name='home'),
@@ -23,10 +23,6 @@ urlpatterns = [
     url(r'^load/', 'reservation.views.loadpage', name='load'),
     url(r'^admin/', include(admin.site.urls)),
 ]
-
-if settings.DEBUG:
-    urlpatterns += static(settings.STATIC_URL,
-                          document_root=settings.STATIC_ROOT)
-    urlpatterns += static(settings.MEDIA_URL,
-                          document_root=settings.MEDIA_ROOT)
-
+urlpatterns += patterns('',
+    (r'^static/(?P.*)$', 'django.views.static.serve', {'document_root': settings.STATIC_ROOT}),
+)
