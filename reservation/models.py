@@ -31,8 +31,8 @@ class Reservation(models.Model):
     res_total_seats = models.CharField(max_length = 255, null=True)
     res_last_action_taken = models.DateField()
     res_untouched = models.CharField(max_length = 255, default='yes')
-    class Meta:
-        ordering = ['res_date']
+    #class Meta:
+     #   ordering = ['res_date']
         
 
 class Statuscode(models.Model):
