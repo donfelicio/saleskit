@@ -17,7 +17,7 @@ ALLOWED_HOSTS = ['*']
 
 # Static asset configuration by heroku
 # BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-STATIC_ROOT = (os.path.join(os.path.dirname(__file__), '..', 'static'))
+STATIC_ROOT = (os.path.join(os.path.join(os.path.dirname(__file__), '..', 'static')))
 # STATIC_ROOT = 'staticfiles'
 # STATIC_URL = '/static/'
 # 
