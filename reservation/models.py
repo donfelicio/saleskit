@@ -9,7 +9,7 @@ class Reservation(models.Model):
     res_company = models.CharField(max_length = 255)
     res_desc = models.CharField(max_length = 255)
     res_date_created = models.DateField()
-    res_date = models.DateField()
+    res_date = models.DateField(auto_now_add=True)
     res_status_choices = {
         ('1', 'attention required'),
         ('2', 'final'),
