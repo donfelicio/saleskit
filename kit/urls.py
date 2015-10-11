@@ -24,4 +24,4 @@ urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
 ]
 
-urlpatterns += staticfiles_urlpatterns()
+#urlpatterns += staticfiles_urlpatterns()
