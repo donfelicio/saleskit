@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
 
 
 # Quick-start development settings - unsuitable for production
@@ -102,12 +102,17 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
-#BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-STATIC_ROOT = 'staticfiles'
 STATIC_URL = '/static/'
 
+#STATIC_ROOT = '/Users/jmitch/desktop/lwc/src/static/static_root/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static', 'static_root')
+
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'static'),
+    os.path.join(BASE_DIR, 'static', 'static_dirs'),
+    #'/Users/jmitch/desktop/lwc/src/static/static_dirs/',
+    # '/Users/jmitch/desktop/lwc/src/static/static_dirs/',
+    # '/Users/jmitch/desktop/lwc/src/static/static_dirs/',
+    # '/Users/jmitch/desktop/lwc/src/static/static_dirs/',
 )
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
