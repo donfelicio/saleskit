@@ -2,7 +2,7 @@ import os
 from django.conf import settings
 
 DEBUG = False
-TEMPLATE_DEBUG = True
+TEMPLATE_DEBUG = False
 DATABASES = settings.DATABASES
 
 # Parse database configuration from $DATABASE_URL
@@ -16,7 +16,7 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 ALLOWED_HOSTS = ['*']
 
 # Static asset configuration by heroku
-# BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 # STATIC_ROOT = 'staticfiles'
 # STATIC_URL = '/static/'
 # 
