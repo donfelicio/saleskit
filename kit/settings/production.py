@@ -1,4 +1,4 @@
-import os
+import os, settings
 
 DEBUG = False
 TEMPLATE_DEBUG = True
