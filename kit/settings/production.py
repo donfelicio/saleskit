@@ -2,6 +2,7 @@ import os
 
 DEBUG = False
 TEMPLATE_DEBUG = True
+DATABASE = setting.DATABASES
 
 # Parse database configuration from $DATABASE_URL
 import dj_database_url
