@@ -9,7 +9,7 @@ class Reservation(models.Model):
     res_company = models.CharField(max_length = 255)
     res_desc = models.CharField(max_length = 255)
     res_date_created = models.DateField()
-#    res_date = models.DateField()
+    res_date = models.DateField()
     res_status_choices = {
         ('1', 'attention required'),
         ('2', 'final'),
@@ -31,8 +31,8 @@ class Reservation(models.Model):
     res_total_seats = models.CharField(max_length = 255, null=True)
     res_last_action_taken = models.DateField()
     res_untouched = models.CharField(max_length = 255, default='yes')
-    #class Meta:
-     #   ordering = ['res_date']
+    class Meta:
+        ordering = ['res_date']
         
 
 class Statuscode(models.Model):
