@@ -1,6 +1,4 @@
 import os
-from jango.conf import settings
-
 
 DEBUG = False
 TEMPLATE_DEBUG = True
