@@ -270,9 +270,10 @@ def home(request):
       if check_if_loading.active_location == '0':
          if check_if_loading.res_updated == 'busy':
             loading = 'still loading'
+            context = {'loading': loading}
          else:
             loading = ''      
-         context = {'locationlist': locationlist, 'loading': loading}
+            context = {'locationlist': locationlist, 'loading': loading}
          template = 'select.html'   
          return render(request, template, context)
 
