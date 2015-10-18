@@ -5,6 +5,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import redirect, render
 from multiprocessing import Process
 from django.db import connection
+from django.http import HttpResponse
 
 #all s2m api requests
 
@@ -77,33 +78,36 @@ def s2m_login(request):
    }
    
    r = requests.post(url, data=json.dumps(data), headers=headers)
-   r = json.loads(r.text)
-   
-   get_user_key = r.get("Key")
-   
-   #now get or create the user
-   user, created = User.objects.get_or_create(username=r.get("UserName"), email=r.get("Email"), first_name=r.get("FirstName"), last_name=r.get("LastName"))
-   #now also create the userprofile to store the key that we often use
-   profile = Userprofile.objects.get_or_create(user_name=r.get("UserName"), user_key=r.get("Key"))
-   if created is False: #user exists, just log in and redirect. 
-      #and now login the user into the Django account
-      user.backend = 'django.contrib.auth.backends.ModelBackend'
-      login(request, user)
-
+   if r.status_code == 200:
+      r = json.loads(r.text)
       
-      #delete all the users old hidereservation keys (older than today)
-      hideres_list = Hidereservation.objects.all().filter(user_name=request.user.username)
-
-      for hideres in hideres_list:
-         if hideres.hide_days < today:
-            hideres_to_remove = Hidereservation.objects.get(res_id=hideres.res_id, user_name=hideres.user_name)
-            hideres_to_remove.delete()
-        
-      #now check if there's just one location or more, and let the user select one
-    
-   else: #user is created, log in django and then get the locations
-      user.backend = 'django.contrib.auth.backends.ModelBackend'
-      login(request, user)
+      get_user_key = r.get("Key")
+      
+      #now get or create the user
+      user, created = User.objects.get_or_create(username=r.get("UserName"), email=r.get("Email"), first_name=r.get("FirstName"), last_name=r.get("LastName"))
+      #now also create the userprofile to store the key that we often use
+      profile = Userprofile.objects.get_or_create(user_name=r.get("UserName"), user_key=r.get("Key"))
+      if created is False: #user exists, just log in and redirect. 
+         #and now login the user into the Django account
+         user.backend = 'django.contrib.auth.backends.ModelBackend'
+         login(request, user)
+   
+         
+         #delete all the users old hidereservation keys (older than today)
+         hideres_list = Hidereservation.objects.all().filter(user_name=request.user.username)
+   
+         for hideres in hideres_list:
+            if hideres.hide_days < today:
+               hideres_to_remove = Hidereservation.objects.get(res_id=hideres.res_id, user_name=hideres.user_name)
+               hideres_to_remove.delete()
+           
+         #now check if there's just one location or more, and let the user select one
+       
+      else: #user is created, log in django and then get the locations
+         user.backend = 'django.contrib.auth.backends.ModelBackend'
+         login(request, user)
+   else:
+      return redirect('/')
       
 
 def s2m_logout(request):
