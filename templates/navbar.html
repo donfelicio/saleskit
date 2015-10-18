@@ -20,7 +20,7 @@
             <button type="submit" class="btn btn-success">Logout</button>
           </form>
           {% else %}
-          <form method="post" action="" class="navbar-form navbar-right">{% csrf_token %}
+          <form method="post" action="login" class="navbar-form navbar-right">{% csrf_token %}
             <div class="form-group">
               <input type="hidden" name="login" value="yes">
               <input type="text" placeholder="S2M Email" name="username" class="form-control">

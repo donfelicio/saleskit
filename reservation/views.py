@@ -7,6 +7,9 @@ from .search import *
 from .s2m import *
 from .dicts import *
 from django.http import *
+from redis import Redis
+from rq import Queue
+import time
 
 
 def search(request):
@@ -29,8 +32,6 @@ def filter_res_status_sales_9(element):
    
 #the loading page that gets and updates all reservations from s2m
 def loadpage(request):
-   
-   
    
    #set DB userprofile res_updated to 'busy'
    instance = Userprofile.objects.get(user_name=request.user.username)
@@ -100,7 +101,7 @@ def loadpage(request):
          findres.res_total_seats=reservation.get("TotalSeats")
          findres.save()
 
-   #set DB userprofile res_updated to 'busy'
+   #set DB userprofile res_updated to 'done'
    instance = Userprofile.objects.get(user_name=request.user.username)
    instance.res_updated = 'done'
    instance.save()
@@ -151,7 +152,33 @@ def listall(request):
    return render(request, template, context)
 
 
-
+def create_locationlist(request):
+   res_status = Userprofile.objects.get(user_name=request.user.username).res_updated
+   if request.user.username and res_status != 'busy' and res_status != 'done':
+      
+       #set DB userprofile res_updated to 'busy'
+      instance = Userprofile.objects.get(user_name=request.user.username)
+      instance.res_updated = 'busy'
+      instance.save()
+    
+      locationlist = s2m_locationlist() #get all locations to check if a user is allowed in list
+      for location in locationlist:
+         print location.get("Id")
+         url = 'https://www.seats2meet.com/api/accounts/hasaccess/%s/%s' % (location.get("Id"), get_user_key(request))
+         headers = {'content-type':'application/json'}
+         data = {}
+     
+         r = requests.get(url, data=json.dumps(data), headers=headers)
+         r = json.loads(r.text)
+         if r:
+             
+          # if true, put it to the db.
+            Userlocation.objects.get_or_create(location_id=location.get("Id"), user_key=get_user_key(request), location_name=location.get("Name"))
+   
+      #set DB userprofile res_updated to 'done'
+      instance = Userprofile.objects.get(user_name=request.user.username)
+      instance.res_updated = 'done'
+      instance.save()
 
 
 def home(request):
@@ -172,21 +199,11 @@ def home(request):
    res_open = ''
    loading = ''
    filtered_res_list = ''
-      
    
-   #if user doesn't exist, create it and also save the location id's with the user keys
-   if request.method == 'POST' and 'username' in request.POST:
-      locationlist = s2m_login(request)
-      #check for multi location access in user, then make them select the location
-      
-      context = {'locationlist': locationlist}
-      template = 'select.html'   
-      return render(request, template, context)
-         
       
    #If user has selected a location when he has access to multiple, save the active_location now
    if request.method == 'POST' and 'location_id' in request.POST:
-
+      
       p = Process(target=loadpage, args=(request,), name='res_loader')
       p.start()
       
@@ -232,9 +249,25 @@ def home(request):
       item_to_update = Reservation.objects.get(res_id=request.POST['res_id'])
       form = UpdateForm(request.POST or None, instance=item_to_update)
       if form.is_valid():
-         form.save()         
+         form.save()
    
-   if request.user.username:
+   p = Process(target=create_locationlist, args=(request,), name='create_locationlist')
+   p.start()
+   if request.user.username: #if user is logged in
+      
+      locationlist = Userlocation.objects.all().filter(user_key=get_user_key(request))
+
+      time.sleep(1)
+      check_if_loading = Userprofile.objects.get(user_name=request.user.username)
+      if check_if_loading.active_location == '0':
+         if check_if_loading.res_updated == 'busy':
+            loading = 'still loading'
+         else:
+            loading = ''      
+         context = {'locationlist': locationlist, 'loading': loading}
+         template = 'select.html'   
+         return render(request, template, context)
+
       
       #check if it's the same day as last_login, otherwise checkout
       check_if_sameday = Userprofile.objects.get(user_name=request.user.username)
@@ -315,5 +348,12 @@ def help(request):
    return render(request, template, context)
 
 def logout(request):
+   instance = Userprofile.objects.get(user_name=request.user.username)
+   instance.active_location = 0
+   instance.save()
    s2m_logout(request)
+   return redirect('/')
+
+def login(request):
+   s2m_login(request)
    return redirect('/')

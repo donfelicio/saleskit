@@ -23,6 +23,7 @@ urlpatterns = [
     url(r'^show', 'show.views.show', name='show'),
     url(r'^help', 'reservation.views.help', name='help'),
     url(r'^logout', 'reservation.views.logout', name='logout'),
+    url(r'^login', 'reservation.views.login', name='login'),
     url(r'^load/', 'reservation.views.loadpage', name='load'),
     url(r'^admin/', include(admin.site.urls)),
 ]

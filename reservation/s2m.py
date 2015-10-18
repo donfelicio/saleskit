@@ -58,6 +58,7 @@ def get_s2m_res(request): #you should only do this in background, or when user p
          print rowsleft
    return results
 
+   
 
 def s2m_login(request):
    today = datetime.date.today()
@@ -83,6 +84,7 @@ def s2m_login(request):
       #and now login the user into the Django account
       user.backend = 'django.contrib.auth.backends.ModelBackend'
       login(request, user)
+
       
       #delete all the users old hidereservation keys (older than today)
       hideres_list = Hidereservation.objects.all().filter(user_name=request.user.username)
@@ -93,29 +95,11 @@ def s2m_login(request):
             hideres_to_remove.delete()
         
       #now check if there's just one location or more, and let the user select one
-      locationlist = Userlocation.objects.all().filter(user_key=get_user_key)
-      return locationlist
     
    else: #user is created, log in django and then get the locations
       user.backend = 'django.contrib.auth.backends.ModelBackend'
       login(request, user)
-      locationlist = s2m_locationlist() #get all locations to check if a user is allowed in list
-   
-   for location in locationlist:
-      print location.get("Id")
-      url = 'https://www.seats2meet.com/api/accounts/hasaccess/%s/%s' % (location.get("Id"), get_user_key)
-      headers = {'content-type':'application/json'}
-      data = {}
-  
-      r = requests.get(url, data=json.dumps(data), headers=headers)
-      r = json.loads(r.text)
-      if r:
-          
-       # if true, put it to the db.
-         Userlocation.objects.get_or_create(location_id=location.get("Id"), user_key=get_user_key, location_name=location.get("Name"))
-
-   locationlist = Userlocation.objects.all().filter(user_key=get_user_key)
-   return locationlist
+      
 
 def s2m_logout(request):
     logout(request)

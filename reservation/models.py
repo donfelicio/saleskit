@@ -49,8 +49,8 @@ class Userlocation(models.Model):
 class Userprofile(models.Model):
     user_name = models.CharField(max_length = 255, null=True)
     user_key = models.CharField(max_length = 255, null=True)
-    active_location = models.CharField(max_length = 255, null=True)
-    last_login = models.DateField(null=True)
+    active_location = models.CharField(max_length = 255, default=0)
+    last_login = models.DateField(auto_now=True, null=True)
     res_updated = models.CharField(max_length = 255, default='no')
     
 class Hidereservation(models.Model):
