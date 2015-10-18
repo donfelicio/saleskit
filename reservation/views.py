@@ -156,10 +156,10 @@ def listall(request):
 
 def create_locationlist(request):
    connection.close()
-   res_status = Userprofile.objects.get(user_name=request.user.username).res_updated
+   res_status = Userprofile.objects.get(user_name=request.user.username)
    
-   if request.user.username and res_status != 'busy' and res_status != 'done':
-      
+   if request.user.username and res_status.res_updated != 'busy' and res_status.res_updated != 'done' and res_status.res_updated != 'nope':
+      print res_status.res_updated
       #set DB userprofile res_updated to 'busy'
       instance = Userprofile.objects.get(user_name=request.user.username)
       instance.res_updated = 'busy'
@@ -181,7 +181,7 @@ def create_locationlist(request):
    
       #set DB userprofile res_updated to 'done'
       instance = Userprofile.objects.get(user_name=request.user.username)
-      instance.res_updated = 'no'
+      instance.res_updated = 'nope'
       instance.save()
 
 
