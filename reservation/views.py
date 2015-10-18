@@ -358,7 +358,7 @@ def logout(request):
    connection.close()
    instance = Userprofile.objects.get(user_name=request.user.username)
    instance.active_location = 0
-   instance.res_update = 'done'
+   instance.res_updated = 'done'
    instance.save()
    s2m_logout(request)
    return redirect('/')
