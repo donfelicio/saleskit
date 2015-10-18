@@ -10,10 +10,10 @@ class UpdateForm(forms.ModelForm):
 class HidereservationForm(forms.ModelForm):
     class Meta:
         model = Hidereservation
-        fields = ['res_id', 'user_key', 'hide_days']
+        fields = ['res_id', 'user_name', 'hide_days']
         
 class UpdateprofileForm(forms.ModelForm):
     class Meta:
         model = Userprofile
-        fields = ['user_key', 'active_location']
+        fields = ['user_name', 'active_location']
         

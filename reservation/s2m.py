@@ -8,7 +8,11 @@ from multiprocessing import Process
 
 def get_location_id(request):
    #get the location id from the userprofile of logged in user
-   return Userprofile.objects.get(user_key=request.user.username).active_location
+   return Userprofile.objects.get(user_name=request.user.username).active_location
+
+def get_user_key(request):
+   #get the location id from the userprofile of logged in user
+   return Userprofile.objects.get(user_name=request.user.username).user_key
          
 #get reservations from S2M API
 def get_s2m_res(request): #you should only do this in background, or when user presses refresh, and then still in background with alert 'this might take a minute'. 
@@ -72,22 +76,24 @@ def s2m_login(request):
    get_user_key = r.get("Key")
    
    #now get or create the user
-   user, created = User.objects.get_or_create(username=r.get("Key"), email=r.get("Email"), first_name=r.get("FirstName"), last_name=r.get("LastName"))
+   user, created = User.objects.get_or_create(username=r.get("UserName"), email=r.get("Email"), first_name=r.get("FirstName"), last_name=r.get("LastName"))
+   #now also create the userprofile to store the key that we often use
+   profile = Userprofile.objects.get_or_create(user_name=r.get("UserName"), user_key=r.get("Key"))
    if created is False: #user exists, just log in and redirect. 
       #and now login the user into the Django account
       user.backend = 'django.contrib.auth.backends.ModelBackend'
       login(request, user)
       
       #delete all the users old hidereservation keys (older than today)
-      hideres_list = Hidereservation.objects.all().filter(user_key=request.user.username)
+      hideres_list = Hidereservation.objects.all().filter(user_name=request.user.username)
 
       for hideres in hideres_list:
          if hideres.hide_days < today:
-            hideres_to_remove = Hidereservation.objects.get(res_id=hideres.res_id, user_key=hideres.user_key)
+            hideres_to_remove = Hidereservation.objects.get(res_id=hideres.res_id, user_name=hideres.user_name)
             hideres_to_remove.delete()
         
       #now check if there's just one location or more, and let the user select one
-      locationlist = Userlocation.objects.all().filter(user_key = request.user.username)
+      locationlist = Userlocation.objects.all().filter(user_key=get_user_key)
       return locationlist
     
    else: #user is created, log in django and then get the locations
@@ -96,6 +102,7 @@ def s2m_login(request):
       locationlist = s2m_locationlist() #get all locations to check if a user is allowed in list
    
    for location in locationlist:
+      print location.get("Id")
       url = 'https://www.seats2meet.com/api/accounts/hasaccess/%s/%s' % (location.get("Id"), get_user_key)
       headers = {'content-type':'application/json'}
       data = {}
@@ -107,7 +114,7 @@ def s2m_login(request):
        # if true, put it to the db.
          Userlocation.objects.get_or_create(location_id=location.get("Id"), user_key=get_user_key, location_name=location.get("Name"))
 
-   locationlist = Userlocation.objects.all().filter(user_key = request.user.username)
+   locationlist = Userlocation.objects.all().filter(user_key=get_user_key)
    return locationlist
 
 def s2m_logout(request):

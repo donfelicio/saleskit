@@ -33,7 +33,7 @@ class Userprofileadmin(admin.ModelAdmin):
 admin.site.register(Userprofile, Userprofileadmin)
 
 class Hidereservationadmin(admin.ModelAdmin):
-    list_display = ['res_id', 'user_key', 'hide_days']
+    list_display = ['res_id', 'user_name', 'hide_days']
     class Meta:
         model = Hidereservation
         

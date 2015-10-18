@@ -47,6 +47,7 @@ class Userlocation(models.Model):
     location_name = models.CharField(max_length = 255, null=True)
     
 class Userprofile(models.Model):
+    user_name = models.CharField(max_length = 255, null=True)
     user_key = models.CharField(max_length = 255, null=True)
     active_location = models.CharField(max_length = 255, null=True)
     last_login = models.DateField(null=True)
@@ -55,6 +56,7 @@ class Userprofile(models.Model):
 class Hidereservation(models.Model):
     res_id = models.CharField(max_length = 255, null=True)
     user_key = models.CharField(max_length = 255, null=True)
+    user_name = models.CharField(max_length = 255, null=True)
     hide_days = models.DateField(null=True)
     
     

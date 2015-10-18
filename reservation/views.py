@@ -33,7 +33,7 @@ def loadpage(request):
    
    
    #set DB userprofile res_updated to 'busy'
-   instance = Userprofile.objects.get(user_key=request.user.username)
+   instance = Userprofile.objects.get(user_name=request.user.username)
    #check if firstrun, res_update is set to no by default (when created for first time)
    if instance.res_updated == 'no':
       firstrun = 'yes'
@@ -101,7 +101,7 @@ def loadpage(request):
          findres.save()
 
    #set DB userprofile res_updated to 'busy'
-   instance = Userprofile.objects.get(user_key=request.user.username)
+   instance = Userprofile.objects.get(user_name=request.user.username)
    instance.res_updated = 'done'
    instance.save()
    
@@ -191,7 +191,7 @@ def home(request):
       p.start()
       
       #if needed create and always update active location and last login to today.
-      instance, created = Userprofile.objects.get_or_create(user_key=request.user.username)
+      instance, created = Userprofile.objects.get_or_create(user_name=request.user.username)
       instance.active_location=request.POST['location_id']
       instance.last_login=today
       instance.save()
@@ -237,7 +237,7 @@ def home(request):
    if request.user.username:
       
       #check if it's the same day as last_login, otherwise checkout
-      check_if_sameday = Userprofile.objects.get(user_key=request.user.username)
+      check_if_sameday = Userprofile.objects.get(user_name=request.user.username)
       if check_if_sameday.last_login != today:
          return redirect('/logout')
          
@@ -252,7 +252,7 @@ def home(request):
          #get the first reservation that's not in the hidereservation table
          for reservation in res_list:
             try:
-               matchtohide = Hidereservation.objects.get(res_id=reservation.res_id, user_key=request.user.username)
+               matchtohide = Hidereservation.objects.get(res_id=reservation.res_id, user_name=request.user.username)
             except: #didn't find it
                no_res = False
                filtered_res_list.append(reservation)
@@ -282,7 +282,7 @@ def home(request):
          #get the list of statuscodes from db
          status_list = Statuscode.objects.all()
          
-      check_if_loading = Userprofile.objects.get(user_key=request.user.username)
+      check_if_loading = Userprofile.objects.get(user_name=request.user.username)
       if check_if_loading.res_updated == 'busy':
          loading = 'still loading'
       else:
