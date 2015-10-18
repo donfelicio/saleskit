@@ -7,8 +7,6 @@ from .search import *
 from .s2m import *
 from .dicts import *
 from django.http import *
-from redis import Redis
-from rq import Queue
 import time
 
 
