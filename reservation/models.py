@@ -34,7 +34,7 @@ class Reservation(models.Model):
     res_last_change_by = models.CharField(max_length = 255, null=True)
     res_last_change_date = models.DateField(auto_now = True)
     class Meta:
-        ordering = ['res_date']   
+        ordering = ['res_date', 'res_id']   
 
 class Statuscode(models.Model):
     status_code = models.CharField(max_length = 255)
