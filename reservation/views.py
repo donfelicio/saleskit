@@ -157,9 +157,10 @@ def listall(request):
 def create_locationlist(request):
    connection.close()
    res_status = Userprofile.objects.get(user_name=request.user.username).res_updated
+   
    if request.user.username and res_status != 'busy' and res_status != 'done':
       
-       #set DB userprofile res_updated to 'busy'
+      #set DB userprofile res_updated to 'busy'
       instance = Userprofile.objects.get(user_name=request.user.username)
       instance.res_updated = 'busy'
       instance.save()
@@ -208,14 +209,16 @@ def home(request):
    #If user has selected a location when he has access to multiple, save the active_location now
    if request.method == 'POST' and 'location_id' in request.POST:
       
-      p = Process(target=loadpage, args=(request,), name='res_loader')
-      p.start()
-      
       #if needed create and always update active location and last login to today.
       instance, created = Userprofile.objects.get_or_create(user_name=request.user.username)
       instance.active_location=request.POST['location_id']
       instance.last_login=today
       instance.save()
+      
+      p = Process(target=loadpage, args=(request,), name='res_loader')
+      p.start()
+      
+
          
    
    if request.method == 'POST' and 'logout' in request.POST:
