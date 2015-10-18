@@ -181,7 +181,7 @@ def create_locationlist(request):
    
       #set DB userprofile res_updated to 'done'
       instance = Userprofile.objects.get(user_name=request.user.username)
-      instance.res_updated = 'done'
+      instance.res_updated = 'no'
       instance.save()
 
 
