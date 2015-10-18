@@ -260,6 +260,7 @@ def home(request):
    
    p = Process(target=create_locationlist, args=(request,), name='create_locationlist')
    p.start()
+   connection.close()
    if request.user.username: #if user is logged in
       
       locationlist = Userlocation.objects.all().filter(user_key=get_user_key(request))
