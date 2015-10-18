@@ -1,30 +1,56 @@
-met prio top to bottom:
+---met prio top to bottom:
 
-Kit: herinner me over 1,2,3,4,5 days.
-Form -> last action = yes dan in form function 'today ophalen en pushen. Model geen now_ meer
+<3 uur>stuur offerte (maak pagina, download pdf header..)
+add personal info of sender (profile name, pic, etc..)
+intro tekst by this person
+reservation info
+location details https://www.seats2meet.com/Help/Api/GET-api-locations-locationId
+https://www.seats2meet.com/Help/Api/GET-api-locations-images-locationId
+https://www.seats2meet.com/Help/Api/POST-api-locations-directions
 
-afmaken view home. Test of reserveringen die zijn aangeraakt maar niet vandaag getoond worden.
+options details from reservation api (setting to on..) - https://www.seats2meet.com/Help/Api/GET-api-options
+events at location https://www.seats2meet.com/Help/Api/GET-api-event-calendar-location-locationId-year-month-day
+tools: now.s2m, meetin.gs, meetup, partup, ..., 'powered by 'better meetings'.
+s2m international info (more locations than one)
 
-stuur offerte (maak pagina, stuur mail met pdf..)
-acties advies 'staat al 2 dagen op status sent.., you should call or you haven't heard from this client in 1 month, maybe call them for an update? 'ignore'..)
 
-on load, get new reservations and update info and res_status from s2m into db.
-then set all reservations without 'success or failed' from yesterday or earlier to status_sales = success, all cancellations would be failures.
-this is done for analytic purposes later.
+offerte pagina met download pdf header zonder prijzen voor klanten van klant
 
-make the view user based. all filters, all actions. all reservations belong to an organisation, but show who's edited last, and make sure 2 people can't work on the same res.
 
-for new instances, import preset databases instances filter en statusses
 
+
+
+---CRON----
+update all reservations every hour
+you should check user's allowed access location list every night or so if they have new locations
+
+
+----USER input----
+elise: Waar we vooral behoefte hebben aan zoiets is als er veel subzalen zijn.
+voorbeeld: https://www.dropbox.com/s/l04dr2wzbrme1xd/aafm.pdf?dl=0 en https://www.dropbox.com/s/abwog8ryw4q91mb/arriva.pdf?dl=0
+
+
+-----LIVEGANG CHANGES----------
+100000 reserveringen ophalen, niet 10
 DNS subdomein fixen naar heroku
 
 
-1000 reserveringen ophalen, niet 10
-
 -------wannahaves
+<1 uur>pro-actieve leads list, hele systeem is nu reactief obv reserveringen. Simpele lijst met naam, organisatie, status (tekst). Tot aan moment dat de lead een reservering wordt of failed is. 
+
+(last-try: API returnt nix)<1 uur>medewerker aan res koppelen, en laten zien van wie die is? iedereen zien alles wel langskomen. als berend jan iets skipt dat van sharon is, ziet hij hem de volgende dag gewoon weer, sharon ziet hem nog wel op de dag zelf... 
+use https://www.seats2meet.com/Help/Api/POST-api-reservation-log-reservationId to get who created it, and all edits...
 show 'revisions' to see who sent that offer...
+
 grove stats 'annuleringsratio, omzet vs budget, etc...'.
-filters logischer weergeven
+amount of money in reservations (realtime budget) VS
+https://www.seats2meet.com/Help/Api/GET-api-budget-locationId-year
+https://www.seats2meet.com/Help/Api/POST-api-stats-meetingspaceoccupancy
+
+filters mooier weergeven
+
+alleen ophalen wat je nodig hebt. Dus als iemand een pagina bekijkt, dan pas ophalen. (hoe track je dan updates van reserveringen?)
+
 
 -------just an idea
 #save bootstrap and run from local in stead of web? not sure, only if speed needs improvements...

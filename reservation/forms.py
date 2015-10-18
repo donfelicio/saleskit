@@ -1,18 +1,19 @@
 from django import forms
 from reservation.models import *
+import datetime
 
 class UpdateForm(forms.ModelForm):
     class Meta:
         model = Reservation
-        fields = ['res_id', 'res_status_sales']
+        fields = ['res_id', 'res_status_sales', 'res_prev_status', 'res_last_change_by']
         
-class TouchedForm(forms.ModelForm):
+class HidereservationForm(forms.ModelForm):
     class Meta:
-        model = Reservation
-        fields = ['res_untouched']
+        model = Hidereservation
+        fields = ['res_id', 'user_key', 'hide_days']
         
-class UpdateFilter(forms.ModelForm):
+class UpdateprofileForm(forms.ModelForm):
     class Meta:
-        model = Filteroption
-        fields = ['filter_name', 'filter_status']
+        model = Userprofile
+        fields = ['user_key', 'active_location']
         

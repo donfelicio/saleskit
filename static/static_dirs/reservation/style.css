@@ -41,3 +41,10 @@
     padding:15px;
     display:none;
 }
+
+.loading {
+    padding: 10px;
+    color: white;
+    height:230px;
+    
+}

@@ -1,76 +1,118 @@
 from django.shortcuts import render, redirect
 from reservation.models import *
 from reservation.forms import *
-import json, requests, datetime
-from .filters import *
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.core.mail import send_mail
+from .search import *
+from .s2m import *
+from .dicts import *
+from django.http import *
 
-#er ging iets mis bij url /?accordion-234 ... of zo, hoe komt dat daar?
 
-#get reservations from S2M API
-def get_s2m_res(amount):
+def search(request):
+    query_string = ''
+    found_entries = False
+    if ('q' in request.POST) and request.POST['q'].strip():
+        query_string = request.POST['q']
+        
+        entry_query = get_query(query_string, ['res_company', 'res_user', 'res_id'])
+        
+        return Reservation.objects.filter(entry_query).order_by('res_id')
+
+
+#some filters for later views    
+def filter_res_status_sales_8(element):
+    return element.res_status_sales != '8'
+
+def filter_res_status_sales_9(element):
+    return element.res_status_sales != '9'
    
-   #set datetime for future date set
-   today = datetime.date.today()
-   one_year = datetime.timedelta(weeks=52)
-   url = 'https://seats2meet.com/api/reservation/location/563'
-   headers = {'content-type':'application/json; charset=utf-8'}
-   data = {
-   "ApiKey":14257895,
-   "ProfileKey":"6DE79403-D5EF-186C-9529-25ED04A66FD6",
-   "ChannelId":0,
-   "ProfileId":0,
-   "CompanyId":0,
-   "StatusIds":[1,2],
-   "MeetingTypeIds":[1],
-   "StartDate":str(today),
-   "EndDate":str(today + one_year),
-   "SearchTerm":"",
-   "ShowNoInvoice":False,
-   "ShowNoRevenue":True,
-   "ShowAmountOpen":False,
-   "ShowOptionCategory":-1,
-   "Page":1,
-   "ItemsPerPage":amount
-   }
-   r = requests.get(url, params=json.dumps(data), headers=headers)
-   return r.json()
-   
-
-            
-
+#the loading page that gets and updates all reservations from s2m
 def loadpage(request):
-   things = get_s2m_res(100)
-   #and now save the reservation
-   #problem!!! An instance has subdicts(), but this for thinks every { is a new dict. so it repeats unnesecarily.  
-   for reservation in things:
+   
+   
+   
+   #set DB userprofile res_updated to 'busy'
+   instance = Userprofile.objects.get(user_key=request.user.username)
+   #check if firstrun, res_update is set to no by default (when created for first time)
+   if instance.res_updated == 'no':
+      firstrun = 'yes'
+   else:
+      firstrun = 'no'
+   instance.res_updated = 'busy'
+   instance.save()
 
+   #get reservations   
+   things = get_s2m_res(request)
+   
+   for reservation in things:
       #cut loose date
       res_date_created_split = reservation.get("CreatedOn").split("T")
       res_date_split = reservation.get("StartTime").split("T")
-      
       #now poor into model and save
-      new_res, created = Reservation.objects.get_or_create(
-      res_id=reservation.get("Id"),
-      res_location_id=reservation.get("LocationId"),
-      res_company=reservation.get("CompanyName"),
-      res_user=reservation.get("ProfileName"),
-      res_desc=reservation.get("ReservationName"),
-      res_date_created=res_date_created_split[0],
-      res_date=res_date_split[0],
-      res_status=reservation.get("StatusId"),
-      res_total_seats=reservation.get("TotalSeats"),
-      res_status_sales=1
-      )      
-   # context = {}
-   # template = 'load.html'   
-   # return render(request, template, context)
+      
+      if firstrun == 'yes':
+         #if the res with s2m is final, make the sales status a success
+         if reservation.get("StatusId") == 2:
+            sales_status = '8'
+         else:
+            pass
+      
+      #if the res with s2m is cancelled, make the sales status a failure
+      if reservation.get("StatusId") == 3:
+         sales_status = '9'
+      else:
+         pass
+      
+      if reservation.get("StatusId") == 1:
+         sales_status = '1'
+      else:
+         pass
+         
+      #now check if the reservation already exists
+      try: #can we find it?
+         findres = Reservation.objects.get(res_id=reservation.get("Id"))
+            
+      except: #didn't find it
+         new_res = Reservation.objects.create(
+         res_id=reservation.get("Id"),
+         res_location_id=reservation.get("LocationId"),
+         res_company=reservation.get("CompanyName"),
+         res_user=reservation.get("ProfileName"),
+         res_desc=reservation.get("ReservationName"),
+         res_date_created=res_date_created_split[0],
+         res_date=res_date_split[0],
+         res_status_sales=sales_status,
+         res_status=reservation.get("StatusId"),
+         res_total_seats=reservation.get("TotalSeats")
+         )
+      else: #found it
+         findres.res_company=reservation.get("CompanyName")
+         findres.res_user=reservation.get("ProfileName")
+         findres.res_desc=reservation.get("ReservationName")
+         findres.res_date=res_date_split[0]
+         findres.res_status=reservation.get("StatusId")
+
+         #if the res with s2m is updated to cancelled, make the sales status a failure
+         if reservation.get("StatusId") == 3:
+            findres.res_status_sales = '9'
+            
+         findres.res_total_seats=reservation.get("TotalSeats")
+         findres.save()
+
+   #set DB userprofile res_updated to 'busy'
+   instance = Userprofile.objects.get(user_key=request.user.username)
+   instance.res_updated = 'done'
+   instance.save()
+   
    return redirect('/')
 
 
 
-
-
 def listall(request):
+   
+   #define for search purposes
+   found_entries = False
    
    # when user changes a reservation status, process it now.
    item_to_update = [] 
@@ -80,102 +122,198 @@ def listall(request):
       if form.is_valid():
          form.save()
          
-   #when user changes a filter, process it now
-   if request.method == 'POST' and 'filter_name' in request.POST:
-      filter_to_update = Filteroption.objects.get(filter_name=request.POST['filter_name'])
-      form = UpdateFilter(request.POST or None, instance=filter_to_update)
-      if form.is_valid():
-         form.save()
-   #get the list of reservations from db
-   filteroptions_on = Filteroption.objects.all().filter(filter_status=0)
+   #if search is done   
+   found_entries = search(request)
    
    #get list of all reservations
-   res_list = Reservation.objects.all()
-   #now filter through it for every filter
-   for filteroption in filteroptions_on:
-      #pass all filters. if the filter is off, take all the instances out of the list 
-      if filteroption.filter_name == 'res_status_attention':
-         res_list = filter(filter_res_status_attention, res_list)
-      if filteroption.filter_name == 'res_status_final':
-         res_list = filter(filter_res_status_final, res_list)
-      if filteroption.filter_name == 'res_status_sales_1':
-         res_list = filter(filter_res_status_sales_1, res_list)
-      if filteroption.filter_name == 'res_status_sales_2':
-         res_list = filter(filter_res_status_sales_2, res_list)
-      if filteroption.filter_name == 'res_status_sales_3':
-         res_list = filter(filter_res_status_sales_3, res_list)
-      if filteroption.filter_name == 'res_status_sales_4':
-         res_list = filter(filter_res_status_sales_4, res_list)
-      if filteroption.filter_name == 'res_status_sales_5':
-         res_list = filter(filter_res_status_sales_5, res_list)
-      if filteroption.filter_name == 'res_status_sales_6':
-         res_list = filter(filter_res_status_sales_6, res_list)
-      if filteroption.filter_name == 'res_status_sales_7':
-         res_list = filter(filter_res_status_sales_7, res_list)
-      if filteroption.filter_name == 'res_status_sales_8':
-         res_list = filter(filter_res_status_sales_8, res_list)
-      if filteroption.filter_name == 'res_status_sales_9':
-         res_list = filter(filter_res_status_sales_9, res_list)
+   res_list = Reservation.objects.all().filter(res_location_id=get_location_id(request))
 
    #get the list of statuscodes from db
    status_list = Statuscode.objects.all()
-   
-   #get the list of filters from db
-   filter_list = Filteroption.objects.all()
-   
+      
    #count items in list of reservations
    list_size = len(res_list)
+   
+   #paginate the results to 25 per page
+   paginator = Paginator(res_list, 25) # Show 25 contacts per page
+   page = request.GET.get('page')
+   try:
+       reservationlist = paginator.page(page)
+   except PageNotAnInteger:
+       # If page is not an integer, deliver first page.
+       reservationlist = paginator.page(1)
+   except EmptyPage:
+       # If page is out of range (e.g. 9999), deliver last page of results.
+       reservationlist = paginator.page(paginator.num_pages)
 
-   context = {'res_list': res_list, 'status_list': status_list, 'updated_item': item_to_update, 'filter_list': filter_list, 'list_size': list_size}
+   context = {'res_list': res_list, 'reservationlist': reservationlist, 'status_list': status_list, 'updated_item': item_to_update, 'list_size': list_size,  'found_entries': found_entries}
    template = 'listall.html'
-   return render(request, template, context)   
+   return render(request, template, context)
+
 
 
 
 
 def home(request):
+       
+   today = datetime.date.today()
+   one_day = datetime.timedelta(days=1)
+   one_week = datetime.timedelta(weeks=1)
+   one_month = datetime.timedelta(weeks=4)
+   days_untouched = 0
    
-   #we want to show:
-   #res x's last action (to next step in sales) was 1 day ago.
-   # so in filters show everything that was touched x days ago...
-   #remind me tomorrow button - never show me this one again (change status_sales to success)
-   #send offer.. (change status_sales to offer sent)   
-   #after action 'last_action_date' is today..
+   #load this if user is logged in and set some empty stuff for later if it isn't used
+   no_res = True
+   sales_tip = ''
+   days_to_res = ''
+   days_last_change = ''
+   reservation = ''
+   status_list = ''
+   res_open = ''
+   loading = ''
+   filtered_res_list = ''
+      
+   
+   #if user doesn't exist, create it and also save the location id's with the user keys
+   if request.method == 'POST' and 'username' in request.POST:
+      locationlist = s2m_login(request)
+      #check for multi location access in user, then make them select the location
+      
+      context = {'locationlist': locationlist}
+      template = 'select.html'   
+      return render(request, template, context)
+         
+      
+   #If user has selected a location when he has access to multiple, save the active_location now
+   if request.method == 'POST' and 'location_id' in request.POST:
 
-
+      p = Process(target=loadpage, args=(request,), name='res_loader')
+      p.start()
+      
+      #if needed create and always update active location and last login to today.
+      instance, created = Userprofile.objects.get_or_create(user_key=request.user.username)
+      instance.active_location=request.POST['location_id']
+      instance.last_login=today
+      instance.save()
+         
+   
+   if request.method == 'POST' and 'logout' in request.POST:
+      return redirect('/logout')
+      
+   
    #when a user clicks 'next', save the items's last change date as today
-   if request.method == 'POST' and 'res_untouched' in request.POST:
-      item_to_update = Reservation.objects.get(res_id=request.POST['res_id'])
-      form = TouchedForm(request.POST or None, instance=item_to_update)
+   #define today for last_action_taken var
+   
+   if request.method == 'POST' and 'hide_days' in request.POST:
+      form = HidereservationForm(request.POST or None)
+      request.POST._mutable = True
+      #now set the last_action_taken so the user will be reminded as asked (1 day is (Date.today), so it will show up tomorrow)
+      if request.POST['hide_days'] == '1': #next or 1 day
+         request.POST['hide_days'] = today
+      elif request.POST['hide_days'] == '2': #2 days
+         request.POST['hide_days'] = today + one_day
+      elif request.POST['hide_days'] == '3': #3 days
+         request.POST['hide_days'] = today + one_day + one_day
+      elif request.POST['hide_days'] == '4': #4 days
+         request.POST['hide_days'] = today + one_day + one_day + one_day
+      elif request.POST['hide_days'] == '5': #5 days
+         request.POST['hide_days'] = today + one_day + one_day + one_day + one_day
+      elif request.POST['hide_days'] == '14': #14 days
+         request.POST['hide_days'] = today + one_week + one_week
+      elif request.POST['hide_days'] == '30': #30 days
+         request.POST['hide_days'] = today + one_month
       if form.is_valid():
          form.save()
-   
+         
+            
    # when user changes a reservation status, process it now.
    item_to_update = []
-   #define today for last_action_taken var
-   today = datetime.date.today()
    if request.method == 'POST' and 'res_status_sales' in request.POST:
       item_to_update = Reservation.objects.get(res_id=request.POST['res_id'])
       form = UpdateForm(request.POST or None, instance=item_to_update)
       if form.is_valid():
          form.save()         
    
-   #get list of all reservations !! i just want the next one that isn't processed yet
-   res_list = Reservation.objects.all()
-   #filter away stuff we don't need
-   res_list = filter(filter_res_status_sales_8, res_list) #success we don't need to show
-   res_list = filter(filter_res_status_sales_9, res_list) #failed we don't need to show
-   res_list = filter(filter_res_touchedtoday, res_list) #touched today we don't need to show
-   reservation = []
-   no_res = ''
-   if res_list:
-      reservation = res_list[0]
-   else:
-      no_res = True
-
-   #get the list of statuscodes from db
-   status_list = Statuscode.objects.all()
+   if request.user.username:
+      
+      #check if it's the same day as last_login, otherwise checkout
+      check_if_sameday = Userprofile.objects.get(user_key=request.user.username)
+      if check_if_sameday.last_login != today:
+         return redirect('/logout')
+         
+      #get list of all reservations !! i just want the next one that isn't processed yet
+      res_list = Reservation.objects.all().filter(res_location_id=get_location_id(request))
+      #filter away stuff we don't need
+      res_list = filter(filter_res_status_sales_8, res_list) #success we don't need to show
+      res_list = filter(filter_res_status_sales_9, res_list) #failed we don't need to show
+      reservation = []
+      if res_list:
+         filtered_res_list = []
+         #get the first reservation that's not in the hidereservation table
+         for reservation in res_list:
+            try:
+               matchtohide = Hidereservation.objects.get(res_id=reservation.res_id, user_key=request.user.username)
+            except: #didn't find it
+               no_res = False
+               filtered_res_list.append(reservation)
+            else: #found it
+               pass
+               
+      if filtered_res_list != [] and filtered_res_list != '':
+         res_open = len(filtered_res_list) #count amount of reservations to go
+         
+         reservation = filtered_res_list[0] #just need the next reservation:)
+         
+         #get how long ago it was changed      
+         days_untouched = today - reservation.res_last_change_date
+         days_untouched = getattr(days_untouched, "days")
+         
+         #now get the sales tip from dicts
+         sales_tip = salestip(reservation.res_status_sales)
+         
+         #now get days until reservation
+         days_to_res = reservation.res_date - today
+         days_to_res = getattr(days_to_res, "days")
+         
+         #figure out when last change was done
+         days_last_change = today - reservation.res_last_change_date
+         days_last_change = getattr(days_last_change, "days")
+      
+         #get the list of statuscodes from db
+         status_list = Statuscode.objects.all()
+         
+      check_if_loading = Userprofile.objects.get(user_key=request.user.username)
+      if check_if_loading.res_updated == 'busy':
+         loading = 'still loading'
+      else:
+         loading = ''
+      
+      context = {
+         'reservation': reservation,
+         'status_list': status_list,
+         'updated_item': item_to_update,
+         'today':today,
+         'no_res': no_res,
+         'days_untouched': days_untouched,
+         'sales_tip': sales_tip,
+         'res_open': res_open,
+         'days_to_res': days_to_res,
+         'days_last_change': days_last_change,
+         'loading': loading
+         }
+      template = 'home.html'   
+      return render(request, template, context)
    
-   context = {'reservation': reservation, 'status_list': status_list, 'updated_item': item_to_update, 'today':today, 'no_res': no_res}
+   #if loggedout   
+   context = {}
    template = 'home.html'   
    return render(request, template, context)
+
+def help(request):
+   context = {}
+   template = 'help.html'   
+   return render(request, template, context)
+
+def logout(request):
+   s2m_logout(request)
+   return redirect('/')

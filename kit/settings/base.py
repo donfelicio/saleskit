@@ -38,6 +38,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'reservation',
+    'show',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -117,3 +118,7 @@ STATICFILES_DIRS = (
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 MEDIA_URL = os.path.join(BASE_DIR, 'media/')
+
+
+SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
+

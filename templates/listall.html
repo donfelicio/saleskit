@@ -2,33 +2,89 @@
 {% load staticfiles %}
 
     {% block content %}
-     <h4>Filters</h4>
-     <div class="row">
+     {% if user.is_authenticated %}
+        
+     <!-- if there are search results, show this section -->
+        {% if found_entries != None %}
+    <!-- show search results if search -->
+     <h1>Search results - <a href='/listall'>Back</a></h1>
+    <div class="accordion">
+              {% for reservation in found_entries %}
+         <div class="accordion-section">
+ 
+               <a class="accordion-section-title" href="#accordion-{{reservation.res_id}}">
+                    #{{reservation.res_id}} -
+                    {{reservation.res_date|date:'Y-m-d'}} -
+                    {{reservation.res_user}} -
+                    {{reservation.res_company}} -
+                    {{reservation.res_total_seats}}pax -
+                    {{reservation.get_res_status_sales_display}} -
+                    {{reservation.get_res_status_display}}
+               </a>
+               <div id="accordion-{{reservation.res_id}}" class="accordion-section-content">
+          <p><a href="https://www.seats2meet.com/locations/{{reservation.res_location_id}}/saleskit/manage/resertion/{{reservation.res_id}}" target="_blank">{{ reservation.res_id }}</a> - {{ reservation.res_user }} - {{ reservation.get_res_status_sales_display }}</p>
+          {% for status in status_list %}    
 
-     {% for filter in filter_list %}
-          {% if filter.filter_status == 0 %}
-               <div class="col-md-1">
+               {% if reservation.res_status_sales == status.status_code %}
+                 
+                    <!-- no form needed, this already is the current status -->
+                    <p class="col-md-1">
+                       <button type="submit" class="btn btn-primary" style="width:90px;font-size:12px;" data-toggle="tooltip" title="{{ status.description }}">{{status.description_short}}</button>
+                    </p>        
+                 
+               {% else %}
+                    <form action="" method="POST" name="form3"> {% csrf_token %}
+                      <p class="col-md-1">
+                         <input type="hidden" name="res_id" value="{{reservation.res_id}}">
+                         <input type="hidden" name="res_untouched" value="no">
+                         <input type="hidden" name="res_status_sales" value="{{status.status_code}}">
+                         <button type="submit" class="btn btn-default" style="width:90px;font-size:12px;" data-toggle="tooltip" title="{{ status.description }}">{{status.description_short}}</button>
+                      </p>        
+                    </form>
                     
-                    <form action="" method="POST" name="form1">{% csrf_token %}
-                         <input type="hidden" name="filter_name" value="{{filter.filter_name}}">
-                         <input type="hidden" name="filter_status" value="1">
-                         <button type="submit" class="btn btn-danger btn-xs" style="width:90px;font-size:12px;" data-toggle="tooltip" title="hidden: {{ filter.filter_desc }}">{{filter.filter_short}}</button>
-                    </form>
-               </div>
-          {% else %}
-               <div class="col-md-1">
-                    <form action="" method="POST" name="form2">{% csrf_token %}
-                         <input type="hidden" name="filter_name" value="{{filter.filter_name}}">
-                         <input type="hidden" name="filter_status" value="0">
-                         <button type="submit" class="btn btn-success btn-xs" style="width:90px;font-size:12px;" data-toggle="tooltip" title="shown: {{ filter.filter_desc }}">{{filter.filter_short}}</button>
-                    </form>
-               </div>
-          {% endif %}     
-     {% endfor %}
-     </div>
+               {% endif %}
+          {% endfor %}
+
+               </div><!--end .accordion-section-content-->
+         </div><!--end .accordion-section-->
+          {% endfor %}
+    </div><!--end .accordion-->
+    
+   
+     {% endif %}
+    <!-- if there are search results, dont show the rest -->
+        {% if found_entries == None %}
+
+    <!-- end search results -->
+    
+    
+     <form action="" method="POST" name="form1">{% csrf_token %}
+          <input type="input" name="q" value="" placeholder="Search...">
+          <button type="submit" class="btn btn-primary btn-xs" style="width:90px;font-size:12px;" data-toggle="tooltip" title="Search for users, companies and reservation id's">Search</button>
+     </form>   
+
+
      <h4>Results - {{list_size}} items</h4>
+     <div class="row" style="margin:20px;">
+     <div class="col-md-4 col-md-offset-5">
+          <span class="step-links">
+              {% if reservationlist.has_previous %}
+                  <a href="?page={{ reservationlist.previous_page_number }}"><button class="btn btn-primary">Previous</button></a>
+              {% endif %}
+      
+              <span class="current" style="font-size: 18px;font-weight: bold">
+               {{ reservationlist.number }} of {{ reservationlist.paginator.num_pages }}
+              </span>
+      
+              {% if reservationlist.has_next %}
+                  <a href="?page={{ reservationlist.next_page_number }}"><button class="btn btn-primary">Next</button></a>
+              {% endif %}
+          </span>
+     </div>
+     </div>
+     
      <div class="accordion">
-         {% for reservation in res_list %}
+         {% for reservation in reservationlist %}
          {% if reservation.res_id == updated_item.res_id %}
          <div class="accordion-section">
                <a class="accordion-section-title active" href="#accordion-{{reservation.res_id}}">
@@ -68,6 +124,7 @@
                     <form action="" method="POST" name="form3"> {% csrf_token %}
                       <p class="col-md-1">
                          <input type="hidden" name="res_id" value="{{reservation.res_id}}">
+                         <input type="hidden" name="res_untouched" value="no">
                          <input type="hidden" name="res_status_sales" value="{{status.status_code}}">
                          <button type="submit" class="btn btn-default" style="width:90px;font-size:12px;" data-toggle="tooltip" title="{{ status.description }}">{{status.description_short}}</button>
                       </p>        
@@ -80,5 +137,9 @@
          </div><!--end .accordion-section-->
         {% endfor %}
     </div><!--end .accordion-->
+    
+    {% endif %}
+    {% endif %}
+    
    
     {% endblock %}

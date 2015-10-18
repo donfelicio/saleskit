@@ -5,7 +5,7 @@ from .models import *
 
 
 class Reservationadmin(admin.ModelAdmin):
-    list_display = ['res_id', 'res_user', 'res_date', 'res_date_created', 'res_status_sales', 'res_last_action_taken']
+    list_display = ['res_id', 'res_user', 'res_date', 'res_date_created', 'res_status_sales']
     class Meta:
         model = Reservation
         
@@ -18,9 +18,23 @@ class Statuscodeadmin(admin.ModelAdmin):
         
 admin.site.register(Statuscode, Statuscodeadmin)
 
-class Filteroptionadmin(admin.ModelAdmin):
-    list_display = ['filter_name', 'filter_desc', 'filter_status']
+class Userlocationadmin(admin.ModelAdmin):
+    list_display = ['location_id', 'location_name', 'user_key']
     class Meta:
-        model = Filteroption
+        model = Userlocation
         
-admin.site.register(Filteroption, Filteroptionadmin)
+admin.site.register(Userlocation, Userlocationadmin)
+
+class Userprofileadmin(admin.ModelAdmin):
+    list_display = ['user_key', 'active_location', 'last_login']
+    class Meta:
+        model = Userprofile
+        
+admin.site.register(Userprofile, Userprofileadmin)
+
+class Hidereservationadmin(admin.ModelAdmin):
+    list_display = ['res_id', 'user_key', 'hide_days']
+    class Meta:
+        model = Hidereservation
+        
+admin.site.register(Hidereservation, Hidereservationadmin)

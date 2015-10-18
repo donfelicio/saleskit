@@ -3,33 +3,50 @@
 
      
     {% block content %}     <!-- show page content --->
-    
+       
+ {% if user.is_authenticated %}
+ 
+ <!-- show notification that reservations are still loading in background if the are -->
+  
+ <!-- end loading notification -->
+ 
     {% if no_res == True %}
     <h4>There are no reservations to process, enjoy your day!</h4>
     {% else %}
+         
+     <h4>Only {{res_open}} to go! This customer needs your attention. Last change was {{days_untouched}} days ago. </h4><h2 style="color:red;">Do right now:</h2><p>{{sales_tip}}</p>
 
-     </div>
-     <h4>This customer needs your attention. Last change was x days ago</h4>
-          <form action="" method="POST">{% csrf_token %}
-               <input type="hidden" name="res_id" value="{{reservation.res_id}}">
-               <input type="hidden" name="res_untouched" value="no"> 
-               <button type="submit" class="btn btn-primary">Next</button></p>
-          </form>
      <div class="accordion">
 
           <div class="accordion-section">
                <a class="accordion-section-title active" href="#accordion-{{reservation.res_id}}">
                     #{{reservation.res_id}}
+                    {% if reservation.res_last_change_by != None %}
+                    - Last change by: {{reservation.res_last_change_by}} from status '{{reservation.get_res_prev_status_display}}', {{days_last_change}} days ago
+                    {% endif %}
                     
                </a>
                <div id="accordion-{{reservation.res_id}}" class="accordion-section-content open" style="display: block">
                     <p class="pull-right">
-                    <p><a href="https://www.seats2meet.com/locations/{{reservation.res_location_id}}/saleskit/manage/reservation/{{reservation.res_id}}" target="_blank">{{ reservation.res_id }}</a></p>
-                    <p>Date: {{reservation.res_date|date:'Y-m-d'}} -</p> 
-                    <p>Customer: {{reservation.res_user}} -</p>
-                    <p>Company: {{reservation.res_company}} -</p>
-                    <p>Seats: {{reservation.res_total_seats}}pax -</p>
-                    <p>S2M status: {{reservation.get_res_status_display}}</p>
+                    <p><a href="https://www.seats2meet.com/locations/{{reservation.res_location_id}}/saleskit/manage/reservation/{{reservation.res_id}}" target="_blank">Go to reservation in Seats2meet.com: {{ reservation.res_id }}</a></p>
+                    <table class="table">
+                         <tr>
+                              <td>Date:</td><td> {{reservation.res_date|date:'Y-m-d'}} - Meeting is in <b>{{days_to_res}} </b>days</td>
+                         </tr> 
+                         <tr><td>Customer:</td><td> {{reservation.res_user}}</td></tr>
+                         <tr><td>Company:</td><td> {{reservation.res_company}}</td></tr>
+                         <tr><td>Seats:</td><td> {{reservation.res_total_seats}}pax</td></tr>
+                         <tr><td>S2M status:</td><td> {{reservation.get_res_status_display}}</td></tr>
+                    </table>
+                    
+          <div class="col-md-5 col-md-offset-3">
+               <span class="step-links">
+                    <span class="current" style="font-size: 18px;font-weight: bold">
+                         <h3>Status of reservation in sales funnel</h3>
+                    </span>
+               </span>
+          </div>
+          
           <div id="row" class="col-md-12 col-md-offset-1">
           {% for status in status_list %}    
                {% if reservation.res_status_sales == status.status_code %}
@@ -43,6 +60,9 @@
                     <form action="" method="POST" name="form3"> {% csrf_token %}
                       <p class="col-md-1">                        
                          <input type="hidden" name="res_id" value="{{reservation.res_id}}">
+                         <input type="hidden" name="res_untouched" value="no">
+                         <input type="hidden" name="res_prev_status" value="{{reservation.res_status_sales}}">
+                         <input type="hidden" name="res_last_change_by" value="{{request.user.first_name}} {{request.user.last_name}}">
                          <input type="hidden" name="res_status_sales" value="{{status.status_code}}">
                          <button type="submit" class="btn btn-default" style="width:90px;font-size:12px;" data-toggle="tooltip" title="{{ status.description }}">{{status.description_short}}</button>
                       </p>        
@@ -54,6 +74,67 @@
                </div><!--end .accordion-section-content-->
          </div><!--end .accordion-section-->
     </div><!--end .accordion-->
+
+    <div class="jumbotron" style="height:70px;padding-top:1px;padding-bottom: 50px;background-color: #7a7a7a">
+ <!--    
+          <p>
+               <form action="" method="POST" class="col-md-1">{% csrf_token %}
+                    <input type="hidden" name="res_id" value="{{reservation.res_id}}">
+                    <input type="hidden" name="user_key" value="{{request.user.username}}">
+                    <input type="hidden" name="hide_days" value="1">
+                    <button type="submit" class="btn btn-primary">Next</button></p>
+               </form>
+          </p>
+          <p>-->
+              <h3 class="col-md-3">Remind me in: </h5>
+          </p>
+          <p>
+               <form class="col-md-1" action="" method="POST">{% csrf_token %}
+                    <input type="hidden" name="res_id" value="{{reservation.res_id}}">
+                    <input type="hidden" name="user_key" value="{{request.user.username}}">
+                    <input type="hidden" name="hide_days" value="1">
+                    <button type="submit" class="btn btn-primary">1 day</button>
+               </form>
+               <form action="" method="POST" class="col-md-1">{% csrf_token %}
+                    <input type="hidden" name="res_id" value="{{reservation.res_id}}">
+                    <input type="hidden" name="user_key" value="{{request.user.username}}">
+                    <input type="hidden" name="hide_days" value="2">
+                    <button type="submit" class="btn btn-primary">2 days</button>
+               </form>
+               <form action="" method="POST" class="col-md-1">{% csrf_token %}
+                    <input type="hidden" name="res_id" value="{{reservation.res_id}}">
+                    <input type="hidden" name="user_key" value="{{request.user.username}}">
+                    <input type="hidden" name="hide_days" value="3">
+                    <button type="submit" class="btn btn-primary">3 days</button>
+               </form>
+               <form action="" method="POST" class="col-md-1">{% csrf_token %}
+                    <input type="hidden" name="res_id" value="{{reservation.res_id}}">
+                    <input type="hidden" name="user_key" value="{{request.user.username}}">
+                    <input type="hidden" name="hide_days" value="4">
+                    <button type="submit" class="btn btn-primary">4 days</button>
+               </form>
+               <form action="" method="POST" class="col-md-1">{% csrf_token %}
+                    <input type="hidden" name="res_id" value="{{reservation.res_id}}">
+                    <input type="hidden" name="user_key" value="{{request.user.username}}">
+                    <input type="hidden" name="hide_days" value="5">
+                    <button type="submit" class="btn btn-primary">5 days</button>
+               </form>
+                    <form action="" method="POST" class="col-md-1">{% csrf_token %}
+                    <input type="hidden" name="res_id" value="{{reservation.res_id}}">
+                    <input type="hidden" name="user_key" value="{{request.user.username}}">
+                    <input type="hidden" name="hide_days" value="14">
+                    <button type="submit" class="btn btn-primary">14 days</button>
+               </form>
+                    <form action="" method="POST" class="col-md-1">{% csrf_token %}
+                    <input type="hidden" name="res_id" value="{{reservation.res_id}}">
+                    <input type="hidden" name="user_key" value="{{request.user.username}}">
+                    <input type="hidden" name="hide_days" value="30">
+                    <button type="submit" class="btn btn-primary">30 days</button>
+               </form>
+          </p> <!-- end of all butons -->
+     </div>
+     
+   {% endif %}
    {% endif %}
     {% endblock %}     <!-- end page content -->
 

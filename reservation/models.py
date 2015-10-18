@@ -1,4 +1,5 @@
 from django.db import models
+import datetime
 
 # Create your models here.
 
@@ -29,24 +30,31 @@ class Reservation(models.Model):
     )
     res_status_sales = models.CharField(max_length = 255, choices=res_status_sales_choices, default='1')
     res_total_seats = models.CharField(max_length = 255, null=True)
-    res_last_action_taken = models.DateField()
-    res_untouched = models.CharField(max_length = 255, default='yes')
+    res_prev_status = models.CharField(max_length = 255,choices=res_status_sales_choices, default='9')
+    res_last_change_by = models.CharField(max_length = 255, null=True)
+    res_last_change_date = models.DateField(auto_now = True)
     class Meta:
-        ordering = ['res_date']
-        
+        ordering = ['res_date']   
 
 class Statuscode(models.Model):
     status_code = models.CharField(max_length = 255)
     description = models.CharField(max_length = 255)
     description_short = models.CharField(max_length = 255)
 
-
+class Userlocation(models.Model):
+    location_id = models.CharField(max_length = 255, null=True)
+    user_key = models.CharField(max_length = 255, null=True)
+    location_name = models.CharField(max_length = 255, null=True)
     
-class Filteroption(models.Model):
-    filter_name = models.CharField(max_length = 255, null=True)
-    filter_short = models.CharField(max_length = 255, null=True)
-    filter_desc = models.CharField(max_length = 255, null=True)
-    filter_status = models.IntegerField()
-
-
+class Userprofile(models.Model):
+    user_key = models.CharField(max_length = 255, null=True)
+    active_location = models.CharField(max_length = 255, null=True)
+    last_login = models.DateField(null=True)
+    res_updated = models.CharField(max_length = 255, default='no')
+    
+class Hidereservation(models.Model):
+    res_id = models.CharField(max_length = 255, null=True)
+    user_key = models.CharField(max_length = 255, null=True)
+    hide_days = models.DateField(null=True)
+    
     

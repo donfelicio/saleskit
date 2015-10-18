@@ -7,9 +7,50 @@
             <span class="icon-bar"></span>
           </button>
           <a class="navbar-brand" href="/">Sales kit</a>
-          <a class="navbar-brand" href="/listall">Show list</a>
+          <!-- <a class="navbar-brand" href="/listall">Show list</a> -->
+          <a class="navbar-brand" href="/help" target="_blank">Help</a>
         </div>
+
+      <div id="navbar" class="navbar-collapse collapse">
+          {% if user.is_authenticated %}
+          <form method="post" action="" class="navbar-form navbar-right">{% csrf_token %}
+            <div class="form-group">
+              <input type="hidden" name="logout" value="yes" class="form-control">
+            </div>
+            <button type="submit" class="btn btn-success">Logout</button>
+          </form>
+          {% else %}
+          <form method="post" action="" class="navbar-form navbar-right">{% csrf_token %}
+            <div class="form-group">
+              <input type="hidden" name="login" value="yes">
+              <input type="text" placeholder="S2M Email" name="username" class="form-control">
+            </div>
+            <div class="form-group">
+              <input type="password" placeholder="Password" name="pass" class="form-control">
+            </div>
+            <button type="submit" class="btn btn-success">Sign in</button>
+          </form>
+          
+        {% endif %}
+        
+        </div><!--/.navbar-collapse -->
+          </p>
         <div id="navbar" class="navbar-collapse collapse">
         </div><!--/.navbar-collapse -->
       </div>
+      
+  {% if loading == 'still loading' %}
+
+        <div class="loading" name="loading" style="background-color: #ff7d7d;">
+          <h2>We are updating your reservations, this may take a while.</h2>
+          <p>this message will show until we have loaded and updated all of your reservations. This may take a few minutes. </p>
+          <a href=""><button class="btn btn-primary">Check if ready</button></a>
+           <meta http-equiv="refresh" content="5; URL=/">
+        </div>
+ 
+  {% endif %}
+
     </nav>
+     
+
+
