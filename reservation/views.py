@@ -8,17 +8,19 @@ from .s2m import *
 from .dicts import *
 from django.http import *
 import time
+from django.db import connection
 
 
 def search(request):
-    query_string = ''
-    found_entries = False
-    if ('q' in request.POST) and request.POST['q'].strip():
-        query_string = request.POST['q']
-        
-        entry_query = get_query(query_string, ['res_company', 'res_user', 'res_id'])
-        
-        return Reservation.objects.filter(entry_query).order_by('res_id')
+   connection.close()
+   query_string = ''
+   found_entries = False
+   if ('q' in request.POST) and request.POST['q'].strip():
+       query_string = request.POST['q']
+       
+       entry_query = get_query(query_string, ['res_company', 'res_user', 'res_id'])
+       
+       return Reservation.objects.filter(entry_query).order_by('res_id')
 
 
 #some filters for later views    
@@ -30,6 +32,7 @@ def filter_res_status_sales_9(element):
    
 #the loading page that gets and updates all reservations from s2m
 def loadpage(request):
+   connection.close()
    
    #set DB userprofile res_updated to 'busy'
    instance = Userprofile.objects.get(user_name=request.user.username)
@@ -109,6 +112,7 @@ def loadpage(request):
 
 
 def listall(request):
+   connection.close()
    
    #define for search purposes
    found_entries = False
@@ -151,6 +155,7 @@ def listall(request):
 
 
 def create_locationlist(request):
+   connection.close()
    res_status = Userprofile.objects.get(user_name=request.user.username).res_updated
    if request.user.username and res_status != 'busy' and res_status != 'done':
       
@@ -180,6 +185,7 @@ def create_locationlist(request):
 
 
 def home(request):
+   connection.close()
        
    today = datetime.date.today()
    one_day = datetime.timedelta(days=1)
@@ -346,6 +352,7 @@ def help(request):
    return render(request, template, context)
 
 def logout(request):
+   connection.close()
    instance = Userprofile.objects.get(user_name=request.user.username)
    instance.active_location = 0
    instance.save()
@@ -353,5 +360,6 @@ def logout(request):
    return redirect('/')
 
 def login(request):
+   connection.close()
    s2m_login(request)
    return redirect('/')

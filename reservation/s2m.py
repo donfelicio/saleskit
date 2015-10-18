@@ -4,19 +4,23 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import redirect, render
 from multiprocessing import Process
+from django.db import connection
+
 #all s2m api requests
 
 def get_location_id(request):
+   connection.close()
    #get the location id from the userprofile of logged in user
    return Userprofile.objects.get(user_name=request.user.username).active_location
 
 def get_user_key(request):
+   connection.close()
    #get the location id from the userprofile of logged in user
    return Userprofile.objects.get(user_name=request.user.username).user_key
          
 #get reservations from S2M API
 def get_s2m_res(request): #you should only do this in background, or when user presses refresh, and then still in background with alert 'this might take a minute'. 
-   
+   connection.close()
    #set datetime for future date set
    #!!!!WHEN going live, parse all data in rows. Uncomment below to do all.
    page = 1 #!!!!change to 1 after testen
@@ -61,6 +65,7 @@ def get_s2m_res(request): #you should only do this in background, or when user p
    
 
 def s2m_login(request):
+   connection.close()
    today = datetime.date.today()
    url = 'https://www.seats2meet.com/api/login'
    headers = {'content-type':'application/json'}
@@ -106,6 +111,7 @@ def s2m_logout(request):
     request.session.flush()
 
 def s2m_locationlist():
+    connection.close()
     
     url = 'https://www.seats2meet.com/api/locations'
     headers = {'content-type':'application/json'}
