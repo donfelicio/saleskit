@@ -54,7 +54,32 @@
                     <!-- no form needed, this already is the current status -->
                     <p class="col-md-1">
                        <button type="submit" class="btn btn-primary" style="width:90px;font-size:12px;" data-toggle="tooltip" title="{{ status.description }}">{{status.description_short}}</button>
-                    </p>        
+                    </p>
+                    
+               {% elif status.description_short == 'Success' %}
+               <form action="" method="POST" name="form3"> {% csrf_token %}
+                      <p class="col-md-1">                        
+                         <input type="hidden" name="res_id" value="{{reservation.res_id}}">
+                         <input type="hidden" name="res_untouched" value="no">
+                         <input type="hidden" name="res_prev_status" value="{{reservation.res_status_sales}}">
+                         <input type="hidden" name="res_last_change_by" value="{{request.user.first_name}} {{request.user.last_name}}">
+                         <input type="hidden" name="res_status_sales" value="{{status.status_code}}">
+                         <button type="submit" class="btn btn-success" style="width:90px;font-size:12px;" data-toggle="tooltip" title="{{ status.description }}">{{status.description_short}}</button>
+                      </p>        
+                    </form>
+               
+               {% elif status.description_short == 'Failed' %}
+               
+               <form action="" method="POST" name="form3"> {% csrf_token %}
+                      <p class="col-md-1">                        
+                         <input type="hidden" name="res_id" value="{{reservation.res_id}}">
+                         <input type="hidden" name="res_untouched" value="no">
+                         <input type="hidden" name="res_prev_status" value="{{reservation.res_status_sales}}">
+                         <input type="hidden" name="res_last_change_by" value="{{request.user.first_name}} {{request.user.last_name}}">
+                         <input type="hidden" name="res_status_sales" value="{{status.status_code}}">
+                         <button type="submit" class="btn btn-danger" style="width:90px;font-size:12px;" data-toggle="tooltip" title="{{ status.description }}">{{status.description_short}}</button>
+                      </p>        
+                    </form>
                 
                {% else %}
                     <form action="" method="POST" name="form3"> {% csrf_token %}
@@ -133,8 +158,12 @@
                </form>
           </p> <!-- end of all butons -->
      </div>
+    
+    
      
    {% endif %}
    {% endif %}
     {% endblock %}     <!-- end page content -->
+    
+    
 

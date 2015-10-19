@@ -258,10 +258,12 @@ def home(request):
       if form.is_valid():
          form.save()
    
-   p = Process(target=create_locationlist, args=(request,), name='create_locationlist')
-   p.start()
+   
    connection.close()
    if request.user.username: #if user is logged in
+      
+      p = Process(target=create_locationlist, args=(request,), name='create_locationlist')
+      p.start()
       
       locationlist = Userlocation.objects.all().filter(user_key=get_user_key(request))
 
