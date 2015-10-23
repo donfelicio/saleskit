@@ -45,3 +45,10 @@ class Loginlogadmin(admin.ModelAdmin):
         model = Loginlog
         
 admin.site.register(Loginlog, Loginlogadmin)
+
+class Testeradmin(admin.ModelAdmin):
+    list_display = ['user_name']
+    class Meta:
+        model = Tester
+        
+admin.site.register(Tester, LogTesteradmininlogadmin)
