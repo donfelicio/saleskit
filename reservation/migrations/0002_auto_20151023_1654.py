@@ -13,7 +13,12 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AlterField(
             model_name='reservation',
-            name='res_id',
-            field=models.CharField(max_length=255),
+            name='res_prev_status',
+            field=models.CharField(default=b'9', max_length=255),
+        ),
+        migrations.AlterField(
+            model_name='reservation',
+            name='res_status_sales',
+            field=models.CharField(default=b'1', max_length=255),
         ),
     ]

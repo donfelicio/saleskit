@@ -22,7 +22,7 @@ class Migration(migrations.Migration):
             name='Reservation',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('res_id', models.CharField(unique=True, max_length=255)),
+                ('res_id', models.CharField(max_length=255)),
                 ('res_user', models.CharField(max_length=255, null=True)),
                 ('res_location_id', models.CharField(max_length=255, null=True)),
                 ('res_company', models.CharField(max_length=255)),

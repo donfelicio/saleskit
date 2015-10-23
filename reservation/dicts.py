@@ -20,7 +20,7 @@ def salestip(sales_status):
     elif sales_status == '9':
         message = "Your sale failed, too bad. You aren't supposed to see this anymore."
     else:
-        message = "Je moet nu werken!!"
+        message = "Er is geen status bekend!!"
     return message
 
 

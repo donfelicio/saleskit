@@ -36,9 +36,10 @@ def loadpage(request):
       res_date_split = reservation.get("StartTime").split("T")
       #now poor into model and save
       
-      
+      sales_status = '1'
+      #HIER! firstrun werkt niet
       if ran_before == 'no':
-         sales_status = '1'
+         
          #if the res with s2m is final, make the sales status a success
          if reservation.get("StatusId") == 2:
             sales_status = '8'
@@ -96,11 +97,9 @@ def loadpage(request):
 
 def create_locationlist(request):
    connection.close()
-   time.sleep(1) #even wachten, anders slaat je script de render over omdat je userprofile nog niet geupdate is
    res_status = Userprofile.objects.get(user_name=request.user.username)
    
    if res_status.loc_updated != 'busy' and res_status.loc_updated != 'done':
-      print res_status.res_updated
       #set DB userprofile res_updated to 'busy'
       instance = Userprofile.objects.get(user_name=request.user.username)
       instance.loc_updated = 'busy'
@@ -171,7 +170,7 @@ def home(request):
          form.save()
    
    
-   connection.close()
+  
    if request.user.username: #if user is logged in
             
       #check if it's the same day as last_login, otherwise checkout
@@ -179,17 +178,20 @@ def home(request):
          return redirect('/logout')
       
       #maak nu de locationlist terwijl de gebruiker wacht
+      connection.close()
       if Userprofile.objects.get(user_name=request.user.username).loc_updated == 'no':
          p = Process(target=create_locationlist, args=(request,), name='create_locationlist')
          p.start()
-
+         time.sleep(1)
       #als geen actieve locatie, dan laten kiezen
+      connection.close()
       if Userprofile.objects.get(user_name=request.user.username).active_location == 'False':
          context = {
             'locationlist': Userlocation.objects.all().filter(user_name=Userprofile.objects.get(user_name=request.user.username)),
             'userprofile': Userprofile.objects.get(user_name=request.user.username)
                     }
-         template = 'select.html'   
+         template = 'select.html'
+         
          return render(request, template, context)
 
 
@@ -218,7 +220,9 @@ def home(request):
          'no_res': no_res,         
          'userprofile': Userprofile.objects.get(user_name=request.user.username)
          }
+      
       if reservation: #if there is a reservation.. (might be empty list?)
+         
          context['res_open'] = len(res_list) - len(Reservationfilter.objects.all().filter(user_name=request.user.username))
          context['sales_tip'] = salestip(reservation.res_status_sales)
          context['days_untouched'] = getattr(datetime.date.today() - reservation.res_last_change_date, "days")
