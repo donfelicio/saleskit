@@ -2,25 +2,11 @@ from django.shortcuts import render, redirect
 from reservation.models import *
 from reservation.forms import *
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.core.mail import send_mail
-from .search import *
 from .s2m import *
 from .dicts import *
 from django.http import *
 import time
 from django.db import connection
-
-
-def search(request):
-   connection.close()
-   query_string = ''
-   found_entries = False
-   if ('q' in request.POST) and request.POST['q'].strip():
-       query_string = request.POST['q']
-       
-       entry_query = get_query(query_string, ['res_company', 'res_user', 'res_id'])
-       
-       return Reservation.objects.filter(entry_query).order_by('res_id')
 
 
 #some filters for later views    
@@ -30,6 +16,8 @@ def filter_res_status_sales_8(element):
 def filter_res_status_sales_9(element):
     return element.res_status_sales != '9'
    
+   
+   
 #the loading page that gets and updates all reservations from s2m
 def loadpage(request):
    connection.close()
@@ -37,23 +25,20 @@ def loadpage(request):
    #set DB userprofile res_updated to 'busy'
    instance = Userprofile.objects.get(user_name=request.user.username)
    #check if firstrun, res_update is set to no by default (when created for first time)
-   if instance.res_updated == 'no':
-      firstrun = 'yes'
-   else:
-      firstrun = 'no'
+   ran_before = instance.res_updated
    instance.res_updated = 'busy'
    instance.save()
-
-   #get reservations   
-   things = get_s2m_res(request)
    
-   for reservation in things:
+   
+   for reservation in get_s2m_res(request):
       #cut loose date
       res_date_created_split = reservation.get("CreatedOn").split("T")
       res_date_split = reservation.get("StartTime").split("T")
       #now poor into model and save
       
-      if firstrun == 'yes':
+      
+      if ran_before == 'no':
+         sales_status = '1'
          #if the res with s2m is final, make the sales status a success
          if reservation.get("StatusId") == 2:
             sales_status = '8'
@@ -65,11 +50,7 @@ def loadpage(request):
          sales_status = '9'
       else:
          pass
-      
-      if reservation.get("StatusId") == 1:
-         sales_status = '1'
-      else:
-         pass
+
          
       #now check if the reservation already exists
       try: #can we find it?
@@ -111,64 +92,24 @@ def loadpage(request):
 
 
 
-def listall(request):
-   connection.close()
-   
-   #define for search purposes
-   found_entries = False
-   
-   # when user changes a reservation status, process it now.
-   item_to_update = [] 
-   if request.method == 'POST' and 'res_id' in request.POST:
-      item_to_update = Reservation.objects.get(res_id=request.POST['res_id'])
-      form = UpdateForm(request.POST or None, instance=item_to_update)
-      if form.is_valid():
-         form.save()
-         
-   #if search is done   
-   found_entries = search(request)
-   
-   #get list of all reservations
-   res_list = Reservation.objects.all().filter(res_location_id=get_location_id(request))
-
-   #get the list of statuscodes from db
-   status_list = Statuscode.objects.all()
-      
-   #count items in list of reservations
-   list_size = len(res_list)
-   
-   #paginate the results to 25 per page
-   paginator = Paginator(res_list, 25) # Show 25 contacts per page
-   page = request.GET.get('page')
-   try:
-       reservationlist = paginator.page(page)
-   except PageNotAnInteger:
-       # If page is not an integer, deliver first page.
-       reservationlist = paginator.page(1)
-   except EmptyPage:
-       # If page is out of range (e.g. 9999), deliver last page of results.
-       reservationlist = paginator.page(paginator.num_pages)
-
-   context = {'res_list': res_list, 'reservationlist': reservationlist, 'status_list': status_list, 'updated_item': item_to_update, 'list_size': list_size,  'found_entries': found_entries}
-   template = 'listall.html'
-   return render(request, template, context)
 
 
 def create_locationlist(request):
    connection.close()
+   time.sleep(1) #even wachten, anders slaat je script de render over omdat je userprofile nog niet geupdate is
    res_status = Userprofile.objects.get(user_name=request.user.username)
    
-   if request.user.username and res_status.res_updated != 'busy' and res_status.res_updated != 'done' and res_status.res_updated != 'nope':
+   if res_status.loc_updated != 'busy' and res_status.loc_updated != 'done':
       print res_status.res_updated
       #set DB userprofile res_updated to 'busy'
       instance = Userprofile.objects.get(user_name=request.user.username)
-      instance.res_updated = 'busy'
+      instance.loc_updated = 'busy'
       instance.save()
     
       locationlist = s2m_locationlist() #get all locations to check if a user is allowed in list
       for location in locationlist:
          print location.get("Id")
-         url = 'https://www.seats2meet.com/api/accounts/hasaccess/%s/%s' % (location.get("Id"), get_user_key(request))
+         url = 'https://www.seats2meet.com/api/accounts/hasaccess/%s/%s' % (location.get("Id"), Userprofile.objects.get(user_name=request.user.username).user_key)
          headers = {'content-type':'application/json'}
          data = {}
      
@@ -177,22 +118,16 @@ def create_locationlist(request):
          if r:
              
           # if true, put it to the db.
-            Userlocation.objects.get_or_create(location_id=location.get("Id"), user_key=get_user_key(request), location_name=location.get("Name"))
+            Userlocation.objects.get_or_create(location_id=location.get("Id"), user_name=Userprofile.objects.get(user_name=request.user.username), location_name=location.get("Name"))
    
       #set DB userprofile res_updated to 'done'
       instance = Userprofile.objects.get(user_name=request.user.username)
-      instance.res_updated = 'nope'
+      instance.loc_updated = 'done'
       instance.save()
 
 
 def home(request):
    connection.close()
-       
-   today = datetime.date.today()
-   one_day = datetime.timedelta(days=1)
-   one_week = datetime.timedelta(weeks=1)
-   one_month = datetime.timedelta(weeks=4)
-   days_untouched = 0
    
    #load this if user is logged in and set some empty stuff for later if it isn't used
    no_res = True
@@ -204,48 +139,25 @@ def home(request):
    res_open = ''
    loading = ''
    filtered_res_list = ''
-   
+
       
    #If user has selected a location when he has access to multiple, save the active_location now
    if request.method == 'POST' and 'location_id' in request.POST:
       
-      #if needed create and always update active location and last login to today.
+      #if needed create and always update active location.
       instance, created = Userprofile.objects.get_or_create(user_name=request.user.username)
       instance.active_location=request.POST['location_id']
-      instance.last_login=today
       instance.save()
       
       p = Process(target=loadpage, args=(request,), name='res_loader')
       p.start()
       
-
-         
    
-   if request.method == 'POST' and 'logout' in request.POST:
-      return redirect('/logout')
-      
-   
-   #when a user clicks 'next', save the items's last change date as today
-   #define today for last_action_taken var
-   
+   #when a user clicks 'next', save the items's last change date as today 
    if request.method == 'POST' and 'hide_days' in request.POST:
-      form = HidereservationForm(request.POST or None)
+      form = ReservationfilterForm(request.POST or None)
       request.POST._mutable = True
-      #now set the last_action_taken so the user will be reminded as asked (1 day is (Date.today), so it will show up tomorrow)
-      if request.POST['hide_days'] == '1': #next or 1 day
-         request.POST['hide_days'] = today
-      elif request.POST['hide_days'] == '2': #2 days
-         request.POST['hide_days'] = today + one_day
-      elif request.POST['hide_days'] == '3': #3 days
-         request.POST['hide_days'] = today + one_day + one_day
-      elif request.POST['hide_days'] == '4': #4 days
-         request.POST['hide_days'] = today + one_day + one_day + one_day
-      elif request.POST['hide_days'] == '5': #5 days
-         request.POST['hide_days'] = today + one_day + one_day + one_day + one_day
-      elif request.POST['hide_days'] == '14': #14 days
-         request.POST['hide_days'] = today + one_week + one_week
-      elif request.POST['hide_days'] == '30': #30 days
-         request.POST['hide_days'] = today + one_month
+      request.POST['hide_days'] = datetime.date.today() + datetime.timedelta(days=int(request.POST['hide_days']))
       if form.is_valid():
          form.save()
          
@@ -261,29 +173,26 @@ def home(request):
    
    connection.close()
    if request.user.username: #if user is logged in
+            
+      #check if it's the same day as last_login, otherwise checkout
+      if Userprofile.objects.get(user_name=request.user.username).last_login != datetime.date.today():
+         return redirect('/logout')
       
-      p = Process(target=create_locationlist, args=(request,), name='create_locationlist')
-      p.start()
-      
-      locationlist = Userlocation.objects.all().filter(user_key=get_user_key(request))
+      #maak nu de locationlist terwijl de gebruiker wacht
+      if Userprofile.objects.get(user_name=request.user.username).loc_updated == 'no':
+         p = Process(target=create_locationlist, args=(request,), name='create_locationlist')
+         p.start()
 
-      time.sleep(1)
-      check_if_loading = Userprofile.objects.get(user_name=request.user.username)
-      if check_if_loading.active_location == '0':
-         if check_if_loading.res_updated == 'busy':
-            loading = 'still loading'
-            context = {'loading': loading}
-         else:
-            loading = ''      
-            context = {'locationlist': locationlist, 'loading': loading}
+      #als geen actieve locatie, dan laten kiezen
+      if Userprofile.objects.get(user_name=request.user.username).active_location == 'False':
+         context = {
+            'locationlist': Userlocation.objects.all().filter(user_name=Userprofile.objects.get(user_name=request.user.username)),
+            'userprofile': Userprofile.objects.get(user_name=request.user.username)
+                    }
          template = 'select.html'   
          return render(request, template, context)
 
-      
-      #check if it's the same day as last_login, otherwise checkout
-      check_if_sameday = Userprofile.objects.get(user_name=request.user.username)
-      if check_if_sameday.last_login != today:
-         return redirect('/logout')
+
          
       #get list of all reservations !! i just want the next one that isn't processed yet
       res_list = Reservation.objects.all().filter(res_location_id=get_location_id(request))
@@ -296,55 +205,28 @@ def home(request):
          #get the first reservation that's not in the hidereservation table
          for reservation in res_list:
             try:
-               matchtohide = Hidereservation.objects.get(res_id=reservation.res_id, user_name=request.user.username)
-            except: #didn't find it
+               Reservationfilter.objects.get(res_id=reservation.res_id, user_name=request.user.username)
+            except: #No 'hide this res' filter was found
                no_res = False
-               filtered_res_list.append(reservation)
-            else: #found it
+               break
+            else: #a 'hide this res' filter was found
                pass
-               
-      if filtered_res_list != [] and filtered_res_list != '':
-         res_open = len(filtered_res_list) #count amount of reservations to go
-         
-         reservation = filtered_res_list[0] #just need the next reservation:)
-         
-         #get how long ago it was changed      
-         days_untouched = today - reservation.res_last_change_date
-         days_untouched = getattr(days_untouched, "days")
-         
-         #now get the sales tip from dicts
-         sales_tip = salestip(reservation.res_status_sales)
-         
-         #now get days until reservation
-         days_to_res = reservation.res_date - today
-         days_to_res = getattr(days_to_res, "days")
-         
-         #figure out when last change was done
-         days_last_change = today - reservation.res_last_change_date
-         days_last_change = getattr(days_last_change, "days")
-      
-         #get the list of statuscodes from db
-         status_list = Statuscode.objects.all()
-         
-      check_if_loading = Userprofile.objects.get(user_name=request.user.username)
-      if check_if_loading.res_updated == 'busy':
-         loading = 'still loading'
-      else:
-         loading = ''
       
       context = {
          'reservation': reservation,
-         'status_list': status_list,
-         'updated_item': item_to_update,
-         'today':today,
-         'no_res': no_res,
-         'days_untouched': days_untouched,
-         'sales_tip': sales_tip,
-         'res_open': res_open,
-         'days_to_res': days_to_res,
-         'days_last_change': days_last_change,
-         'loading': loading
+         'status_list': Statuscode.objects.all(),
+         'no_res': no_res,         
+         'userprofile': Userprofile.objects.get(user_name=request.user.username)
          }
+      if reservation: #if there is a reservation.. (might be empty list?)
+         context['res_open'] = len(res_list) - len(Reservationfilter.objects.all().filter(user_name=request.user.username))
+         context['sales_tip'] = salestip(reservation.res_status_sales)
+         context['days_untouched'] = getattr(datetime.date.today() - reservation.res_last_change_date, "days")
+         context['days_last_change'] = getattr(datetime.date.today() - reservation.res_last_change_date, "days")
+         context['days_to_res'] = getattr(reservation.res_date - datetime.date.today(), "days")
+         
+      
+      
       template = 'home.html'   
       return render(request, template, context)
    
@@ -361,10 +243,10 @@ def help(request):
 def logout(request):
    connection.close()
    instance = Userprofile.objects.get(user_name=request.user.username)
-   instance.active_location = 0
+   instance.active_location = False
    instance.res_updated = 'done'
    instance.save()
-   s2m_logout(request)
+   request.session.flush()
    return redirect('/')
 
 def login(request):

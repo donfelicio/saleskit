@@ -19,7 +19,6 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 urlpatterns = [
     url(r'^$', 'reservation.views.home', name='home'),
-    url(r'^listall', 'reservation.views.listall', name='listall'),
     url(r'^show', 'show.views.show', name='show'),
     url(r'^help', 'reservation.views.help', name='help'),
     url(r'^logout', 'reservation.views.logout', name='logout'),

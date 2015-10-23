@@ -7,9 +7,9 @@ class UpdateForm(forms.ModelForm):
         model = Reservation
         fields = ['res_id', 'res_status_sales', 'res_prev_status', 'res_last_change_by']
         
-class HidereservationForm(forms.ModelForm):
+class ReservationfilterForm(forms.ModelForm):
     class Meta:
-        model = Hidereservation
+        model = Reservationfilter
         fields = ['res_id', 'user_name', 'hide_days']
         
 class UpdateprofileForm(forms.ModelForm):

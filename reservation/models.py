@@ -43,20 +43,23 @@ class Statuscode(models.Model):
 
 class Userlocation(models.Model):
     location_id = models.CharField(max_length = 255, null=True)
-    user_key = models.CharField(max_length = 255, null=True)
+    user_name = models.CharField(max_length = 255, null=True)
     location_name = models.CharField(max_length = 255, null=True)
     
 class Userprofile(models.Model):
     user_name = models.CharField(max_length = 255, null=True)
     user_key = models.CharField(max_length = 255, null=True)
-    active_location = models.CharField(max_length = 255, default=0)
+    active_location = models.CharField(max_length = 255, default=False)
     last_login = models.DateField(auto_now=True, null=True)
     res_updated = models.CharField(max_length = 255, default='no')
+    loc_updated = models.CharField(max_length = 255, default='no')
     
-class Hidereservation(models.Model):
+class Reservationfilter(models.Model):
     res_id = models.CharField(max_length = 255, null=True)
-    user_key = models.CharField(max_length = 255, null=True)
     user_name = models.CharField(max_length = 255, null=True)
     hide_days = models.DateField(null=True)
     
+class Loginlog(models.Model):
+    user_name = models.CharField(max_length = 255, null=True)
+    login_date = models.DateField(auto_now=True, null=True)
     

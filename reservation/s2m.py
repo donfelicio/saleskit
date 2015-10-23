@@ -14,11 +14,6 @@ def get_location_id(request):
    #get the location id from the userprofile of logged in user
    return Userprofile.objects.get(user_name=request.user.username).active_location
 
-def get_user_key(request):
-   connection.close()
-   #get the location id from the userprofile of logged in user
-   return Userprofile.objects.get(user_name=request.user.username).user_key
-         
 #get reservations from S2M API
 def get_s2m_res(request): #you should only do this in background, or when user presses refresh, and then still in background with alert 'this might take a minute'. 
    connection.close()
@@ -29,8 +24,6 @@ def get_s2m_res(request): #you should only do this in background, or when user p
    results=[]
    while rowsleft != 0:
    #!!!PRINT NOG DUBBEL, maar alleen bij tweede run. alleen in zelfde browser na refresh van /load. zal wel request onthouden. 
-      today = datetime.date.today()
-      one_year = datetime.timedelta(weeks=52)
       url = 'http://www.seats2meet.com/api/reservation/location/%s' % get_location_id(request)
       headers = {'content-type':'application/json'}
       data = {
@@ -41,8 +34,8 @@ def get_s2m_res(request): #you should only do this in background, or when user p
       "CompanyId":0,
       "StatusIds":[1,2,3],
       "MeetingTypeIds":[1],
-      "StartDate":str(today),
-      "EndDate":str(today + one_year),
+      "StartDate":str(datetime.date.today()),
+      "EndDate":str(datetime.date.today() + datetime.timedelta(weeks=52)),
       "SearchTerm":"",
       "ShowNoInvoice":False,
       "ShowNoRevenue":True,
@@ -78,10 +71,8 @@ def s2m_login(request):
    }
    
    r = requests.post(url, data=json.dumps(data), headers=headers)
-   if r.status_code == 200:
+   if r.status_code == 200:   
       r = json.loads(r.text)
-      
-      get_user_key = r.get("Key")
       
       #now get or create the user
       user, created = User.objects.get_or_create(username=r.get("UserName"), email=r.get("Email"), first_name=r.get("FirstName"), last_name=r.get("LastName"))
@@ -91,28 +82,30 @@ def s2m_login(request):
          #and now login the user into the Django account
          user.backend = 'django.contrib.auth.backends.ModelBackend'
          login(request, user)
-   
-         
-         #delete all the users old hidereservation keys (older than today)
-         hideres_list = Hidereservation.objects.all().filter(user_name=request.user.username)
-   
-         for hideres in hideres_list:
-            if hideres.hide_days < today:
-               hideres_to_remove = Hidereservation.objects.get(res_id=hideres.res_id, user_name=hideres.user_name)
-               hideres_to_remove.delete()
+         #and save login date
+         instance, created = Userprofile.objects.get_or_create(user_name=request.user.username)
+         instance.save()
+         #and create login log instance
+         Loginlog.objects.create(user_name=request.user.username)
+
+         #delete all the users old hidereservation keys (older than today)   
+         for resfilter in Reservationfilter.objects.all().filter(user_name=request.user.username):
+            if resfilter.hide_days < today:
+               Reservationfilter.objects.get(res_id=resfilter.res_id, user_name=resfilter.user_name).delete()
            
          #now check if there's just one location or more, and let the user select one
        
       else: #user is created, log in django and then get the locations
          user.backend = 'django.contrib.auth.backends.ModelBackend'
          login(request, user)
+         #and save login date
+         instance, created = Userprofile.objects.get_or_create(user_name=request.user.username)
+         instance.save()
+         #and create login log instance
+         Loginlog.objects.create(user_name=request.user.username)
    else:
       return redirect('/')
       
-
-def s2m_logout(request):
-    logout(request)
-    request.session.flush()
 
 def s2m_locationlist():
     connection.close()

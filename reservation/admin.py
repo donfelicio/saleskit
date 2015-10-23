@@ -19,22 +19,29 @@ class Statuscodeadmin(admin.ModelAdmin):
 admin.site.register(Statuscode, Statuscodeadmin)
 
 class Userlocationadmin(admin.ModelAdmin):
-    list_display = ['location_id', 'location_name', 'user_key']
+    list_display = ['location_id', 'location_name', 'user_name']
     class Meta:
         model = Userlocation
         
 admin.site.register(Userlocation, Userlocationadmin)
 
 class Userprofileadmin(admin.ModelAdmin):
-    list_display = ['user_key', 'active_location', 'last_login']
+    list_display = ['user_name', 'active_location', 'last_login']
     class Meta:
         model = Userprofile
         
 admin.site.register(Userprofile, Userprofileadmin)
 
-class Hidereservationadmin(admin.ModelAdmin):
+class Reservationfilteradmin(admin.ModelAdmin):
     list_display = ['res_id', 'user_name', 'hide_days']
     class Meta:
-        model = Hidereservation
+        model = Reservationfilter
         
-admin.site.register(Hidereservation, Hidereservationadmin)
+admin.site.register(Reservationfilter, Reservationfilteradmin)
+
+class Loginlogadmin(admin.ModelAdmin):
+    list_display = ['user_name', 'login_date']
+    class Meta:
+        model = Loginlog
+        
+admin.site.register(Loginlog, Loginlogadmin)

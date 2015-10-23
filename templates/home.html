@@ -5,13 +5,13 @@
     {% block content %}     <!-- show page content --->
        
  {% if user.is_authenticated %}
- 
- <!-- show notification that reservations are still loading in background if the are -->
-  
- <!-- end loading notification -->
- 
     {% if no_res == True %}
     <h4>There are no reservations to process, enjoy your day!</h4>
+    
+    {% elif userprofile.res_updated == 'busy' or userprofile.loc_updated == 'busy' %}
+    
+    <h4>Please wait while loading!</h4>
+    
     {% else %}
          
      <h4>Only {{res_open}} to go! This customer needs your attention. Last change was {{days_untouched}} days ago. </h4><h2 style="color:red;">Do right now:</h2><p>{{sales_tip}}</p>
@@ -23,6 +23,9 @@
                     #{{reservation.res_id}}
                     {% if reservation.res_last_change_by != None %}
                     - Last change by: {{reservation.res_last_change_by}} from status '{{reservation.get_res_prev_status_display}}', {{days_last_change}} days ago
+                    {% else %}
+                    - Nobody has made changes to this reservation, let's do this!
+                    
                     {% endif %}
                     
                </a>
@@ -101,59 +104,50 @@
     </div><!--end .accordion-->
 
     <div class="jumbotron" style="height:70px;padding-top:1px;padding-bottom: 50px;background-color: #7a7a7a">
- <!--    
-          <p>
-               <form action="" method="POST" class="col-md-1">{% csrf_token %}
-                    <input type="hidden" name="res_id" value="{{reservation.res_id}}">
-                    <input type="hidden" name="user_key" value="{{request.user.username}}">
-                    <input type="hidden" name="hide_days" value="1">
-                    <button type="submit" class="btn btn-primary">Next</button></p>
-               </form>
-          </p>
-          <p>-->
+
               <h3 class="col-md-3">Remind me in: </h5>
           </p>
           <p>
                <form class="col-md-1" action="" method="POST">{% csrf_token %}
                     <input type="hidden" name="res_id" value="{{reservation.res_id}}">
                     <input type="hidden" name="user_name" value="{{request.user.username}}">
-                    <input type="hidden" name="hide_days" value="1">
+                    <input type="hidden" name="hide_days" value="0">
                     <button type="submit" class="btn btn-primary">1 day</button>
                </form>
                <form action="" method="POST" class="col-md-1">{% csrf_token %}
                     <input type="hidden" name="res_id" value="{{reservation.res_id}}">
                     <input type="hidden" name="user_name" value="{{request.user.username}}">
-                    <input type="hidden" name="hide_days" value="2">
+                    <input type="hidden" name="hide_days" value="1">
                     <button type="submit" class="btn btn-primary">2 days</button>
                </form>
                <form action="" method="POST" class="col-md-1">{% csrf_token %}
                     <input type="hidden" name="res_id" value="{{reservation.res_id}}">
                     <input type="hidden" name="user_name" value="{{request.user.username}}">
-                    <input type="hidden" name="hide_days" value="3">
+                    <input type="hidden" name="hide_days" value="2">
                     <button type="submit" class="btn btn-primary">3 days</button>
                </form>
                <form action="" method="POST" class="col-md-1">{% csrf_token %}
                     <input type="hidden" name="res_id" value="{{reservation.res_id}}">
                     <input type="hidden" name="user_name" value="{{request.user.username}}">
-                    <input type="hidden" name="hide_days" value="4">
+                    <input type="hidden" name="hide_days" value="3">
                     <button type="submit" class="btn btn-primary">4 days</button>
                </form>
                <form action="" method="POST" class="col-md-1">{% csrf_token %}
                     <input type="hidden" name="res_id" value="{{reservation.res_id}}">
                     <input type="hidden" name="user_name" value="{{request.user.username}}">
-                    <input type="hidden" name="hide_days" value="5">
+                    <input type="hidden" name="hide_days" value="4">
                     <button type="submit" class="btn btn-primary">5 days</button>
                </form>
                     <form action="" method="POST" class="col-md-1">{% csrf_token %}
                     <input type="hidden" name="res_id" value="{{reservation.res_id}}">
                     <input type="hidden" name="user_name" value="{{request.user.username}}">
-                    <input type="hidden" name="hide_days" value="14">
+                    <input type="hidden" name="hide_days" value="13">
                     <button type="submit" class="btn btn-primary">14 days</button>
                </form>
                     <form action="" method="POST" class="col-md-1">{% csrf_token %}
                     <input type="hidden" name="res_id" value="{{reservation.res_id}}">
                     <input type="hidden" name="user_name" value="{{request.user.username}}">
-                    <input type="hidden" name="hide_days" value="30">
+                    <input type="hidden" name="hide_days" value="29">
                     <button type="submit" class="btn btn-primary">30 days</button>
                </form>
           </p> <!-- end of all butons -->
