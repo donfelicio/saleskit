@@ -63,6 +63,4 @@ class Loginlog(models.Model):
     user_name = models.CharField(max_length = 255, null=True)
     login_date = models.DateField(auto_now=True, null=True)
     
-class Tester(models.Model):
-    user_name = models.CharField(max_length = 255)
     
