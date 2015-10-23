@@ -4,7 +4,7 @@ import datetime
 # Create your models here.
 
 class Reservation(models.Model):
-    res_id = models.CharField(max_length = 255, unique=True)
+    res_id = models.CharField(max_length = 255)
     res_user = models.CharField(max_length = 255, null=True)
     res_location_id = models.CharField(max_length = 255, null=True)    
     res_company = models.CharField(max_length = 255)
