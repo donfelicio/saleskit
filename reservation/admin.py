@@ -51,4 +51,4 @@ class Testeradmin(admin.ModelAdmin):
     class Meta:
         model = Tester
         
-admin.site.register(Tester, LogTesteradmininlogadmin)
+admin.site.register(Tester, Testeradmin)
