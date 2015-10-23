@@ -5,13 +5,12 @@
     {% block content %}     <!-- show page content --->
        
  {% if user.is_authenticated %}
-    {% if no_res == True %}
-    <h4>There are no reservations to process, enjoy your day!</h4>
-    
-    {% elif userprofile.res_updated == 'busy' or userprofile.loc_updated == 'busy' %}
-    
+     {% if userprofile.res_updated == 'busy' or userprofile.loc_updated == 'busy' %}
     <h4>Please wait while loading!</h4>
     
+    {% elif no_res == True %}
+    <h4>There are no reservations to process, enjoy your day!</h4>
+        
     {% else %}
          
      <h4>Only {{res_open}} to go! This customer needs your attention. Last change was {{days_untouched}} days ago. </h4><h2 style="color:red;">Do right now:</h2><p>{{sales_tip}}</p>
