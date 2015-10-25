@@ -7,6 +7,7 @@
         <!-- Main jumbotron for a primary marketing message or call to action -->
     <div class="s2m_block1" style='background-image: url("https://az691754.vo.msecnd.net/website/{{reservation.LocationId}}/{{reservation.LocationImage}}");'>
       <div class="part_overlay">
+        <a href="/static/show/pdf/{{reservation.Id}}.pdf"><button class="btn btn-primary">Download as PDF</button></a>
         <p></p><p><h1 class="white">YOU MEET EACH OTHER AT SEATS2MEET.COM</h1></p>
         <div class="widget">Dear {{reservation.ProfileName|capfirst}},
         <p>We are so happy you have reached out to {{reservation.LocationName}} regarding your event: {{reservation.ReservationName}}.</p>
