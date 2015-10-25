@@ -3,27 +3,10 @@ from reservation.models import *
 import json, requests, time
 from datetime import date
 from django.utils.html import strip_tags
-import pdfcrowd
+from easy_pdf.views import PDFTemplateView
 from django.http import HttpResponse
 from multiprocessing import Process
 import os.path
-
-
-def generate_pdf_view(request):
-
-    try:
-    # create an API client instance
-        client = pdfcrowd.Client("donfelicio", "c80838c2ded070c41bcf39c0a619c809")
-        client.setPageWidth(1024)
-        
-        pdf = client.convertURI('http://saleskit.meetberlage.com/show?r=%s&u=%s&pdf=yes' % (request.GET.get('r', ''),request.GET.get('u', '')))
-        output_file = open('%s.pdf' % request.GET.get('r', ''), 'wb')
-        output_file.write(pdf)
-
-    except pdfcrowd.Error, why:
-        print 'Failed:', why
-
-
 
 
 #get reservation from S2M API
@@ -108,18 +91,9 @@ def get_s2m_options(request, resid):
 
 
 
-
-
-
-
 def show(request):
         
     reservation = get_s2m_res(request)
-    
-    generate_pdf_view(request)
-    if not os.path.exists('static/static_dirs/show/pdf/%s.pdf' % request.GET.get('r', '')):
-        p = Process(target=generate_pdf_view, args=(request,), name='create_pdf')
-        p.start()    
     
     context={
         'reservation': reservation,
