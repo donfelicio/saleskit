@@ -86,7 +86,7 @@
       {% if forloop.counter = 3 or forloop.counter = 5 or forloop.counter = 7 or forloop.counter = 9 or forloop.counter = 11 or forloop.counter = 13  or forloop.counter = 15 or forloop.counter = 17 %}
       </tr><tr>
       {% endif %}
-          <td style="padding-left:50px;vertical-align: top;">{% for meetingspace in meetingspaces %}
+          <td class="tdstyle">{% for meetingspace in meetingspaces %}
               {% if meetingspace.Id == Unit.UnitId %}
               <a href="javascript:void(0)" onclick="document.getElementById('{{ Unit.UnitName }}').style.display='block';document.getElementById('fade').style.display='block'">
                 <div class="meetingspace_images" style='background-image: url("https://az691754.vo.msecnd.net/website/{{reservation.LocationId}}/{{meetingspace.Image}}");'>

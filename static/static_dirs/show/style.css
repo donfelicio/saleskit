@@ -47,6 +47,11 @@
     border-right:solid #ffffff 1px;
 }
 
+.tdstyle{
+    padding-left:50px;
+    vertical-align: top;
+}
+
 .30perc {
     width:30%;
 }
@@ -156,6 +161,9 @@ h1{
     }
     .s2m_block2{
     padding:2px;
+    }
+    .tdstyle{
+        padding-left:5px;
     }
       
 }
