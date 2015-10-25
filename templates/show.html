@@ -8,7 +8,7 @@
     <div class="s2m_block1" style='background-image: url("https://az691754.vo.msecnd.net/website/{{reservation.LocationId}}/{{reservation.LocationImage}}");'>
       <div class="part_overlay">
         {% if pdf != "yes" %}
-        <p class="pdf"><a href="/static/show/pdf/{{reservation.Id}}.pdf"><button class="btn btn-primary">Download as PDF</button></a></p>
+        <p class="pdf"><a href="static/show/img/{{reservation.Id}}.pdf"><button class="btn btn-primary">Download as PDF</button></a></p>
         {% endif %}
         <p></p><p><h1 class="white">YOU MEET EACH OTHER AT SEATS2MEET.COM</h1></p>
         <div class="widget">Dear {{reservation.ProfileName|capfirst}},
