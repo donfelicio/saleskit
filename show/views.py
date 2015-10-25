@@ -3,6 +3,29 @@ from reservation.models import *
 import json, requests, time
 from datetime import date
 from django.utils.html import strip_tags
+import pdfcrowd
+from django.http import HttpResponse
+from multiprocessing import Process
+import os.path
+
+
+def generate_pdf_view(request):
+    if not os.path.exists('static/static_dirs/show/pdf/%s.pdf' % request.GET.get('r', '')):
+
+        try:
+        # create an API client instance
+            client = pdfcrowd.Client("donfelicio", "c80838c2ded070c41bcf39c0a619c809")
+        
+            pdf = client.convertURI('http://saleskit.meetberlage.com/show?r=%s&u=%s' % (request.GET.get('r', ''),request.GET.get('u', '')))
+            with open('static/static_dirs/show/pdf/%s.pdf' % request.GET.get('r', ''), 'wb') as output_file:
+                output_file.write(pdf)
+    
+    
+        except pdfcrowd.Error, why:
+            print 'Failed:', why
+
+
+
 
 #get reservation from S2M API
 def get_s2m_res(request):
@@ -64,7 +87,6 @@ def get_s2m_address(request, location):
     }
       
     r = requests.get(url, params=json.dumps(data), headers=headers)
-    print r.text
     r = json.loads(r.text)
     
     return r
@@ -94,8 +116,10 @@ def get_s2m_options(request, resid):
 def show(request):
         
     reservation = get_s2m_res(request)
-            
-    #get the res id from the url
+
+    p = Process(target=generate_pdf_view, args=(request,), name='create_pdf')
+    p.start()    
+    
     context={
         'reservation': reservation,
         'startdate': reservation.get("StartTime").split("T")[0],
