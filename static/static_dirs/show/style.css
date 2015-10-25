@@ -47,6 +47,12 @@
     border-right:solid #ffffff 1px;
 }
 
+.pdf{
+    margin-left:auto;
+    margin-right:auto;
+    width:10%;
+    padding-top:2px;
+}
 .tdstyle{
     padding-left:50px;
     vertical-align: top;
