@@ -130,6 +130,7 @@ body {
 h1{
     margin-left:auto;
     margin-right:auto;
+    width:60%;
     padding-top:50px;
     text-shadow: 0 0 10px rgba(0, 0, 0, .7);*
     filter: progid: DXImageTransform.Microsoft.DropShadow(color=#b3000000, offX=0, offY=0)
