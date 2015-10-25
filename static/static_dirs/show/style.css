@@ -1,10 +1,69 @@
 @import"//fonts.googleapis.com/css?family=Open+Sans:300italic,300,600";
 /*s2m css*/
-.s2m_block1{
-    
+
+.s2m_block1{   
     width:100%;
-    background-image: url("img/background.jpeg");    
+    background-size: 100%;
     min-height:470px;
+    }
+    .black_overlay {
+    display: none;
+    position: absolute;
+    top: 0%;
+    left: 0%;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    z-index:1001;
+    -moz-opacity: 0.8;
+    opacity:.80;
+    filter: alpha(opacity=80);
+}
+.white_content {
+    display: none;
+    position: absolute;
+    top: 0%;
+    left:4%;
+    width: 90%;
+    height: 500px;
+    border: 5px solid gray;
+    background-color: white;
+    z-index:1002;
+    overflow: auto;
+}
+.textright {
+    float: right;
+}
+
+
+.s2m_block2{
+    background-color: #cccccc;
+    min-height:300px;
+    height:100%;
+    padding:20px;
+    border-top: solid #ffffff 1px;
+    border-right:solid #ffffff 1px;
+}
+
+.30perc {
+    width:30%;
+}
+.70perc {
+    width:70%;
+}
+.100perc {
+    width:100%;
+}
+
+.higher{
+    min-height:510px;
+}
+
+.light {
+    background-color: #d9d9d9;
+}
+.dark {
+    background-color: #bfbfbf;
 }
 
 .part_overlay {
@@ -12,7 +71,7 @@
     top: 0;
     left: 0;
     width: 100%;
-    height: 100%;
+    min-height: 470px;
     background-color: transparent;
     background-color: rgba(0, 30, 45, .2);
     zoom: 1;
@@ -20,11 +79,31 @@
     * filter: progid: DXImageTransform.Microsoft.gradient(startColorstr=#33001e2d, endColorstr=#33001e2d)
 }
 
+.part_overlay_small {
+    width: 100%;
+    margin-top:30px;
+    background-color: transparent;
+    background-color: rgba(245, 245, 245, .8);
+    zoom: 1;
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(GradientType=0, startColorstr=#33001e2d, endColorstr=#33001e2d)";
+    * filter: progid: DXImageTransform.Microsoft.gradient(startColorstr=#33001e2d, endColorstr=#33001e2d)
+}
+
+.meetingspace_images {
+    min-height: 200px;
+    min-width:300px;
+    max-width: 300px;
+    background-size: 100%;
+    background-repeat: no-repeat;
+    background-position: center center;
+    padding:1px;
+    
+}
 .widget{
-        margin-left: auto;
+    margin-left: auto;
     margin-right: auto;
     padding: 15px;
-    min-height: 300px;
+    min-height: 330px;
     width:70%;
     color: #001e2d;
     background-color: #fff;
@@ -41,7 +120,10 @@
 body, html, select, td, input, textarea, .ui-widget {
     font: 14px 'Open Sans', Tahoma, Arial;
     font-weight: 300;
-    color: #001e2d
+    color: #001e2d;
+}
+body {
+    background-color: #e6e6e6;
 }
 
 h1{

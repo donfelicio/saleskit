@@ -19,11 +19,11 @@
     <link rel="stylesheet" href="static/show/bootstrap/css/bootstrap-theme.min.css">
     
     <!-- Latest compiled and minified JavaScript -->
-    <script src="static/show/bootstrap/js/bootstrap.min.js"></script> 
+    <script src="static/show/bootstrap/js/bootstrap.min.js"></script>
     
     <!-- Jquery -->
     <link rel="stylesheet" href="static/show/style.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="static/js/jquery.min.js"></script>  
 
  
     <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
@@ -39,36 +39,18 @@
     <!-- script for hover tooltip -->
     <script>
     $(document).ready(function(){
-        $('[data-toggle="tooltip"]').tooltip();   
+        $('[data-toggle="tooltip"]').tooltip();
     });
     </script>
+
+  
     
   </head>
 
   <body>
 
-
-
-    <!-- Main jumbotron for a primary marketing message or call to action -->
-    <div class="s2m_block1">
-      <div class="part_overlay">
-        <h1 class="white">YOU MEET EACH OTHER AT SEATS2MEET.COM</h1>
-        <div class="widget">test</div>
-      </div>
-    </div>
     
-    
-    <div class="jumbotron">
-      <div class="row">
-          <div class="col-md-1"></div>
-          <div class="col-md-6">
-            <p><h2>S2M Saleskit!</h2></p>
-
-    </div>
-
-    <div class="container">
-      <!-- Example row of columns -->
-      <div class="row">
+  
             {% block header %}
     
             {% endblock %}
@@ -76,14 +58,15 @@
             {% block content %}
     
             {% endblock %}
-      </div>
+
+    
 
       <hr>
 
       <footer>
         <p></p>
       </footer>
-    </div> <!-- /container -->
+
 
 
     <!-- Bootstrap core JavaScript

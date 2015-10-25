@@ -17,7 +17,6 @@ def filter_res_status_sales_9(element):
     return element.res_status_sales != '9'
    
    
-   
 #the loading page that gets and updates all reservations from s2m
 def loadpage(request):
    connection.close()
