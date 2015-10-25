@@ -64,6 +64,7 @@ def get_s2m_address(request, location):
     }
       
     r = requests.get(url, params=json.dumps(data), headers=headers)
+    print r.text
     r = json.loads(r.text)
     
     return r

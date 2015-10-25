@@ -15,6 +15,7 @@
       </br><div class="col-md-2"><img style="max-width: 100px; margin-top:10px;" src="https://d3817ykd1rv0p7.cloudfront.net/{{profile.Image}}"></div>
       </br>Kind regards,
       </br>{{profile.FirstName|capfirst}} {{profile.LastName|capfirst}}
+      </br><a href="mailto:{{profile.Email}}">{{profile.Email}}</a>
       </br>{{reservation.LocationName}}
       </div>
         </div>
@@ -40,7 +41,7 @@
       {% for Option in reservation.Options %}
         {% for detail in options %}
           {% if detail.OptionId == Option.OptionId %}
-          <p>{{ Option.Amount }} x {{ Option.OptionName|capfirst }}: {{ Option.CurrencySymbol }}{{ Option.PriceTotalExclTax}}
+          <p>{{ Option.Amount }} x {{ Option.OptionName|capfirst }}: {{ Option.CurrencySymbol }}{{ Option.PriceTotalExclTax|floatformat:2}}
           
           {% if detail.OptionDescription != "" %}<button data-toggle="tooltip" title='{{ detail.OptionDescription|striptags }}'>Details</button>
            
@@ -58,20 +59,20 @@
           <hr>
           <table><tr>
           <td><p>Total amount excl. VAT &nbsp;&nbsp;</p></td>
-          <td><p><strong> {{ reservation.CurrencySymbol }}{{reservation.TotalExcl}}</strong></p></td>
+          <td><p><strong> {{ reservation.CurrencySymbol }}{{reservation.TotalExcl|floatformat:2}}</strong></p></td>
           {% for item in reservation.TaxTotals %}
           </tr><tr>
           <td><p>Total VAT {{item.Percentage}}% &nbsp;&nbsp;</p></td>
-          <td><p><strong> {{ reservation.CurrencySymbol }}{{item.Total}}</strong></p></td>
+          <td><p><strong> {{ reservation.CurrencySymbol }}{{item.Total|floatformat:2}}</strong></p></td>
           {% endfor %}
           </tr><tr>
           <tr><td><hr></td></tr>
           <td><p>Total amount incl. VAT &nbsp;&nbsp;</p></td>
-          <td><p><strong> {{ reservation.CurrencySymbol }}{{reservation.TotalIncl}}</strong></p></td>
+          <td><p><strong> {{ reservation.CurrencySymbol }}{{reservation.TotalIncl|floatformat:2}}</strong></p></td>
           {% if reservation.TotalSeats != 0 %}
           </tr><tr>
           <td><p>Total amount per person &nbsp;&nbsp;</p></td>
-          <td><p><strong> {{ reservation.CurrencySymbol }}{{price_per_person}}</strong></p></td>
+          <td><p><strong> {{ reservation.CurrencySymbol }}{{price_per_person|floatformat:2}}</strong></p></td>
           {% endif %}
           
           </tr></table>
@@ -98,7 +99,7 @@
               </div>
               <div id="fade" class="black_overlay"></div>
               </a>
-              <p>Setup: {{ Unit.SettingName|capfirst }} - Price: {{ Unit.CurrencySymbol }}{{ Unit.PriceTotalExclTax }}</p>
+              <p>Setup: {{ Unit.SettingName|capfirst }} - Price: {{ Unit.CurrencySymbol }}{{ Unit.PriceTotalExclTax|floatformat:2 }}</p>
                   {% if Unit.Seats != 0 %}
                   <p>A total of {{ Unit.Seats }} persons</p>
                   {% endif %}
@@ -120,6 +121,10 @@
       <p>{{reservation.LocationName|capfirst}}</p>
       <p>{{location.Address}} - {{location.Zipcode}}</p>
       <p>{{location.City}}</p>
+      <p>{{location.PhoneNumber}}</p>
+      <a href="mailto:{{location.Email}}"><p>{{location.Email}}</p></a>
+      <p>{{location.City}}</p>
+      <p>Rated: {{location.ReviewScore|floatformat:0}} out of 100 by {{location.ReviewCount|floatformat:0}} people</p>
       <a href="{{location.url}}" target="_blank">
         <button class="btn btn-primary">Check out location</button></a>
       <a href="https://www.google.com/maps/place/{{location.Address}}+{{location.Zipcode}}+{{location.City}}" target="_blank">
