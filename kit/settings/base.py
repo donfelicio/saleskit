@@ -39,7 +39,6 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'reservation',
     'show',
-    'easy_pdf',
 )
 
 MIDDLEWARE_CLASSES = (
