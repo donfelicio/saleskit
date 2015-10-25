@@ -99,8 +99,8 @@
     background-repeat: no-repeat;
     background-position: center center;
     padding:1px;
-    
 }
+
 .widget{
     margin-left: auto;
     margin-right: auto;
@@ -148,6 +148,12 @@ h1{
       .s2m_block1{
       min-height: 650px;
       }
+      
+      .meetingspace_images {
+    min-height: 75px;
+    min-width:100px;
+    max-width: 100px;
+    }
       
 }
 
