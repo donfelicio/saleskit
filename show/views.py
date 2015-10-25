@@ -17,8 +17,8 @@ def generate_pdf_view(request):
         client.setPageWidth(1024)
         
         pdf = client.convertURI('http://saleskit.meetberlage.com/show?r=%s&u=%s&pdf=yes' % (request.GET.get('r', ''),request.GET.get('u', '')))
-        with open('%s.pdf' % request.GET.get('r', ''), 'wb') as output_file:
-            output_file.write(pdf)
+        output_file = open('%s.pdf' % request.GET.get('r', ''), 'wb')
+        output_file.write(pdf)
 
     except pdfcrowd.Error, why:
         print 'Failed:', why
