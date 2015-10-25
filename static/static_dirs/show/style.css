@@ -58,13 +58,7 @@
     vertical-align: top;
 }
 
-.profileimage{
-    min-width:40px;
-    min-height:150px;
-    background-size: 100%;
-    background-repeat: no-repeat;
-    margin-right:10px;
-}
+
 .30perc {
     width:30%;
 }
