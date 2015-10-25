@@ -136,6 +136,13 @@ h1{
     filter: progid: DXImageTransform.Microsoft.DropShadow(color=#b3000000, offX=0, offY=0)
 }
 
+@media screen and (max-width: 768px) {
+      h1 {
+            font-size: 20px;
+      }
+      
+}
+
 .white{
     color:white;
 }
