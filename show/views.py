@@ -10,19 +10,18 @@ import os.path
 
 
 def generate_pdf_view(request):
-    if not os.path.exists('static/static_dirs/show/pdf/%s.pdf' % request.GET.get('r', '')):
 
-        try:
-        # create an API client instance
-            client = pdfcrowd.Client("donfelicio", "c80838c2ded070c41bcf39c0a619c809")
-        
-            pdf = client.convertURI('http://saleskit.meetberlage.com/show?r=%s&u=%s' % (request.GET.get('r', ''),request.GET.get('u', '')))
-            with open('static/static_dirs/show/pdf/%s.pdf' % request.GET.get('r', ''), 'wb') as output_file:
-                output_file.write(pdf)
-    
-    
-        except pdfcrowd.Error, why:
-            print 'Failed:', why
+    try:
+    # create an API client instance
+        client = pdfcrowd.Client("donfelicio", "c80838c2ded070c41bcf39c0a619c809")
+        client.setPageWidth(1024)
+        pdf = client.convertURI('http://saleskit.meetberlage.com/show?r=%s&u=%s&pdf=yes' % (request.GET.get('r', ''),request.GET.get('u', '')))
+        with open('static/static_dirs/show/pdf/%s.pdf' % request.GET.get('r', ''), 'wb') as output_file:
+            output_file.write(pdf)
+
+
+    except pdfcrowd.Error, why:
+        print 'Failed:', why
 
 
 
@@ -116,9 +115,10 @@ def get_s2m_options(request, resid):
 def show(request):
         
     reservation = get_s2m_res(request)
-
-    p = Process(target=generate_pdf_view, args=(request,), name='create_pdf')
-    p.start()    
+    
+    if not os.path.exists('static/static_dirs/show/pdf/%s.pdf' % request.GET.get('r', '')):
+        p = Process(target=generate_pdf_view, args=(request,), name='create_pdf')
+        p.start()    
     
     context={
         'reservation': reservation,
@@ -129,7 +129,8 @@ def show(request):
         'meetingspaces': get_s2m_meetingspaces(request, reservation.get("LocationId")),
         'profile': get_s2m_profile(request),
         'location': get_s2m_address(request, reservation.get("LocationId")),
-        'options': strip_tags(get_s2m_options(request, reservation.get("Id")))
+        'options': strip_tags(get_s2m_options(request, reservation.get("Id"))),
+        'pdf': request.GET.get('pdf', '')
         }
     if reservation.get("TotalSeats") != 0:
         context['price_per_person'] = reservation.get("TotalExcl") / reservation.get("TotalSeats")
