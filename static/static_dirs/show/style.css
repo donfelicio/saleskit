@@ -5,8 +5,9 @@
     width:100%;
     background-size: 100%;
     min-height:470px;
+    word-wrap: normal;
     }
-    .black_overlay {
+.black_overlay {
     display: none;
     position: absolute;
     top: 0%;
@@ -129,7 +130,6 @@ body {
 h1{
     margin-left:auto;
     margin-right:auto;
-    width:850px;
     padding-top:50px;
     font-size:40px;
     text-shadow: 0 0 10px rgba(0, 0, 0, .7);*
