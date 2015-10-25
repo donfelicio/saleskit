@@ -13,7 +13,7 @@
         <p>We are so happy you have reached out to {{reservation.LocationName}} regarding your event: {{reservation.ReservationName}}.</p>
       <p></p><p>We offer a dynamic environment to work and meet, in a diverse range of spaces. Beside this, we offer you the opportunity to use our coworking spaces free of charge. This might just lead to a great unexpected encounter that will bring your meeting or event to the next level.</p>
       <p></p><p>Below, you'll find our offer for your event at {{startdate}}. The proposal is based on {{reservation.TotalSeats}} persons, and will show you the rooms and settings we have in mind for your event. 
-      <div class="col-md-2"><img style="max-width: 100px; margin-top:10px;" src="https://d3817ykd1rv0p7.cloudfront.net/{{profile.Image}}"></div>
+      <div class="col-md-2 profileimage" style="background-image: url('https://d3817ykd1rv0p7.cloudfront.net/{{profile.Image}}');"></div>
       <p>Kind regards,</p>
       <p>{{profile.FirstName|capfirst}} {{profile.LastName|capfirst}}</p>
       <p><a href="mailto:{{profile.Email}}">{{profile.Email}}</a></p>
