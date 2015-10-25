@@ -19,7 +19,7 @@
 
           <div class="accordion-section">
                <a class="accordion-section-title active" href="#accordion-{{reservation.res_id}}">
-                    #{{reservation.res_id}}
+                    #{{reservation.res_id}} 
                     {% if reservation.res_last_change_by != None %}
                     - Last change by: {{reservation.res_last_change_by}} from status '{{reservation.get_res_prev_status_display}}', {{days_last_change}} days ago
                     {% else %}
@@ -30,7 +30,9 @@
                </a>
                <div id="accordion-{{reservation.res_id}}" class="accordion-section-content open" style="display: block">
                     <p class="pull-right">
-                    <p><a href="https://www.seats2meet.com/locations/{{reservation.res_location_id}}/saleskit/manage/reservation/{{reservation.res_id}}" target="_blank">Go to reservation in Seats2meet.com: {{ reservation.res_id }}</a></p>
+                    <p><a href="https://www.seats2meet.com/locations/{{reservation.res_location_id}}/saleskit/manage/reservation/{{reservation.res_id}}" target="_blank">Go to reservation in Seats2meet.com: {{ reservation.res_id }}</a>
+                    <a href="/show?r={{reservation.res_id}}&u={{userprofile.user_key}}" target="_blank"><button class="btn btn-sm btn-primary">open offer</button></a>
+                    </p>
                     <table class="table">
                          <tr>
                               <td>Date:</td><td> {{reservation.res_date|date:'Y-m-d'}} - Meeting is in <b>{{days_to_res}} </b>days</td>
