@@ -40,17 +40,9 @@
       <h4>Additional options</h4>
       <hr>
       {% for Option in reservation.Options %}
-        {% for detail in options %}
-          {% if detail.OptionId == Option.OptionId %}
           <p>{{ Option.Amount }} x {{ Option.OptionName|capfirst }}: {{ Option.CurrencySymbol }}{{ Option.PriceTotalExclTax|floatformat:2}}
-          
-          {% if detail.OptionDescription != "" %}<button data-toggle="tooltip" title='{{ detail.OptionDescription|striptags }}'>Details</button>
-           
-          {% endif %}</p>
-         
+                   
           <p></p>
-          {% endif %}
-        {% endfor %} 
       {% endfor %} 
     </div>
 

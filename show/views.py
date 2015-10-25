@@ -71,21 +71,6 @@ def get_s2m_address(request, location):
     
     return r
 
-#get option details
-def get_s2m_options(request, resid):
-    url = 'http://www.seats2meet.com/api/reservation/wizard/options/%s' % resid
-    headers = {'content-type':'application/json'}
-    data = {
-    "ApiKey":14257895,
-    "ProfileKey":"6DE79403-D5EF-186C-9529-25ED04A66FD6",
-    "ReservationId": resid,
-    }
-      
-    r = requests.get(url, params=json.dumps(data), headers=headers)
-    r = json.loads(r.text)
-    
-    return r
-
 
 def show(request):
         
@@ -100,7 +85,6 @@ def show(request):
         'meetingspaces': get_s2m_meetingspaces(request, reservation.get("LocationId")),
         'profile': get_s2m_profile(request),
         'location': get_s2m_address(request, reservation.get("LocationId")),
-        'options': strip_tags(get_s2m_options(request, reservation.get("Id"))),
         }
     if reservation.get("TotalSeats") != 0:
         context['price_per_person'] = reservation.get("TotalExcl") / reservation.get("TotalSeats")
