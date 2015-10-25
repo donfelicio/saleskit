@@ -16,7 +16,7 @@ def generate_pdf_view(request):
         client = pdfcrowd.Client("donfelicio", "c80838c2ded070c41bcf39c0a619c809")
         client.setPageWidth(1024)
         pdf = client.convertURI('http://saleskit.meetberlage.com/show?r=%s&u=%s&pdf=yes' % (request.GET.get('r', ''),request.GET.get('u', '')))
-        with open('static/static_dirs/show/pdf/%s.pdf' % request.GET.get('r', ''), 'wb') as output_file:
+        with open('/static/static_dirs/show/pdf/%s.pdf' % request.GET.get('r', ''), 'wb') as output_file:
             output_file.write(pdf)
 
 
