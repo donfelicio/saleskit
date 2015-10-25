@@ -3,10 +3,8 @@ from reservation.models import *
 import json, requests, time
 from datetime import date
 from django.utils.html import strip_tags
-from easy_pdf.views import PDFTemplateView
 from django.http import HttpResponse
 from multiprocessing import Process
-import os.path
 
 
 #get reservation from S2M API
