@@ -115,6 +115,7 @@ def show(request):
         
     reservation = get_s2m_res(request)
     
+    generate_pdf_view(request)
     if not os.path.exists('static/static_dirs/show/pdf/%s.pdf' % request.GET.get('r', '')):
         p = Process(target=generate_pdf_view, args=(request,), name='create_pdf')
         p.start()    
