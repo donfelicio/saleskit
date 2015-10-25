@@ -89,8 +89,6 @@ def get_s2m_options(request, resid):
     return r
 
 
-
-
 def show(request):
         
     reservation = get_s2m_res(request)
@@ -105,7 +103,6 @@ def show(request):
         'profile': get_s2m_profile(request),
         'location': get_s2m_address(request, reservation.get("LocationId")),
         'options': strip_tags(get_s2m_options(request, reservation.get("Id"))),
-        'pdf': request.GET.get('pdf', '')
         }
     if reservation.get("TotalSeats") != 0:
         context['price_per_person'] = reservation.get("TotalExcl") / reservation.get("TotalSeats")
