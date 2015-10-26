@@ -31,7 +31,9 @@
                <div id="accordion-{{reservation.res_id}}" class="accordion-section-content open" style="display: block">
                     <p class="pull-right">
                     <p><a href="https://www.seats2meet.com/locations/{{reservation.res_location_id}}/saleskit/manage/reservation/{{reservation.res_id}}" target="_blank">Go to reservation in Seats2meet.com: {{ reservation.res_id }}</a>
-                    <a href="/show?r={{reservation.res_id}}&u={{userprofile.user_key}}" target="_blank"><button class="btn btn-sm btn-primary">open offer</button></a>
+                    <strong> | Offer site:</strong>
+                    <!--nl--><a href="/show?r={{reservation.res_id}}&u={{userprofile.user_key}}&lang=nl" target="_blank"><button class="btn btn-sm btn-primary">Nl</button></a>
+                    <!--en--><a href="/show?r={{reservation.res_id}}&u={{userprofile.user_key}}" target="_blank"><button class="btn btn-sm btn-primary">Eng</button></a>
                     </p>
                     <table class="table">
                          <tr>

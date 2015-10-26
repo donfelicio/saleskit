@@ -6,7 +6,6 @@ from django.utils.html import strip_tags
 from django.http import HttpResponse
 from multiprocessing import Process
 
-
 #get reservation from S2M API
 def get_s2m_res(request):
     url = 'http://www.seats2meet.com/api/reservation//%s' % request.GET.get('r', '')
@@ -72,7 +71,9 @@ def get_s2m_address(request, location):
     return r
 
 
-def show(request):
+def show(request):    
+    # default to your native language
+    request.session['lang'] = request.GET.get('lang', 'en')
         
     reservation = get_s2m_res(request)
     

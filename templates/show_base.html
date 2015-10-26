@@ -9,9 +9,11 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="icon" href="../../favicon.ico">
-
-    <title>Your reservation</title>    
-
+    {% if request.session.lang == "nl" %} <!-- if lang is dutch -->
+    <title>Je reservering bij Seats2meet.com</title>   
+    {% else %} <!-- if lang is dutch -->
+    <title>Your reservation with Seats2meet.com</title>   
+    {% endif %}
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="static/show/bootstrap/css/bootstrap.min.css">
     
