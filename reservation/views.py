@@ -40,7 +40,6 @@ def loadpage(request):
          else:
             sales_status = '1'
 
-      
       #if the res with s2m is cancelled, make the sales status a failure
       if reservation.get("StatusId") == 3:
          sales_status = '9'
@@ -90,35 +89,32 @@ def loadpage(request):
 
 
 
-def create_locationlist(request):
-   time.sleep(1)
-   res_status = Userprofile.objects.get(user_name=request.user.username)
+def create_locationlist(request,userprofile, locationlist):
    
-   if res_status.loc_updated != 'busy' and res_status.loc_updated != 'done':
+   if userprofile.loc_updated != 'busy' and userprofile.loc_updated != 'done':
       #set DB userprofile res_updated to 'busy'
       instance = Userprofile.objects.get(user_name=request.user.username)
       instance.loc_updated = 'busy'
       instance.save()
-    
-      locationlist = s2m_locationlist() #get all locations to check if a user is allowed in list
+      
+      #get all locations to check if a user is allowed in list
       for location in locationlist:
          print location.get("Id")
-         url = 'https://www.seats2meet.com/api/accounts/hasaccess/%s/%s' % (location.get("Id"), Userprofile.objects.get(user_name=request.user.username).user_key)
-         headers = {'content-type':'application/json', 'Connection':'close'}
+         url = 'https://www.seats2meet.com/api/accounts/hasaccess/%s/%s' % (location.get("Id"), userprofile.user_key)
+         headers = {'content-type':'application/json'}
          data = {}
      
          r = requests.get(url, data=json.dumps(data), headers=headers)
          r = json.loads(r.text)
          if r:
-             
-          # if true, put it to the db.
-            Userlocation.objects.get_or_create(location_id=location.get("Id"), user_name=request.user.username, location_name=location.get("Name"))
+          # if true, add to the list
+            Userlocation.objects.get_or_create(location_id=location.get("Id"), user_name=userprofile.user_name, location_name=location.get("Name"))
    
       #set DB userprofile res_updated to 'done'
       instance = Userprofile.objects.get(user_name=request.user.username)
       instance.loc_updated = 'done'
       instance.save()
-
+      
 
 def home(request):
    
@@ -166,22 +162,22 @@ def home(request):
          form.save()
    
    
-  
-   if request.user.username: #if user is logged in
-      uprofile =  Userprofile.objects.get(user_name=request.user.username)      
+   if request.user.username: #if user is logged in      
       #check if it's the same day as last_login, otherwise checkout
-      if uprofile.last_login != datetime.date.today():
+      if Userprofile.objects.get(user_name=request.user.username).last_login != datetime.date.today():
          return redirect('/logout')
       
       #maak nu de locationlist terwijl de gebruiker wacht
       
-      if uprofile.loc_updated == 'no':
-         #p = Process(target=create_locationlist, args=(request,), name='create_locationlist')
-         #p.start()
-         create_locationlist(request)
+      if Userprofile.objects.get(user_name=request.user.username).loc_updated == 'no':
+
+         p = Process(target=create_locationlist, args=(request, Userprofile.objects.get(user_name=request.user.username),s2m_locationlist()))
+         p.start()
+         p.join()
+         #create_locationlist(request, Userprofile.objects.get(user_name=request.user.username))
          time.sleep(1)
       #als geen actieve locatie, dan laten kiezen
-      if uprofile.active_location == 'False':
+      if Userprofile.objects.get(user_name=request.user.username).active_location == 'False':
          context = {
             'locationlist': Userlocation.objects.all().filter(user_name=request.user.username),
             'userprofile': Userprofile.objects.get(user_name=request.user.username)
@@ -224,8 +220,7 @@ def home(request):
          context['days_last_change'] = getattr(datetime.date.today() - reservation.res_last_change_date, "days")
          context['days_to_res'] = getattr(reservation.res_date - datetime.date.today(), "days")
          
-      
-      
+         
       template = 'home.html'
       return render(request, template, context)
    

@@ -106,7 +106,7 @@ def s2m_login(request):
 def s2m_locationlist():
     
     url = 'https://www.seats2meet.com/api/locations'
-    headers = {'content-type':'application/json', 'Connection':'close'}
+    headers = {'content-type':'application/json'}
     data = {
     "ApiKey":14257895,
     "ProfileKey":"6DE79403-D5EF-186C-9529-25ED04A66FD6",
