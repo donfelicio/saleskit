@@ -40,6 +40,8 @@ class Statuscode(models.Model):
     status_code = models.CharField(max_length = 255)
     description = models.CharField(max_length = 255)
     description_short = models.CharField(max_length = 255)
+    class Meta:
+        ordering = ['status_code']
 
 class Userlocation(models.Model):
     location_id = models.CharField(max_length = 255, null=True)
