@@ -118,7 +118,7 @@
       <a href="mailto:{{location.Email}}"><p>{{location.Email}}</p></a>
       <p>{{location.City}}</p>
       <p>Rated: {{location.ReviewScore|floatformat:0}} out of 100 by {{location.ReviewCount|floatformat:0}} people</p>
-      <a href="{{location.Url}}" target="_blank">
+      <a href="http://{{location.Url}}" target="_blank">
         <button class="btn btn-primary">Check out location</button></a>
       <a href="https://www.google.com/maps/place/{{location.Address}}+{{location.Zipcode}}+{{location.City}}" target="_blank">
         <button class="btn btn-primary">Directions</button>
