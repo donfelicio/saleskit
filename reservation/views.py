@@ -6,7 +6,6 @@ from .s2m import *
 from .dicts import *
 from django.http import *
 import time
-from django.db import connection
 
 
 #some filters for later views    
@@ -86,7 +85,6 @@ def loadpage(request):
    instance = Userprofile.objects.get(user_name=request.user.username)
    instance.res_updated = 'done'
    instance.save()
-   connection.close()
    return redirect('/')
 
 
@@ -94,7 +92,6 @@ def loadpage(request):
 
 
 def create_locationlist(request):
-   connection.close()
    res_status = Userprofile.objects.get(user_name=request.user.username)
    
    if res_status.loc_updated != 'busy' and res_status.loc_updated != 'done':
@@ -121,11 +118,9 @@ def create_locationlist(request):
       instance = Userprofile.objects.get(user_name=request.user.username)
       instance.loc_updated = 'done'
       instance.save()
-      connection.close()
 
 
 def home(request):
-   connection.close()
    
    #load this if user is logged in and set some empty stuff for later if it isn't used
    no_res = True
@@ -190,7 +185,6 @@ def home(request):
             'userprofile': Userprofile.objects.get(user_name=request.user.username)
                     }
          template = 'select.html'
-         connection.close()
          return render(request, template, context)
 
 
@@ -231,13 +225,11 @@ def home(request):
       
       
       template = 'home.html'
-      connection.close()
       return render(request, template, context)
    
    #if loggedout   
    context = {}
    template = 'home.html'
-   connection.close()
    return render(request, template, context)
 
 def help(request):
@@ -251,11 +243,8 @@ def logout(request):
    instance.res_updated = 'done'
    instance.save()
    request.session.flush()
-   connection.close()
    return redirect('/')
 
 def login(request):
-   connection.close()
    s2m_login(request)
-   connection.close()
    return redirect('/')
