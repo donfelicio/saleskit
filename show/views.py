@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from reservation.models import *
-import json, requests, time
+import json, requests, time, datetime
 from datetime import date
 from django.utils.html import strip_tags
 from django.http import HttpResponse
@@ -76,12 +76,16 @@ def show(request):
     request.session['lang'] = request.GET.get('lang', 'en')
         
     reservation = get_s2m_res(request)
+    offer_duration = datetime.datetime.strptime(str(reservation.get("CreatedOn").split("T")[0]), '%Y-%m-%d') + datetime.timedelta(days=14)
+    startdate = datetime.datetime.strptime(str(reservation.get("StartTime").split("T")[0]), '%Y-%m-%d')
+    enddate =  datetime.datetime.strptime(str(reservation.get("EndTime").split("T")[0]), '%Y-%m-%d')
     
     context={
         'reservation': reservation,
-        'startdate': reservation.get("StartTime").split("T")[0],
+        'startdate': startdate.strftime('%d-%b-%Y'),
+        'offer_duration': offer_duration.strftime('%d-%b-%Y'), 
         'starttime': "%s:%s" % (reservation.get("StartTime").split("T")[1].split(':')[0], reservation.get("StartTime").split("T")[1].split(':')[1]),
-        'enddate': reservation.get("EndTime").split("T")[0],
+        'enddate': enddate.strftime('%d-%b-%Y'),
         'endtime':  "%s:%s" % (reservation.get("EndTime").split("T")[1].split(':')[0], reservation.get("EndTime").split("T")[1].split(':')[1]),
         'meetingspaces': get_s2m_meetingspaces(request, reservation.get("LocationId")),
         'profile': get_s2m_profile(request),
