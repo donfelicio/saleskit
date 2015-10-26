@@ -177,13 +177,11 @@ def home(request):
          return redirect('/logout')
       
       #maak nu de locationlist terwijl de gebruiker wacht
-      connection.close()
       if Userprofile.objects.get(user_name=request.user.username).loc_updated == 'no':
          p = Process(target=create_locationlist, args=(request,), name='create_locationlist')
          p.start()
          time.sleep(1)
       #als geen actieve locatie, dan laten kiezen
-      connection.close()
       if Userprofile.objects.get(user_name=request.user.username).active_location == 'False':
          context = {
             'locationlist': Userlocation.objects.all().filter(user_name=request.user.username),
