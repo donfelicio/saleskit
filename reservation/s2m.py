@@ -22,7 +22,7 @@ def get_s2m_res(request): #you should only do this in background, or when user p
    while rowsleft != 0:
    #!!!PRINT NOG DUBBEL, maar alleen bij tweede run. alleen in zelfde browser na refresh van /load. zal wel request onthouden. 
       url = 'http://www.seats2meet.com/api/reservation/location/%s' % get_location_id(request)
-      headers = {'content-type':'application/json'}
+      headers = {'content-type':'application/json', 'Connection':'close'}
       data = {
       "ApiKey":14257895,
       "ProfileKey":"6DE79403-D5EF-186C-9529-25ED04A66FD6",
@@ -58,7 +58,7 @@ def get_s2m_res(request): #you should only do this in background, or when user p
 def s2m_login(request):
    today = datetime.date.today()
    url = 'https://www.seats2meet.com/api/login'
-   headers = {'content-type':'application/json'}
+   headers = {'content-type':'application/json', 'Connection':'close'}
    data = {
    "ApiKey":14257895,
    "ProfileKey":"6DE79403-D5EF-186C-9529-25ED04A66FD6",
@@ -106,7 +106,7 @@ def s2m_login(request):
 def s2m_locationlist():
     
     url = 'https://www.seats2meet.com/api/locations'
-    headers = {'content-type':'application/json'}
+    headers = {'content-type':'application/json', 'Connection':'close'}
     data = {
     "ApiKey":14257895,
     "ProfileKey":"6DE79403-D5EF-186C-9529-25ED04A66FD6",

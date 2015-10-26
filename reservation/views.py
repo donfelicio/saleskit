@@ -104,7 +104,7 @@ def create_locationlist(request):
       for location in locationlist:
          print location.get("Id")
          url = 'https://www.seats2meet.com/api/accounts/hasaccess/%s/%s' % (location.get("Id"), Userprofile.objects.get(user_name=request.user.username).user_key)
-         headers = {'content-type':'application/json'}
+         headers = {'content-type':'application/json', 'Connection':'close'}
          data = {}
      
          r = requests.get(url, data=json.dumps(data), headers=headers)
