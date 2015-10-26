@@ -29,7 +29,7 @@ def get_s2m_meetingspaces(request, location):
     "locationId": location,
     "ApiKey":14257895,
     "AuthorizedProfileKey":"6DE79403-D5EF-186C-9529-25ED04A66FD6",
-    "LanguageId": 3,
+    "LanguageId": 65,
     "SearchTerm": "",
     "Page": 1,
     "ItemsPerPage": 50
