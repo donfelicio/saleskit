@@ -13,7 +13,7 @@
         <p></p><p><h1 class="white">JE ONTMOET ELKAAR BIJ SEATS2MEET.COM</h1></p>
         <div class="widget">Beste {{reservation.ProfileName|capfirst}},
         <p>Wat fijn dat je aan {{reservation.LocationName}} denkt voor je meeting of event: {{reservation.ReservationName}}.</p>
-      <p><p>{{intro_text}}</p></p>
+      <p><p>{% if intro_text != None %}{{intro_text}} {% endif %}</p></p>
       <p></p><p>We bieden een dynamische omgeving waar je kunt werken en ontmoeten, met een diverse keuze aan ruimtes. Hiernaast bieden we de mogelijkheid om onze coworking space kosteloos te gebruiken. De kans op onverwachtte relevante ontmoetingen is hier groot, wat een geweldige bijdrage kan leveren aan je meeting of event.</p>
       <p></p><p>Hieronder vind je ons aanbod voor de bijeenkomst op {{startdate}}. Het voorstel is gebaseerd op {{reservation.TotalSeats}} personen, en zal je de ruimtes, opties en verdere setup voor je bijeenkomst toelichten. Dit aanbod is geldig t/m: {{offer_duration}}
       <div class="col-md-2"><img style="max-width: 100px; margin-top:10px;" src="https://d3817ykd1rv0p7.cloudfront.net/{{profile.Image}}"></div>
@@ -149,7 +149,7 @@
         <p></p><p><h1 class="white">YOU MEET EACH OTHER AT SEATS2MEET.COM</h1></p>
         <div class="widget">Dear {{reservation.ProfileName|capfirst}},
         <p>We are so happy you have reached out to {{reservation.LocationName}} regarding your event: {{reservation.ReservationName}}.</p>
-      <p><p>{{intro_text}}</p></p>
+      <p><p>{% if intro_text != None %}{{intro_text}} {% endif %}</p></p>
       <p></p><p>We offer a dynamic environment to work and meet, in a diverse range of spaces. Beside this, we offer you the opportunity to use our coworking spaces free of charge. This might just lead to a great unexpected encounter that will bring your meeting or event to the next level.</p>
       <p></p><p>Below, you'll find our offer for your event at {{startdate}}. The proposal is based on {{reservation.TotalSeats}} persons, and will show you the rooms and settings we have in mind for your event. This offer is valid until: {{offer_duration}}
       <div class="col-md-2"><img style="max-width: 100px; margin-top:10px;" src="https://d3817ykd1rv0p7.cloudfront.net/{{profile.Image}}"></div>
