@@ -179,7 +179,7 @@ def home(request):
       
       #maak nu de locationlist terwijl de gebruiker wacht
       uprofile =  Userprofile.objects.get(user_name=request.user.username)
-      if uprofil.loc_updated == 'no':
+      if uprofile.loc_updated == 'no':
          p = Process(target=create_locationlist, args=(request,), name='create_locationlist')
          p.start()
          time.sleep(1)
