@@ -19,7 +19,6 @@ def filter_res_status_sales_9(element):
    
 #the loading page that gets and updates all reservations from s2m
 def loadpage(request):
-   connection.close()
    
    #set DB userprofile res_updated to 'busy'
    instance = Userprofile.objects.get(user_name=request.user.username)
@@ -87,7 +86,7 @@ def loadpage(request):
    instance = Userprofile.objects.get(user_name=request.user.username)
    instance.res_updated = 'done'
    instance.save()
-   
+   connection.close()
    return redirect('/')
 
 
@@ -122,6 +121,7 @@ def create_locationlist(request):
       instance = Userprofile.objects.get(user_name=request.user.username)
       instance.loc_updated = 'done'
       instance.save()
+      connection.close()
 
 
 def home(request):
@@ -150,6 +150,7 @@ def home(request):
       p = Process(target=loadpage, args=(request,), name='res_loader')
       p.start()
       
+      
    
    #when a user clicks 'next', save the items's last change date as today 
    if request.method == 'POST' and 'hide_days' in request.POST:
@@ -177,7 +178,6 @@ def home(request):
          return redirect('/logout')
       
       #maak nu de locationlist terwijl de gebruiker wacht
-      time.sleep(1)
       if Userprofile.objects.get(user_name=request.user.username).loc_updated == 'no':
          p = Process(target=create_locationlist, args=(request,), name='create_locationlist')
          p.start()
@@ -189,7 +189,7 @@ def home(request):
             'userprofile': Userprofile.objects.get(user_name=request.user.username)
                     }
          template = 'select.html'
-         
+         connection.close()
          return render(request, template, context)
 
 
@@ -229,12 +229,14 @@ def home(request):
          
       
       
-      template = 'home.html'   
+      template = 'home.html'
+      connection.close()
       return render(request, template, context)
    
    #if loggedout   
    context = {}
-   template = 'home.html'   
+   template = 'home.html'
+   connection.close()
    return render(request, template, context)
 
 def help(request):
@@ -243,15 +245,16 @@ def help(request):
    return render(request, template, context)
 
 def logout(request):
-   connection.close()
    instance = Userprofile.objects.get(user_name=request.user.username)
    instance.active_location = False
    instance.res_updated = 'done'
    instance.save()
    request.session.flush()
+   connection.close()
    return redirect('/')
 
 def login(request):
    connection.close()
    s2m_login(request)
+   connection.close()
    return redirect('/')

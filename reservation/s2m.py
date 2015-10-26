@@ -52,6 +52,7 @@ def get_s2m_res(request): #you should only do this in background, or when user p
       for var in r[:1]:
          rowsleft = var.get("MoreRows")
          print rowsleft
+   connection.close()
    return results
 
    
@@ -101,6 +102,7 @@ def s2m_login(request):
          #and create login log instance
          Loginlog.objects.create(user_name=request.user.username)
    else:
+      connection.close()
       return redirect('/')
       
 
@@ -115,6 +117,7 @@ def s2m_locationlist():
     
     r = requests.post(url, data=json.dumps(data), headers=headers)
     r = json.loads(r.text)
+    connection.close()
     return r
    
 
