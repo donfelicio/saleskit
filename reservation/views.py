@@ -186,7 +186,7 @@ def home(request):
       connection.close()
       if Userprofile.objects.get(user_name=request.user.username).active_location == 'False':
          context = {
-            'locationlist': Userlocation.objects.all().filter(user_name=Userprofile.objects.get(user_name=request.user.username)),
+            'locationlist': Userlocation.objects.all().filter(user_name=request.user.username),
             'userprofile': Userprofile.objects.get(user_name=request.user.username)
                     }
          template = 'select.html'
