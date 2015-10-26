@@ -172,19 +172,19 @@ def home(request):
    
   
    if request.user.username: #if user is logged in
-            
+      uprofile =  Userprofile.objects.get(user_name=request.user.username)      
       #check if it's the same day as last_login, otherwise checkout
-      if Userprofile.objects.get(user_name=request.user.username).last_login != datetime.date.today():
+      if uprofile.last_login != datetime.date.today():
          return redirect('/logout')
       
       #maak nu de locationlist terwijl de gebruiker wacht
-      uprofile =  Userprofile.objects.get(user_name=request.user.username)
+      
       if uprofile.loc_updated == 'no':
          p = Process(target=create_locationlist, args=(request,), name='create_locationlist')
          p.start()
          time.sleep(1)
       #als geen actieve locatie, dan laten kiezen
-      if Userprofile.objects.get(user_name=request.user.username).active_location == 'False':
+      if uprofile.active_location == 'False':
          context = {
             'locationlist': Userlocation.objects.all().filter(user_name=request.user.username),
             'userprofile': Userprofile.objects.get(user_name=request.user.username)
