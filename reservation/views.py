@@ -137,6 +137,7 @@ def home(request):
    #If user has selected a location when he has access to multiple, save the active_location now
    if request.method == 'POST' and 'location_id' in request.POST:
       
+      
       #if needed create and always update active location.
       instance, created = Userprofile.objects.get_or_create(user_name=request.user.username)
       instance.active_location=request.POST['location_id']
@@ -144,6 +145,7 @@ def home(request):
       
       p = Process(target=loadpage, args=(request,), name='res_loader')
       p.start()
+      return redirect('/')
       
       
    
