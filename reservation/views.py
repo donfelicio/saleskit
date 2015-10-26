@@ -116,7 +116,7 @@ def create_locationlist(request):
          if r:
              
           # if true, put it to the db.
-            Userlocation.objects.get_or_create(location_id=location.get("Id"), user_name=Userprofile.objects.get(user_name=request.user.username), location_name=location.get("Name"))
+            Userlocation.objects.get_or_create(location_id=location.get("Id"), user_name=request.user.username, location_name=location.get("Name"))
    
       #set DB userprofile res_updated to 'done'
       instance = Userprofile.objects.get(user_name=request.user.username)
