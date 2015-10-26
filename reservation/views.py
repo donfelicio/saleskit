@@ -139,7 +139,7 @@ def home(request):
       instance.active_location=request.POST['location_id']
       instance.save()
       
-      p = Process(target=loadpage, args=(request))
+      p = Process(target=loadpage, args=(request,))
       p.start()
       p.join()
       return redirect('/')
