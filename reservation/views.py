@@ -6,6 +6,7 @@ from .s2m import *
 from .dicts import *
 from django.http import *
 import time
+from threading import Thread
 
 
 #some filters for later views    
@@ -173,9 +174,11 @@ def home(request):
       
       if Userprofile.objects.get(user_name=request.user.username).loc_updated == 'no':
 
-         p = Process(target=create_locationlist, args=(request, Userprofile.objects.get(user_name=request.user.username),s2m_locationlist()))
+         p = Thread(target=create_locationlist, args=(request, Userprofile.objects.get(user_name=request.user.username),s2m_locationlist()))
+         p.daemon = True
          p.start()
-         p.join()
+         time.sleep(1)
+         #p.join()
          #create_locationlist(request, Userprofile.objects.get(user_name=request.user.username))
 
       #als geen actieve locatie, dan laten kiezen
