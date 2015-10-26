@@ -139,7 +139,9 @@ def home(request):
       instance.active_location=request.POST['location_id']
       instance.save()
       
-      loadpage(request)
+      p = Process(target=loadpage, args=(request))
+      p.start()
+      p.join()
       return redirect('/')
       
       
@@ -175,7 +177,7 @@ def home(request):
          p.start()
          p.join()
          #create_locationlist(request, Userprofile.objects.get(user_name=request.user.username))
-         time.sleep(1)
+
       #als geen actieve locatie, dan laten kiezen
       if Userprofile.objects.get(user_name=request.user.username).active_location == 'False':
          context = {
