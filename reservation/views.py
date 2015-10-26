@@ -35,7 +35,7 @@ def loadpage(request):
       
       sales_status = '1'
       #HIER! firstrun werkt niet
-      if ran_before == 'no':
+      if ran_before == 'not':
          
          #if the res with s2m is final, make the sales status a success
          if reservation.get("StatusId") == 2:
@@ -176,7 +176,7 @@ def home(request):
       
       #maak nu de locationlist terwijl de gebruiker wacht
       
-      if uprofile.loc_updated == 'no':
+      if uprofile.loc_updated == 'not':
          p = Process(target=create_locationlist, args=(request,), name='create_locationlist')
          p.start()
          time.sleep(1)
