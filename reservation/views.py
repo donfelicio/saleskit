@@ -177,6 +177,7 @@ def home(request):
          return redirect('/logout')
       
       #maak nu de locationlist terwijl de gebruiker wacht
+      time.sleep(1)
       if Userprofile.objects.get(user_name=request.user.username).loc_updated == 'no':
          p = Process(target=create_locationlist, args=(request,), name='create_locationlist')
          p.start()
