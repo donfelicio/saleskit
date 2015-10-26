@@ -44,7 +44,7 @@
                          <tr><td>Offer Site</td><td>
                     <!--nl--><a href="/show?r={{reservation.res_id}}&u={{userprofile.user_key}}&lang=nl" target="_blank"><button class="btn btn-primary">Nl</button></a>
                     <!--en--><a href="/show?r={{reservation.res_id}}&u={{userprofile.user_key}}" target="_blank"><button class="btn btn-primary">Eng</button></a>
-                    <!--intro--><a href="res_input?res_id={{reservation.res_id}}"<button class="btn btn-primary">Add intro text</button></a></td></tr>
+                    <!--intro--><a href="res_input?res_id={{reservation.res_id}}"<button class="btn {% if reservation.res_intro != '' %}btn-success {% else %} btn-primary {% endif %}">Add intro text</button></a></td></tr>
                     </table>
                     
           <div class="col-md-5 col-md-offset-3">
