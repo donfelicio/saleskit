@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+     
+    {% block content %}     <!-- show page content --->
+
+ {% if user.is_authenticated %}
+ 
+ <p>Dear ..Name..,</p>
+ <p>We are so happy you have reached out to ..Location.. regarding your event: ..name of event...</p>
+ 
+ <form action="" method="post">{% csrf_token %}
+   <p><textarea name="res_intro" placeholder="Your personal intro text." rows="10" cols="80">{{res_intro}}</textarea></p>
+   <p><input type="hidden" name="res_id" value="{{res_id}}"></p>
+   <button type="submit">Save</button>
+ </form>
+ 
+ <p>We offer a dynamic environment to work and meet, in a diverse range of spaces.</p>
+ <p>Beside this, we offer you the opportunity to use our coworking spaces free of charge.</p>
+ <p>This might just lead to a great unexpected encounter that will bring your meeting or event to the next level.</p>
+ <p>etc.etc.etc.</p>
+{% endif %}
+   
+    {% endblock %}     <!-- end page content -->
+

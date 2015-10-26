@@ -3,11 +3,9 @@
 offerte pagina met download pdf header zonder prijzen voor klanten van klant
 - Persoonlijke inleiding
 
-
 ---CRON----
 update all reservations every hour
 you should check user's allowed access location list every night or so if they have new locations
-
 
 ----USER input----
 elise: Waar we vooral behoefte hebben aan zoiets is als er veel subzalen zijn.
@@ -17,8 +15,6 @@ elise: Waar we vooral behoefte hebben aan zoiets is als er veel subzalen zijn.
 
 
 -------wannahaves
-<1 uur>pro-actieve leads list, hele systeem is nu reactief obv reserveringen. Simpele lijst met naam, organisatie, status (tekst). Tot aan moment dat de lead een reservering wordt of failed is. 
-
 (last-try: API returnt nix)<1 uur>medewerker aan res koppelen, en laten zien van wie die is? iedereen zien alles wel langskomen. als berend jan iets skipt dat van sharon is, ziet hij hem de volgende dag gewoon weer, sharon ziet hem nog wel op de dag zelf... 
 use https://www.seats2meet.com/Help/Api/POST-api-reservation-log-reservationId to get who created it, and all edits...
 show 'revisions' to see who sent that offer...

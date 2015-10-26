@@ -240,6 +240,23 @@ def help(request):
    template = 'help.html'   
    return render(request, template, context)
 
+def res_input(request):
+   #if form is saved, save to db
+   if request.method == 'POST' and 'res_id' in request.POST:
+      
+      #if needed create and always update active location.
+      instance = Reservation.objects.get(res_id=request.POST['res_id'])
+      instance.res_intro=request.POST['res_intro']
+      instance.save()
+      return redirect('/')
+   
+   context={
+      'res_id':request.GET.get('res_id', ''),
+      'res_intro':Reservation.objects.get(res_id=request.GET.get('res_id', '')).res_intro
+     }
+   template="res_input.html"
+   return render(request, template, context)
+
 def logout(request):
    instance = Userprofile.objects.get(user_name=request.user.username)
    instance.active_location = False

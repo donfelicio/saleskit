@@ -42,9 +42,9 @@
                          <tr><td>Seats:</td><td> {{reservation.res_total_seats}}pax</td></tr>
                          <tr><td>S2M status:</td><td> {{reservation.get_res_status_display}}</td></tr>
                          <tr><td>Offer Site</td><td>
-                    <!--nl--><a href="/show?r={{reservation.res_id}}&u={{userprofile.user_key}}&lang=nl" target="_blank"><button class="btn btn-sm btn-primary">Nl</button></a>
-                    <!--en--><a href="/show?r={{reservation.res_id}}&u={{userprofile.user_key}}" target="_blank"><button class="btn btn-sm btn-primary">Eng</button></a>
-                         </td></tr>
+                    <!--nl--><a href="/show?r={{reservation.res_id}}&u={{userprofile.user_key}}&lang=nl" target="_blank"><button class="btn btn-primary">Nl</button></a>
+                    <!--en--><a href="/show?r={{reservation.res_id}}&u={{userprofile.user_key}}" target="_blank"><button class="btn btn-primary">Eng</button></a>
+                    <!--intro--><a href="res_input?res_id={{reservation.res_id}}"<button class="btn btn-primary">Add intro text</button></a></td></tr>
                     </table>
                     
           <div class="col-md-5 col-md-offset-3">

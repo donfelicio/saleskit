@@ -82,6 +82,7 @@ def show(request):
     
     context={
         'reservation': reservation,
+        'intro_text': Reservation.objects.get(res_id=reservation.get("Id")).res_intro,
         'startdate': startdate.strftime('%d-%b-%Y'),
         'offer_duration': offer_duration.strftime('%d-%b-%Y'), 
         'starttime': "%s:%s" % (reservation.get("StartTime").split("T")[1].split(':')[0], reservation.get("StartTime").split("T")[1].split(':')[1]),
@@ -96,3 +97,4 @@ def show(request):
 
     template="show.html"
     return render(request, template, context)
+
