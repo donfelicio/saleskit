@@ -33,21 +33,20 @@ def loadpage(request):
       res_date_split = reservation.get("StartTime").split("T")
       #now poor into model and save
       
-      sales_status = '1'
-      #HIER! firstrun werkt niet
-      if ran_before == 'not':
-         
+      if ran_before == 'no':
          #if the res with s2m is final, make the sales status a success
          if reservation.get("StatusId") == 2:
             sales_status = '8'
          else:
-            pass
+            sales_status = '1'
+
       
       #if the res with s2m is cancelled, make the sales status a failure
       if reservation.get("StatusId") == 3:
          sales_status = '9'
       else:
          pass
+
 
          
       #now check if the reservation already exists
@@ -92,6 +91,7 @@ def loadpage(request):
 
 
 def create_locationlist(request):
+   time.sleep(1)
    res_status = Userprofile.objects.get(user_name=request.user.username)
    
    if res_status.loc_updated != 'busy' and res_status.loc_updated != 'done':
@@ -143,8 +143,7 @@ def home(request):
       instance.active_location=request.POST['location_id']
       instance.save()
       
-      p = Process(target=loadpage, args=(request,), name='res_loader')
-      p.start()
+      loadpage(request)
       return redirect('/')
       
       
@@ -176,9 +175,10 @@ def home(request):
       
       #maak nu de locationlist terwijl de gebruiker wacht
       
-      if uprofile.loc_updated == 'not':
-         p = Process(target=create_locationlist, args=(request,), name='create_locationlist')
-         p.start()
+      if uprofile.loc_updated == 'no':
+         #p = Process(target=create_locationlist, args=(request,), name='create_locationlist')
+         #p.start()
+         create_locationlist(request)
          time.sleep(1)
       #als geen actieve locatie, dan laten kiezen
       if uprofile.active_location == 'False':
