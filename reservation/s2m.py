@@ -25,7 +25,7 @@ def get_s2m_res(request): #you should only do this in background, or when user p
       headers = {'content-type':'application/json', 'Connection':'close'}
       data = {
       "ApiKey":14257895,
-      "ProfileKey":"6DE79403-D5EF-186C-9529-25ED04A66FD6",
+      "ProfileKey":Userprofile.objects.get(user_name=request.user.username).user_key,
       "ChannelId":0,
       "ProfileId":0,
       "CompanyId":0,
@@ -43,6 +43,7 @@ def get_s2m_res(request): #you should only do this in background, or when user p
       }
       
       r = requests.get(url, params=json.dumps(data), headers=headers)
+      print r
       r = json.loads(r.text)
       results.extend(r)
       #up page 1
