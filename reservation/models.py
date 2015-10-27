@@ -64,6 +64,6 @@ class Reservationfilter(models.Model):
     
 class Loginlog(models.Model):
     user_name = models.CharField(max_length = 255, null=True)
-    login_date = models.DateField(auto_now=True, null=True)
+    login_date = models.DateTimeField(auto_now=True, null=True)
     
     
