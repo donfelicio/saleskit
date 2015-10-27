@@ -43,7 +43,6 @@ def get_s2m_res(request): #you should only do this in background, or when user p
       }
       
       r = requests.get(url, params=json.dumps(data), headers=headers)
-      print r
       r = json.loads(r.text)
       results.extend(r)
       #up page 1

@@ -5,7 +5,7 @@ from .models import *
 
 
 class Reservationadmin(admin.ModelAdmin):
-    list_display = ['res_id', 'res_user', 'res_date', 'res_date_created', 'res_status_sales']
+    list_display = ['res_id', 'res_user', 'res_date', 'res_location_id', 'res_date_created', 'res_status_sales']
     class Meta:
         model = Reservation
         

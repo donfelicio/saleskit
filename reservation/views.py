@@ -38,15 +38,14 @@ def loadpage(request):
          #if the res with s2m is final, make the sales status a success
          if reservation.get("StatusId") == 2:
             sales_status = '8'
-         else:
+         if reservation.get("StatusId") == 1:
             sales_status = '1'
 
       #if the res with s2m is cancelled, make the sales status a failure
       if reservation.get("StatusId") == 3:
          sales_status = '9'
-      else:
-         pass
-
+      if reservation.get("StatusId") == 1:
+         sales_status = '1'
 
          
       #now check if the reservation already exists
