@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+     
+    {% block content %}     <!-- show page content --->
+    {% for invoice in invoices %}
+    <div class="row">
+    <p>{{ invoice.Id }} - {{ invoice.AmountOpen }}</p>
+    </div>
+
+    {% endfor %}
+    {% endblock %}     <!-- end page content -->

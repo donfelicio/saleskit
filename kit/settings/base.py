@@ -39,6 +39,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'reservation',
     'show',
+    'invoice',
 )
 
 MIDDLEWARE_CLASSES = (

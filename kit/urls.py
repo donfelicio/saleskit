@@ -26,6 +26,8 @@ urlpatterns = [
     url(r'^login', 'reservation.views.login', name='login'),
     url(r'^load/', 'reservation.views.loadpage', name='load'),
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^invoice', 'invoice.views.home', name='invoice'),
+
 ]
 
 urlpatterns += staticfiles_urlpatterns()

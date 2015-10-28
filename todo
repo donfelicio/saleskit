@@ -1,5 +1,11 @@
 ---met prio top to bottom:
 
+auto-invoicing afmaken
+onder controle: https://www.seats2meet.com/Help/Api/GET-api-invoices-location-locationId
+versturen: https://www.seats2meet.com/Help/Api/POST-api-invoices-sendmail
+mailtext erbij halen; https://www.seats2meet.com/Help/Api/POST-api-invoices-mailtext
+
+
 
 ---CRON----
 update all reservations every hour

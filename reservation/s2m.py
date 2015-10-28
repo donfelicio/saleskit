@@ -19,7 +19,7 @@ def get_s2m_res(request): #you should only do this in background, or when user p
    page = 1 #!!!!change to 1 after testen
    rowsleft = 100000 #must define but can't be zero:)
    results=[]
-   while rowsleft != 0:
+   while rowsleft > 0:
    #!!!PRINT NOG DUBBEL, maar alleen bij tweede run. alleen in zelfde browser na refresh van /load. zal wel request onthouden. 
       url = 'http://www.seats2meet.com/api/reservation/location/%s' % get_location_id(request)
       headers = {'content-type':'application/json', 'Connection':'close'}
@@ -48,9 +48,13 @@ def get_s2m_res(request): #you should only do this in background, or when user p
       #up page 1
       page += 1
       
-      for var in r[:1]:
-         rowsleft = var.get("MoreRows")
-         print rowsleft
+      if rowsleft == 100000:
+         for var in r[:1]:
+            rowsleft = var.get("MoreRows")
+      else:
+         rowsleft -= 1
+      print rowsleft      
+
    return results
 
    
