@@ -24,7 +24,7 @@ def get_s2m_res(request): #you should only do this in background, or when user p
       url = 'http://www.seats2meet.com/api/reservation/location/%s' % get_location_id(request)
       headers = {'content-type':'application/json', 'Connection':'close'}
       data = {
-      "ApiKey":14257895,
+      "ApiKey":91216637,
       "ProfileKey":Userprofile.objects.get(user_name=request.user.username).user_key,
       "ChannelId":0,
       "ProfileId":0,
@@ -64,7 +64,7 @@ def s2m_login(request):
    url = 'https://www.seats2meet.com/api/login'
    headers = {'content-type':'application/json', 'Connection':'close'}
    data = {
-   "ApiKey":14257895,
+   "ApiKey":91216637,
    "ProfileKey":"6DE79403-D5EF-186C-9529-25ED04A66FD6",
    "UserName": request.POST["username"],
    "Password": request.POST["pass"]
@@ -112,7 +112,7 @@ def s2m_locationlist():
     url = 'https://www.seats2meet.com/api/locations'
     headers = {'content-type':'application/json'}
     data = {
-    "ApiKey":14257895,
+    "ApiKey":91216637,
     "ProfileKey":"6DE79403-D5EF-186C-9529-25ED04A66FD6",
     }
     

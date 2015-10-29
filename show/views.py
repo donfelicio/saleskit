@@ -11,7 +11,7 @@ def get_s2m_res(request):
     url = 'http://www.seats2meet.com/api/reservation//%s' % request.GET.get('r', '')
     headers = {'content-type':'application/json'}
     data = {
-    "ApiKey":14257895,
+    "ApiKey":91216637,
     "ProfileKey":"6DE79403-D5EF-186C-9529-25ED04A66FD6",
     }
       
@@ -26,7 +26,7 @@ def get_s2m_meetingspaces(request, location):
     headers = {'content-type':'application/json'}
     data = {
     "locationId": location,
-    "ApiKey":14257895,
+    "ApiKey":91216637,
     "AuthorizedProfileKey":"6DE79403-D5EF-186C-9529-25ED04A66FD6",
     "LanguageId": 65,
     "SearchTerm": "",
@@ -45,7 +45,7 @@ def get_s2m_profile(request):
     headers = {'content-type':'application/json'}
     data = {
     "profileKey": request.GET.get('u', ''),
-    "ApiKey":14257895,
+    "ApiKey":91216637,
     "ProfileKey":"6DE79403-D5EF-186C-9529-25ED04A66FD6",
     }
       
@@ -60,7 +60,7 @@ def get_s2m_address(request, location):
     url = 'http://www.seats2meet.com/api/locations/%s' % location
     headers = {'content-type':'application/json'}
     data = {
-    "ApiKey":14257895,
+    "ApiKey":91216637,
     "ProfileKey":"6DE79403-D5EF-186C-9529-25ED04A66FD6",
     "locationId": location,
     }

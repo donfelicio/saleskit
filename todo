@@ -1,5 +1,11 @@
 ---met prio top to bottom:
 
+reserveringen ophalen elke 10 minuten cron laten doen.
+
+comments toevoegen uit reserveringen van s2m
+klik je op een stap dan 'wat is de notitie bij deze stap?', en hieronder een log (fifo) <b>stap</b>notitie...
+
+
 auto-invoicing afmaken
 onder controle: https://www.seats2meet.com/Help/Api/GET-api-invoices-location-locationId
 versturen: https://www.seats2meet.com/Help/Api/POST-api-invoices-sendmail
