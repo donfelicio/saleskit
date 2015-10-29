@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 from django.shortcuts import render, redirect
 import json, requests, datetime
 from reservation.models import *
