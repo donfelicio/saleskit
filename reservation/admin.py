@@ -6,6 +6,7 @@ from .models import *
 
 class Reservationadmin(admin.ModelAdmin):
     list_display = ['res_id', 'res_user', 'res_date', 'res_location_id', 'res_date_created', 'res_status_sales']
+    search_fields = ['res_id']
     class Meta:
         model = Reservation
         
