@@ -1,6 +1,7 @@
----met prio top to bottom:
+#README
+scheduler /management/commands draait op heroku services elke dag om 01:00 om alle reserveringen bij te werken van alle bekende locaties
 
-reserveringen ophalen elke 10 minuten cron laten doen.
+---met prio top to bottom:
 
 comments toevoegen uit reserveringen van s2m
 klik je op een stap dan 'wat is de notitie bij deze stap?', en hieronder een log (fifo) <b>stap</b>notitie...

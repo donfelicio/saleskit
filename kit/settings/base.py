@@ -40,6 +40,7 @@ INSTALLED_APPS = (
     'reservation',
     'show',
     'invoice',
+    'scheduler',
 )
 
 MIDDLEWARE_CLASSES = (

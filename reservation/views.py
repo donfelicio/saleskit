@@ -138,14 +138,15 @@ def home(request):
       instance, created = Userprofile.objects.get_or_create(user_name=request.user.username)
       instance.active_location=request.POST['location_id']
       instance.save()
-      
-      b = Thread(target=loadpage, args=(request,))
-      b.daemon = True
-      b.start()
-      time.sleep(1)
+
+      if Userprofile.objects.get(user_name=request.user.username).res_updated == 'no':      
+         b = Thread(target=loadpage, args=(request,)) 
+         b.daemon = True
+         b.start()
+         time.sleep(1)
+
       return redirect('/')
-      
-      
+            
    
    #when a user clicks 'next', save the items's last change date as today 
    if request.method == 'POST' and 'hide_days' in request.POST:
