@@ -10,7 +10,7 @@
  <p>We are so happy you have reached out to ..Location.. regarding your event: ..name of event...</p>
  
  <form action="" method="post">{% csrf_token %}
-   <p><textarea name="res_intro" placeholder="Your personal intro text." rows="10" cols="80">{% if res_intro != None %}{{res_intro}} {% endif %}</textarea></p>
+   <p><textarea name="res_intro" placeholder="Your personal intro text for the offer." rows="10" cols="80">{% if res_intro != None %}{{res_intro}} {% endif %}</textarea></p>
    <p><input type="hidden" name="res_id" value="{{res_id}}"></p>
    <button type="submit">Save</button>
  </form>

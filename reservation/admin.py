@@ -46,3 +46,10 @@ class Loginlogadmin(admin.ModelAdmin):
         model = Loginlog
         
 admin.site.register(Loginlog, Loginlogadmin)
+
+class Statuschangeadmin(admin.ModelAdmin):
+    list_display = ['user_name', 'res_id']
+    class Meta:
+        model = Statuschange
+        
+admin.site.register(Statuschange, Statuschangeadmin)

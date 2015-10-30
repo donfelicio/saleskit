@@ -2,11 +2,6 @@ from django import forms
 from reservation.models import *
 import datetime
 
-class UpdateForm(forms.ModelForm):
-    class Meta:
-        model = Reservation
-        fields = ['res_id', 'res_status_sales', 'res_prev_status', 'res_last_change_by']
-        
 class ReservationfilterForm(forms.ModelForm):
     class Meta:
         model = Reservationfilter

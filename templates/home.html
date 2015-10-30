@@ -59,48 +59,34 @@
           {% for status in status_list %}    
                {% if reservation.res_status_sales == status.status_code %}
                  
-                    <!-- no form needed, this already is the current status -->
-                    <p class="col-md-1">
-                       <button type="submit" class="btn btn-primary" style="width:90px;font-size:12px;" data-toggle="tooltip" title="{{ status.description }}">{{status.description_short}}</button>
-                    </p>
+               <!-- no link needed, this already is the current status -->
+               <p class="col-md-1">
+                  <button type="submit" class="btn btn-primary" style="width:90px;font-size:12px;" data-toggle="tooltip" title="{{ status.description }}">{{status.description_short}}</button>
+               </p>
                     
                {% elif status.description_short == 'Success' %}
-               <form action="" method="POST" name="form3"> {% csrf_token %}
-                      <p class="col-md-1">                        
-                         <input type="hidden" name="res_id" value="{{reservation.res_id}}">
-                         <input type="hidden" name="res_untouched" value="no">
-                         <input type="hidden" name="res_prev_status" value="{{reservation.res_status_sales}}">
-                         <input type="hidden" name="res_last_change_by" value="{{request.user.first_name}} {{request.user.last_name}}">
-                         <input type="hidden" name="res_status_sales" value="{{status.status_code}}">
+               <p class="col-md-1">
+                    <a href="/status_change?res_id={{reservation.res_id}}&res_prev_status={{reservation.res_status_sales}}&res_last_change_by={{request.user.first_name}} {{request.user.last_name}}&res_status_sales={{status.status_code}}">
                          <button type="submit" class="btn btn-success" style="width:90px;font-size:12px;" data-toggle="tooltip" title="{{ status.description }}">{{status.description_short}}</button>
-                      </p>        
-                    </form>
+                    </a>
+               </p>
                
                {% elif status.description_short == 'Failed' %}
                
-               <form action="" method="POST" name="form3"> {% csrf_token %}
-                      <p class="col-md-1">                        
-                         <input type="hidden" name="res_id" value="{{reservation.res_id}}">
-                         <input type="hidden" name="res_untouched" value="no">
-                         <input type="hidden" name="res_prev_status" value="{{reservation.res_status_sales}}">
-                         <input type="hidden" name="res_last_change_by" value="{{request.user.first_name}} {{request.user.last_name}}">
-                         <input type="hidden" name="res_status_sales" value="{{status.status_code}}">
+               <p class="col-md-1">
+                    <a href="/status_change?res_id={{reservation.res_id}}&res_prev_status={{reservation.res_status_sales}}&res_last_change_by={{request.user.first_name}} {{request.user.last_name}}&res_status_sales={{status.status_code}}">
                          <button type="submit" class="btn btn-danger" style="width:90px;font-size:12px;" data-toggle="tooltip" title="{{ status.description }}">{{status.description_short}}</button>
-                      </p>        
-                    </form>
+                    </a>
+               </p>
                 
                {% else %}
-                    <form action="" method="POST" name="form3"> {% csrf_token %}
-                      <p class="col-md-1">                        
-                         <input type="hidden" name="res_id" value="{{reservation.res_id}}">
-                         <input type="hidden" name="res_untouched" value="no">
-                         <input type="hidden" name="res_prev_status" value="{{reservation.res_status_sales}}">
-                         <input type="hidden" name="res_last_change_by" value="{{request.user.first_name}} {{request.user.last_name}}">
-                         <input type="hidden" name="res_status_sales" value="{{status.status_code}}">
+
+               <p class="col-md-1">
+                    <a href="/status_change?res_id={{reservation.res_id}}&res_prev_status={{reservation.res_status_sales}}&res_last_change_by={{request.user.first_name}} {{request.user.last_name}}&res_status_sales={{status.status_code}}">
                          <button type="submit" class="btn btn-default" style="width:90px;font-size:12px;" data-toggle="tooltip" title="{{ status.description }}">{{status.description_short}}</button>
-                      </p>        
-                    </form>
-                    
+                    </a>
+               </p>
+          
              {% endif %}
           {% endfor %}
           </div>
@@ -157,9 +143,15 @@
                </form>
           </p> <!-- end of all butons -->
      </div>
-    
-    
-     
+    <table class="table table-striped">
+    {% for change in status_changes %}
+    <tr><td>
+    <strong>Status: {{change.res_status_sales}}          </strong>Changed: {{change.change_date}} by {{change.user_name}}
+    </tr></td><tr><td>
+    Note: {{change.change_note}}
+    </td></tr>
+    {% endfor %}
+    </table> 
    {% endif %}
    {% endif %}
     {% endblock %}     <!-- end page content -->

@@ -66,4 +66,14 @@ class Loginlog(models.Model):
     user_name = models.CharField(max_length = 255, null=True)
     login_date = models.DateTimeField(auto_now=True, null=True)
     
+class Statuschange(models.Model):
+    user_name = models.CharField(max_length = 255, null=True)
+    change_date = models.DateTimeField(auto_now=True, null=True)
+    res_id = models.CharField(max_length = 255, null=True)
+    res_status_sales_code = models.CharField(max_length = 255, null=True)
+    res_status_sales = models.CharField(max_length = 255, null=True)
+    change_note = models.TextField(null=True, default='')
+    class Meta:
+        ordering = ['-res_status_sales_code']
+    
     

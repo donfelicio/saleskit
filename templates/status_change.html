@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+     
+    {% block content %}     <!-- show page content --->
+
+ {% if user.is_authenticated %}
+ 
+ <p>Great work, changing to: {{ res_status_sales }}</p>
+  <p>Any notes you want to leave with this step?</p> 
+ <form action="" method="post">{% csrf_token %}
+    <input type="hidden" name="res_id" value="{{res_id}}">
+    <input type="hidden" name="res_prev_status" value="{{res_status_sales}}">
+    <input type="hidden" name="res_last_change_by" value="{{res_last_change_by}}">
+    <input type="hidden" name="res_status_sales" value="{{res_status_sales_code}}">
+   <p><textarea name="change_note" placeholder="I've spoken to Jim Jones, he is quite grumpy! He really doesn't want the big room, just the small one." rows="10" cols="80">{% if res_intro != None %}{{res_intro}} {% endif %}</textarea></p>
+   <button type="submit">Save</button>
+ </form>
+ 
+
+{% endif %}
+   
+    {% endblock %}     <!-- end page content -->
+

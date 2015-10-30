@@ -114,6 +114,10 @@ def create_locationlist(request,userprofile, locationlist):
       instance = Userprofile.objects.get(user_name=request.user.username)
       instance.loc_updated = 'done'
       instance.save()
+    
+    
+    
+    
       
 
 def home(request):
@@ -128,11 +132,9 @@ def home(request):
    res_open = ''
    loading = ''
    filtered_res_list = ''
-
       
    #If user has selected a location when he has access to multiple, save the active_location now
    if request.method == 'POST' and 'location_id' in request.POST:
-      
       
       #if needed create and always update active location.
       instance, created = Userprofile.objects.get_or_create(user_name=request.user.username)
@@ -153,15 +155,6 @@ def home(request):
       form = ReservationfilterForm(request.POST or None)
       request.POST._mutable = True
       request.POST['hide_days'] = datetime.date.today() + datetime.timedelta(days=int(request.POST['hide_days']))
-      if form.is_valid():
-         form.save()
-         
-            
-   # when user changes a reservation status, process it now.
-   item_to_update = []
-   if request.method == 'POST' and 'res_status_sales' in request.POST:
-      item_to_update = Reservation.objects.get(res_id=request.POST['res_id'])
-      form = UpdateForm(request.POST or None, instance=item_to_update)
       if form.is_valid():
          form.save()
    
@@ -220,6 +213,7 @@ def home(request):
       
       if reservation: #if there is a reservation.. (might be empty list?)
          
+         context['status_changes'] = Statuschange.objects.all().filter(res_id=reservation.res_id)
          context['res_open'] = len(res_list) - len(Reservationfilter.objects.all().filter(user_name=request.user.username))
          context['sales_tip'] = salestip(reservation.res_status_sales)
          context['days_untouched'] = getattr(datetime.date.today() - reservation.res_last_change_date, "days")
@@ -235,10 +229,18 @@ def home(request):
    template = 'home.html'
    return render(request, template, context)
 
+
+
+
+
 def help(request):
    context = {}
    template = 'help.html'   
    return render(request, template, context)
+
+
+
+
 
 def res_input(request):
    #if form is saved, save to db
@@ -257,6 +259,37 @@ def res_input(request):
    template="res_input.html"
    return render(request, template, context)
 
+
+
+
+def status_change(request):
+   #if form is saved, save to db
+   if request.method == 'POST' and 'res_id' in request.POST:
+      
+      #update the reservation
+      instance = Reservation.objects.get(res_id=request.POST['res_id'])
+      instance.res_prev_status=request.POST['res_prev_status']
+      instance.res_last_change_by=request.POST['res_last_change_by']
+      instance.res_status_sales=request.POST['res_status_sales']
+      instance.save()
+      
+      #add the statuschange instance
+      instance = Statuschange.objects.create(res_id=request.POST['res_id'], user_name=request.user.username, res_status_sales_code=request.POST['res_status_sales'], res_status_sales=Statuscode.objects.get(status_code=request.GET.get('res_status_sales', '')).description_short, change_note=request.POST['change_note'])      
+      return redirect('/')
+   
+   context={
+      'res_id':request.GET.get('res_id', ''),
+      'res_prev_status':request.GET.get('res_prev_status', ''),
+      'res_last_changed_by':request.GET.get('res_last_changed_by', ''),
+      'res_status_sales_code':request.GET.get('res_status_sales'),
+      'res_status_sales':Statuscode.objects.get(status_code=request.GET.get('res_status_sales', '')).description_short,
+     }
+   template="status_change.html"
+   return render(request, template, context)
+
+
+
+
 def logout(request):
    instance = Userprofile.objects.get(user_name=request.user.username)
    instance.active_location = False
@@ -264,6 +297,9 @@ def logout(request):
    instance.save()
    request.session.flush()
    return redirect('/')
+
+
+
 
 def login(request):
    s2m_login(request)
