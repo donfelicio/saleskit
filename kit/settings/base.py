@@ -125,3 +125,8 @@ MEDIA_URL = os.path.join(BASE_DIR, 'media/')
 
 SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
 
+EMAIL_HOST = 'smtp.sendgrid.net'
+EMAIL_HOST_USER = 'app42733432@heroku.com'
+EMAIL_HOST_PASSWORD = 'flex1234'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
