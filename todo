@@ -1,11 +1,12 @@
 #README
-scheduler /management/commands draait op heroku services elke dag om 01:00 om alle reserveringen bij te werken van alle bekende locaties
+#scheduler /management/commands draait op heroku services elke dag om 01:00 om alle reserveringen bij te werken van alle bekende locaties
+
+
 
 ---met prio top to bottom:
+handmatig toevoegen van reserveringen, pro-actieve leads bijhouden dus..
 
-comments toevoegen uit reserveringen van s2m
-klik je op een stap dan 'wat is de notitie bij deze stap?', en hieronder een log (fifo) <b>stap</b>notitie...
-
+auto email every morning for first 30 days
 
 auto-invoicing afmaken
 onder controle: https://www.seats2meet.com/Help/Api/GET-api-invoices-location-locationId
@@ -14,37 +15,34 @@ mailtext erbij halen; https://www.seats2meet.com/Help/Api/POST-api-invoices-mail
 
 
 
+
 ---CRON----
-update all reservations every hour
 you should check user's allowed access location list every night or so if they have new locations
+
 
 ----USER input----
 elise: Waar we vooral behoefte hebben aan zoiets is als er veel subzalen zijn.
 
 
-
-
-
 -------wannahaves
-(last-try: API returnt nix)<1 uur>medewerker aan res koppelen, en laten zien van wie die is? iedereen zien alles wel langskomen. als berend jan iets skipt dat van sharon is, ziet hij hem de volgende dag gewoon weer, sharon ziet hem nog wel op de dag zelf... 
-use https://www.seats2meet.com/Help/Api/POST-api-reservation-log-reservationId to get who created it, and all edits...
-show 'revisions' to see who sent that offer...
-
 grove stats 'annuleringsratio, omzet vs budget, etc...'.
 amount of money in reservations (realtime budget) VS
 https://www.seats2meet.com/Help/Api/GET-api-budget-locationId-year
 https://www.seats2meet.com/Help/Api/POST-api-stats-meetingspaceoccupancy
 
-filters mooier weergeven
+fix snelheid cron, moet je echt ALLES ophalen? eigenlijk alleen die zijn aangemaakt en veranderd na de laatste keer..
 
 alleen ophalen wat je nodig hebt. Dus als iemand een pagina bekijkt, dan pas ophalen. (hoe track je dan updates van reserveringen?)
 
 
 -------just an idea
-#save bootstrap and run from local in stead of web? not sure, only if speed needs improvements...
-filteren op groepsgroottes?
 
-Hoe te pushen
+
+
+
+
+
+Hoe te pushen naar heroku
 ###
 git add .
 git commit -m "bericht"
