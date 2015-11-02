@@ -95,7 +95,7 @@
     </div><!--end .accordion-->
 
     <div class="jumbotron" style="height:70px;padding-top:1px;padding-bottom: 50px;background-color: #7a7a7a">
-          <h3 class="col-md-3">Hide until: </h3>
+          <h3 class="col-md-2">Hide until: </h3>
                <form style="margin-top:15px;" action="" method="POST" class="col-md-8">{% csrf_token %}
                    <input type="hidden" name="res_id" value="{{reservation.res_id}}">
                    <input type="hidden" name="user_name" value="{{request.user.username}}">
