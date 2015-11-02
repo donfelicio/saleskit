@@ -34,7 +34,7 @@ class Userprofileadmin(admin.ModelAdmin):
 admin.site.register(Userprofile, Userprofileadmin)
 
 class Reservationfilteradmin(admin.ModelAdmin):
-    list_display = ['res_id', 'user_name', 'hide_days']
+    list_display = ['res_id', 'user_name', 'hide_days', 'hide_hour', 'hide_minute']
     class Meta:
         model = Reservationfilter
         

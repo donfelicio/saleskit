@@ -95,53 +95,18 @@
     </div><!--end .accordion-->
 
     <div class="jumbotron" style="height:70px;padding-top:1px;padding-bottom: 50px;background-color: #7a7a7a">
-
-              <h3 class="col-md-3">Remind me in: </h5>
-          </p>
-          <p>
-               <form class="col-md-1" action="" method="POST">{% csrf_token %}
-                    <input type="hidden" name="res_id" value="{{reservation.res_id}}">
-                    <input type="hidden" name="user_name" value="{{request.user.username}}">
-                    <input type="hidden" name="hide_days" value="0">
-                    <button type="submit" class="btn btn-primary">1 day</button>
+          <h3 class="col-md-3">Hide until: </h3>
+               <form style="margin-top:15px;" action="" method="POST" class="col-md-8">{% csrf_token %}
+                   <input type="hidden" name="res_id" value="{{reservation.res_id}}">
+                   <input type="hidden" name="user_name" value="{{request.user.username}}">
+                   <table><tr><td>
+                   <input type="text" name="hide_days" id="datepicker">
+                   </td><td>
+                   <button type="submit" class="btn btn-primary">Hide</button>
+               </td><td style="padding-left:20px;"><i>Select today to hide this reservation for 60 minutes</i></td></tr></table>
+                   
                </form>
-               <form action="" method="POST" class="col-md-1">{% csrf_token %}
-                    <input type="hidden" name="res_id" value="{{reservation.res_id}}">
-                    <input type="hidden" name="user_name" value="{{request.user.username}}">
-                    <input type="hidden" name="hide_days" value="1">
-                    <button type="submit" class="btn btn-primary">2 days</button>
-               </form>
-               <form action="" method="POST" class="col-md-1">{% csrf_token %}
-                    <input type="hidden" name="res_id" value="{{reservation.res_id}}">
-                    <input type="hidden" name="user_name" value="{{request.user.username}}">
-                    <input type="hidden" name="hide_days" value="2">
-                    <button type="submit" class="btn btn-primary">3 days</button>
-               </form>
-               <form action="" method="POST" class="col-md-1">{% csrf_token %}
-                    <input type="hidden" name="res_id" value="{{reservation.res_id}}">
-                    <input type="hidden" name="user_name" value="{{request.user.username}}">
-                    <input type="hidden" name="hide_days" value="3">
-                    <button type="submit" class="btn btn-primary">4 days</button>
-               </form>
-               <form action="" method="POST" class="col-md-1">{% csrf_token %}
-                    <input type="hidden" name="res_id" value="{{reservation.res_id}}">
-                    <input type="hidden" name="user_name" value="{{request.user.username}}">
-                    <input type="hidden" name="hide_days" value="4">
-                    <button type="submit" class="btn btn-primary">5 days</button>
-               </form>
-                    <form action="" method="POST" class="col-md-1">{% csrf_token %}
-                    <input type="hidden" name="res_id" value="{{reservation.res_id}}">
-                    <input type="hidden" name="user_name" value="{{request.user.username}}">
-                    <input type="hidden" name="hide_days" value="13">
-                    <button type="submit" class="btn btn-primary">14 days</button>
-               </form>
-                    <form action="" method="POST" class="col-md-1">{% csrf_token %}
-                    <input type="hidden" name="res_id" value="{{reservation.res_id}}">
-                    <input type="hidden" name="user_name" value="{{request.user.username}}">
-                    <input type="hidden" name="hide_days" value="29">
-                    <button type="submit" class="btn btn-primary">30 days</button>
-               </form>
-          </p> <!-- end of all butons -->
+           <!-- end of all butons -->
      </div>
     <table class="table table-striped">
     {% for change in status_changes %}

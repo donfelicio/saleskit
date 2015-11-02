@@ -1,12 +1,15 @@
 #README
 #scheduler /management/commands draait op heroku services elke dag om 01:00 om alle reserveringen bij te werken van alle bekende locaties
 
-
+--updates today:
+versturen reminder niet in weekeinde
+selectie van 'remind me in', naast deze standaarden. 
+remind me in 1 hour -> 'today', bij terugbellen...
 
 ---met prio top to bottom:
+'refresh now' voor 1 locatie. 
 handmatig toevoegen van reserveringen, pro-actieve leads bijhouden dus..
 
-auto email every morning for first 30 days
 
 auto-invoicing afmaken
 onder controle: https://www.seats2meet.com/Help/Api/GET-api-invoices-location-locationId

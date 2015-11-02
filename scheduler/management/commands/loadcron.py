@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 from django.core.management.base import BaseCommand
 from django.shortcuts import render, redirect
-import json, requests, datetime
+import json, requests, datetime, time
 from reservation.models import *
 from django.core.mail import send_mail
 from django.contrib.auth.models import User
 from django.utils.timesince import timesince
-
+from datetime import date
 
 
 class Command(BaseCommand):
@@ -112,9 +112,9 @@ class Command(BaseCommand):
         
         
         
-        #and now email all users that they have to move their ass (only first 30 days)
+        #and now email all users that they have to move their ass (only first 14 days)
         for user in User.objects.all():
-            if int(timesince(user.date_joined).split('day')[0]) < 14:
+            if int(timesince(user.date_joined).split('day')[0]) < 15 and datetime.date.today().weekday() != 5 and datetime.date.today().weekday() != 6:
                 print user.email
                 days_left = 14 - int(timesince(user.date_joined).split('day')[0])
                 send_mail('Good Morning, it\'s saleskitting time!',

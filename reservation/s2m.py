@@ -87,11 +87,6 @@ def s2m_login(request):
          instance.save()
          #and create login log instance
          Loginlog.objects.create(user_name=request.user.username)
-
-         #delete all the users old hidereservation keys (older than today)   
-         for resfilter in Reservationfilter.objects.all().filter(user_name=request.user.username):
-            if resfilter.hide_days < today:
-               Reservationfilter.objects.get(res_id=resfilter.res_id, user_name=resfilter.user_name).delete()
            
          #now check if there's just one location or more, and let the user select one
        

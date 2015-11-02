@@ -61,6 +61,8 @@ class Reservationfilter(models.Model):
     res_id = models.CharField(max_length = 255, null=True)
     user_name = models.CharField(max_length = 255, null=True)
     hide_days = models.DateField(null=True)
+    hide_hour = models.CharField(max_length=255, null=True)
+    hide_minute = models.CharField(max_length=255, null=True)
     
 class Loginlog(models.Model):
     user_name = models.CharField(max_length = 255, null=True)

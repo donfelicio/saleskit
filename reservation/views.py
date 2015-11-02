@@ -152,14 +152,21 @@ def home(request):
    
    #when a user clicks 'next', save the items's last change date as today 
    if request.method == 'POST' and 'hide_days' in request.POST:
-      form = ReservationfilterForm(request.POST or None)
-      request.POST._mutable = True
-      request.POST['hide_days'] = datetime.date.today() + datetime.timedelta(days=int(request.POST['hide_days']))
-      if form.is_valid():
-         form.save()
+      if datetime.datetime.strptime(request.POST['hide_days'], '%m/%d/%Y').strftime('%Y-%m-%d') == str(datetime.date.today()):
+         now_plus_hour = datetime.datetime.now() + datetime.timedelta(hours=1)
+      else:
+         now_plus_hour = datetime.datetime.strptime('00:00', '%H:%M')
+      Reservationfilter.objects.create(user_name=request.user.username, res_id=request.POST['res_id'], hide_days=datetime.datetime.strptime(request.POST['hide_days'], '%m/%d/%Y').strftime('%Y-%m-%d'), hide_hour=now_plus_hour.strftime('%H'), hide_minute=now_plus_hour.strftime('%M'))
+
    
-   
-   if request.user.username: #if user is logged in      
+   if request.user.username: #if user is logged in
+   #delete all the users old hidereservation keys (older than today)
+      for resfilter in Reservationfilter.objects.all().filter(user_name=request.user.username):
+         if resfilter.hide_days < datetime.date.today():
+            Reservationfilter.objects.get(res_id=resfilter.res_id, user_name=resfilter.user_name).delete()
+         elif resfilter.hide_days == datetime.date.today() and resfilter.hide_hour <= datetime.datetime.now().time().strftime('%H') and resfilter.hide_minute <= datetime.datetime.now().time().strftime('%M'):
+            Reservationfilter.objects.get(res_id=resfilter.res_id, user_name=resfilter.user_name).delete()
+            
       #check if it's the same day as last_login, otherwise checkout
       if Userprofile.objects.get(user_name=request.user.username).last_login != datetime.date.today():
          return redirect('/logout')
