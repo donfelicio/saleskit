@@ -3,7 +3,9 @@
 
 ---met prio top to bottom:
 fix count 'only -1 to go at AmsterdamConnected with just 2 reservations?'
-//add location_id to filter.
+//add location_id to filter. But what to do with existing filters that don't have a location id??
+maybe it's time to learn how to run a query? - update location_id from reservation..
+
 'refresh now' voor 1 locatie. 
 handmatig toevoegen van reserveringen, pro-actieve leads bijhouden dus..
 
@@ -12,8 +14,6 @@ auto-invoicing afmaken
 onder controle: https://www.seats2meet.com/Help/Api/GET-api-invoices-location-locationId
 versturen: https://www.seats2meet.com/Help/Api/POST-api-invoices-sendmail
 mailtext erbij halen; https://www.seats2meet.com/Help/Api/POST-api-invoices-mailtext
-
-
 
 
 ---CRON----

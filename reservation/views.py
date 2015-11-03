@@ -122,6 +122,12 @@ def create_locationlist(request,userprofile, locationlist):
 
 def home(request):
    
+   for filteritem in Reservationfilter.objects.all():
+      instance = filteritem
+      instance.location_id = Reservation.objects.get(res_id=filteritem.res_id).res_location_id
+      instance.save()
+      
+   
    #load this if user is logged in and set some empty stuff for later if it isn't used
    no_res = True
    sales_tip = ''
@@ -163,7 +169,6 @@ def home(request):
    if request.user.username: #if user is logged in
    #delete all the users old hidereservation keys (older than today)
       for resfilter in Reservationfilter.objects.all().filter(user_name=request.user.username):
-         print (int(resfilter.hide_hour) - int(datetime.datetime.now().time().strftime('%H'))) * 60 + (int(resfilter.hide_minute) - int(datetime.datetime.now().time().strftime('%M')))
          if resfilter.hide_days < datetime.date.today():
             Reservationfilter.objects.get(res_id=resfilter.res_id, user_name=resfilter.user_name).delete()
          elif resfilter.hide_days == datetime.date.today() and (int(resfilter.hide_hour) - int(datetime.datetime.now().time().strftime('%H'))) * 60 + (int(resfilter.hide_minute) - int(datetime.datetime.now().time().strftime('%M'))) < 0:
