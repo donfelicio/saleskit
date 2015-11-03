@@ -163,7 +163,7 @@ def home(request):
             now_plus_hour = datetime.datetime.now() + datetime.timedelta(hours=1)
          else:
             now_plus_hour = datetime.datetime.strptime('00:00', '%H:%M')
-         Reservationfilter.objects.create(user_name=request.user.username, res_id=request.POST['res_id'], hide_days=datetime.datetime.strptime(request.POST['hide_days'], '%m/%d/%Y').strftime('%Y-%m-%d'), hide_hour=now_plus_hour.strftime('%H'), hide_minute=now_plus_hour.strftime('%M'))
+         Reservationfilter.objects.create(user_name=request.user.username, res_id=request.POST['res_id'], location_id=Userprofile.objects.get(user_name=request.user.username).active_location, hide_days=datetime.datetime.strptime(request.POST['hide_days'], '%m/%d/%Y').strftime('%Y-%m-%d'), hide_hour=now_plus_hour.strftime('%H'), hide_minute=now_plus_hour.strftime('%M'))
 
    
    if request.user.username: #if user is logged in
@@ -228,7 +228,7 @@ def home(request):
       if reservation: #if there is a reservation.. (might be empty list?)
          
          context['status_changes'] = Statuschange.objects.all().filter(res_id=reservation.res_id)
-         context['res_open'] = len(res_list) - len(Reservationfilter.objects.all().filter(user_name=request.user.username))
+         context['res_open'] = len(res_list) - len(Reservationfilter.objects.all().filter(user_name=request.user.username, location_id=Userprofile.objects.get(user_name=request.user.username).active_location))
          context['sales_tip'] = salestip(reservation.res_status_sales)
          context['days_untouched'] = getattr(datetime.date.today() - reservation.res_last_change_date, "days")
          context['days_last_change'] = getattr(datetime.date.today() - reservation.res_last_change_date, "days")

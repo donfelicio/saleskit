@@ -3,8 +3,9 @@
 
 ---met prio top to bottom:
 fix count 'only -1 to go at AmsterdamConnected with just 2 reservations?'
-//add location_id to filter. But what to do with existing filters that don't have a location id??
-maybe it's time to learn how to run a query? - update location_id from reservation..
+//add location_id to filter. 
+
+--remove tmp 'add locationkeys to filters code'
 
 'refresh now' voor 1 locatie. 
 handmatig toevoegen van reserveringen, pro-actieve leads bijhouden dus..
