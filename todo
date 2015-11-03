@@ -1,8 +1,10 @@
 #README
 #scheduler /management/commands draait op heroku services elke dag om 01:00 om alle reserveringen bij te werken van alle bekende locaties
 
+--sinds laatste update
+'refresh button' toegevoegd
+
 ---met prio top to bottom:
-'refresh now' voor 1 locatie. 
 handmatig toevoegen van reserveringen, pro-actieve leads bijhouden dus..
 
 
@@ -14,7 +16,6 @@ mailtext erbij halen; https://www.seats2meet.com/Help/Api/POST-api-invoices-mail
 
 ---CRON----
 you should check user's allowed access location list every night or so if they have new locations
-
 
 ----USER input----
 elise: Waar we vooral behoefte hebben aan zoiets is als er veel subzalen zijn.

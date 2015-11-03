@@ -2,7 +2,6 @@ from django.shortcuts import render
 import time, datetime, json, requests
 from django.shortcuts import redirect, render
 
-
 # Create your views here.
  
 
@@ -48,8 +47,7 @@ def s2m_get_invoices(request):
     return results
         
         
-def home(request): 
-    
+def home(request):
     context = {
         #'invoices': s2m_get_invoices(request)
         }
