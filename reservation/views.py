@@ -163,9 +163,10 @@ def home(request):
    if request.user.username: #if user is logged in
    #delete all the users old hidereservation keys (older than today)
       for resfilter in Reservationfilter.objects.all().filter(user_name=request.user.username):
+         print (int(resfilter.hide_hour) - int(datetime.datetime.now().time().strftime('%H'))) * 60 + (int(resfilter.hide_minute) - int(datetime.datetime.now().time().strftime('%M')))
          if resfilter.hide_days < datetime.date.today():
             Reservationfilter.objects.get(res_id=resfilter.res_id, user_name=resfilter.user_name).delete()
-         elif resfilter.hide_days == datetime.date.today() and resfilter.hide_hour <= datetime.datetime.now().time().strftime('%H') and resfilter.hide_minute <= datetime.datetime.now().time().strftime('%M'):
+         elif resfilter.hide_days == datetime.date.today() and (int(resfilter.hide_hour) - int(datetime.datetime.now().time().strftime('%H'))) * 60 + (int(resfilter.hide_minute) - int(datetime.datetime.now().time().strftime('%M'))) < 0:
             Reservationfilter.objects.get(res_id=resfilter.res_id, user_name=resfilter.user_name).delete()
             
       #check if it's the same day as last_login, otherwise checkout
@@ -195,7 +196,7 @@ def home(request):
 
          
       #get list of all reservations !! i just want the next one that isn't processed yet
-      res_list = Reservation.objects.all().filter(res_location_id=get_location_id(request))
+      res_list = Reservation.objects.all().filter(res_location_id=Userprofile.objects.get(user_name=request.user.username).active_location)
       #filter away stuff we don't need
       res_list = filter(filter_res_status_sales_8, res_list) #success we don't need to show
       res_list = filter(filter_res_status_sales_9, res_list) #failed we don't need to show
