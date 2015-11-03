@@ -122,12 +122,6 @@ def create_locationlist(request,userprofile, locationlist):
 
 def home(request):
    
-   for filteritem in Reservationfilter.objects.all():
-      instance = filteritem
-      instance.location_id = Reservation.objects.get(res_id=filteritem.res_id).res_location_id
-      instance.save()
-      
-   
    #load this if user is logged in and set some empty stuff for later if it isn't used
    no_res = True
    sales_tip = ''
