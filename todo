@@ -2,6 +2,7 @@
 #scheduler /management/commands draait op heroku services elke dag om 01:00 om alle reserveringen bij te werken van alle bekende locaties
 
 ---met prio top to bottom:
+fix count 'only -1 to go at AmsterdamConnected with just 2 reservations?'
 'refresh now' voor 1 locatie. 
 handmatig toevoegen van reserveringen, pro-actieve leads bijhouden dus..
 
