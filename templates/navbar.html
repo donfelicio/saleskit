@@ -19,6 +19,9 @@
             </div>
             <button type="submit" class="btn btn-success">Logout</button>
           </form>
+          <a href="/?refresh=yes" class="navbar-form navbar-right"><button class="btn btn-primary">Refresh</button></a>
+          
+
           {% else %}
           <form method="post" action="login" class="navbar-form navbar-right">{% csrf_token %}
             <div class="form-group">
@@ -41,9 +44,9 @@
         {% if userprofile.res_updated == 'busy' or userprofile.loc_updated == 'busy' %}
 
         <div class="loading" name="loading" style="background-color: #ff7d7d;">
-          <h2>This is your first run, welcome!</h2>
-          <p>We are updating your reservations, this may take a while.</p>
-          <p>this message will show until we have loaded and updated all of your reservations. This may take a few minutes. </p>
+          <h2>This is your first run, or you've just clicked 'update'!</h2>
+          <p>We are updating your reservations, this may take a minute or two. If you don't feel like waiting, feel free to close this window and come back later.</p>
+          <p>this message will show until we have loaded and updated all of your reservations. </p>
            <meta http-equiv="refresh" content="5; URL=/">
         </div>
  

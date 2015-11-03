@@ -8,10 +8,6 @@ from django.http import HttpResponse
 
 #all s2m api requests
 
-def get_location_id(request):
-   #get the location id from the userprofile of logged in user
-   return Userprofile.objects.get(user_name=request.user.username).active_location
-
 #get reservations from S2M API
 def get_s2m_res(request): #you should only do this in background, or when user presses refresh, and then still in background with alert 'this might take a minute'. 
    #set datetime for future date set
@@ -21,7 +17,7 @@ def get_s2m_res(request): #you should only do this in background, or when user p
    results=[]
    while rowsleft > 0:
    #!!!PRINT NOG DUBBEL, maar alleen bij tweede run. alleen in zelfde browser na refresh van /load. zal wel request onthouden. 
-      url = 'http://www.seats2meet.com/api/reservation/location/%s' % get_location_id(request)
+      url = 'http://www.seats2meet.com/api/reservation/location/%s' % Userprofile.objects.get(user_name=request.user.username).active_location
       headers = {'content-type':'application/json', 'Connection':'close'}
       data = {
       "ApiKey":91216637,

@@ -34,19 +34,11 @@ def loadpage(request):
       res_date_split = reservation.get("StartTime").split("T")
       #now poor into model and save
       
-      if ran_before == 'no':
-         #if the res with s2m is final, make the sales status a success
-         if reservation.get("StatusId") == 2:
-            sales_status = '8'
-         if reservation.get("StatusId") == 1:
-            sales_status = '1'
-
       #if the res with s2m is cancelled, make the sales status a failure
       if reservation.get("StatusId") == 3:
          sales_status = '9'
-      if reservation.get("StatusId") == 1:
+      else:
          sales_status = '1'
-
          
       #now check if the reservation already exists
       try: #can we find it?
@@ -132,6 +124,15 @@ def home(request):
    res_open = ''
    loading = ''
    filtered_res_list = ''
+   
+   #is user clicked 'refresh', do the refresh.
+   if request.GET.get('refresh', '') == 'yes' and Userprofile.objects.get(user_name=request.user.username).res_updated != 'busy':
+      b = Thread(target=loadpage, args=(request,)) 
+      b.daemon = True
+      b.start()
+      time.sleep(1)
+      return redirect('/')
+   
       
    #If user has selected a location when he has access to multiple, save the active_location now
    if request.method == 'POST' and 'location_id' in request.POST:
