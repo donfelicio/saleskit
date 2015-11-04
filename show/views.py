@@ -79,9 +79,9 @@ def show(request):
     request.session['lang'] = request.GET.get('lang', 'en')
         
     reservation = get_s2m_res(request)
-    offer_duration = datetime.datetime.strptime(str(reservation.get("CreatedOn").split("T")[0]), '%Y-%m-%d') + datetime.timedelta(days=14)
-    startdate = datetime.datetime.strptime(str(reservation.get("StartTime").split("T")[0]), '%Y-%m-%d')
-    enddate =  datetime.datetime.strptime(str(reservation.get("EndTime").split("T")[0]), '%Y-%m-%d')
+    offer_duration = datetime.datetime.strptime(str(reservation.get("CreatedOn")).split("T")[0], '%Y-%m-%d') + datetime.timedelta(days=14)
+    startdate = datetime.datetime.strptime(str(reservation.get("StartTime")).split("T")[0], '%Y-%m-%d')
+    enddate =  datetime.datetime.strptime(str(reservation.get("EndTime")).split("T")[0], '%Y-%m-%d')
     
     context={
         'reservation': reservation,
