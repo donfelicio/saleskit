@@ -70,18 +70,15 @@ def get_s2m_address(request, location):
     
     return r
 
-        
-        
 
-
-def show(request):
+def show(request):    
     # default to your native language
     request.session['lang'] = request.GET.get('lang', 'en')
         
     reservation = get_s2m_res(request)
-    offer_duration = datetime.datetime.strptime(str(reservation.get("CreatedOn")).split("T")[0], '%Y-%m-%d') + datetime.timedelta(days=14)
-    startdate = datetime.datetime.strptime(str(reservation.get("StartTime")).split("T")[0], '%Y-%m-%d')
-    enddate =  datetime.datetime.strptime(str(reservation.get("EndTime")).split("T")[0], '%Y-%m-%d')
+    offer_duration = datetime.datetime.strptime(str(reservation.get("CreatedOn").split("T")[0]), '%Y-%m-%d') + datetime.timedelta(days=14)
+    startdate = datetime.datetime.strptime(str(reservation.get("StartTime").split("T")[0]), '%Y-%m-%d')
+    enddate =  datetime.datetime.strptime(str(reservation.get("EndTime").split("T")[0]), '%Y-%m-%d')
     
     context={
         'reservation': reservation,
@@ -97,9 +94,10 @@ def show(request):
         }
     if request.GET.get('pdf') == 'yes':
         context['pdf_printing'] = 'yes'
+
     if reservation.get("TotalSeats") != 0:
         context['price_per_person'] = reservation.get("TotalExcl") / reservation.get("TotalSeats")
-        
+
     template="show.html"
     return render(request, template, context)
 
