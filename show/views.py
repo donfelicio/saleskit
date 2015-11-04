@@ -87,6 +87,8 @@ def show(request):
             full_path = ('http', ('', 's')[request.is_secure()], '://', request.META['HTTP_HOST'], request.get_full_path())
             # convert a web page and store the generated PDF to a variable
             pdf = client.convertURI(''.join(full_path).split("&pdf=yes")[0])
+            pdf = client.setPageWidth("298mm") 
+    
              # set HTTP response headers
             response = HttpResponse(content_type="application/pdf")
             response["Cache-Control"] = "max-age=0"
