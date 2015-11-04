@@ -98,19 +98,18 @@ def get_s2m_address(request, location):
         
 
 
-def show(request):    
+def show(request):
     # default to your native language
     request.session['lang'] = request.GET.get('lang', 'en')
     
     if request.GET.get('pdf') == 'yes':
-        print 'pdf print'
         try:
             # create an API client instance
             client = pdfcrowd.Client("donfelicio", "c80838c2ded070c41bcf39c0a619c809")
             
             full_path = ('http', ('', 's')[request.is_secure()], '://', request.META['HTTP_HOST'], request.get_full_path())
             # convert a web page and store the generated PDF to a variable
-            pdf = client.convertURI(''.join(full_path))
+            pdf = client.convertURI(''.join(full_path).split("&pdf=yes")[0])
     
              # set HTTP response headers
             response = HttpResponse(content_type="application/pdf")
