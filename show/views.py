@@ -72,28 +72,28 @@ def get_s2m_address(request, location):
     return r
 
 
-
-def generate_pdf_view(request):    
-    try:
-            # create an API client instance
-            client = pdfcrowd.Client("donfelicio", "c80838c2ded070c41bcf39c0a619c809")
-            
-            full_path = ('http', ('', 's')[request.is_secure()], '://', request.META['HTTP_HOST'], request.get_full_path())
-            # convert a web page and store the generated PDF to a variable
-            pdf = client.convertURI(''.join(full_path))
-    
-             # set HTTP response headers
-            response = HttpResponse(content_type="application/pdf")
-            response["Cache-Control"] = "max-age=0"
-            response["Accept-Ranges"] = "none"
-            response["Content-Disposition"] = "attachment; filename=google_com.pdf"
-    
-            # send the generated PDF
-            response.write(pdf)
-    except pdfcrowd.Error, why:
-        response = HttpResponse(content_type="text/plain")
-        response.write(why)
-    return response
+# 
+# def generate_pdf_view(request):    
+#     try:
+#             # create an API client instance
+#             client = pdfcrowd.Client("donfelicio", "c80838c2ded070c41bcf39c0a619c809")
+#             
+#             full_path = ('http', ('', 's')[request.is_secure()], '://', request.META['HTTP_HOST'], request.get_full_path())
+#             # convert a web page and store the generated PDF to a variable
+#             pdf = client.convertURI(''.join(full_path))
+#     
+#              # set HTTP response headers
+#             response = HttpResponse(content_type="application/pdf")
+#             response["Cache-Control"] = "max-age=0"
+#             response["Accept-Ranges"] = "none"
+#             response["Content-Disposition"] = "attachment; filename=google_com.pdf"
+#     
+#             # send the generated PDF
+#             response.write(pdf)
+#     except pdfcrowd.Error, why:
+#         response = HttpResponse(content_type="text/plain")
+#         response.write(why)
+#     return response
         
         
 
