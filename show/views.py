@@ -71,29 +71,6 @@ def get_s2m_address(request, location):
     
     return r
 
-
-# 
-# def generate_pdf_view(request):    
-#     try:
-#             # create an API client instance
-#             client = pdfcrowd.Client("donfelicio", "c80838c2ded070c41bcf39c0a619c809")
-#             
-#             full_path = ('http', ('', 's')[request.is_secure()], '://', request.META['HTTP_HOST'], request.get_full_path())
-#             # convert a web page and store the generated PDF to a variable
-#             pdf = client.convertURI(''.join(full_path))
-#     
-#              # set HTTP response headers
-#             response = HttpResponse(content_type="application/pdf")
-#             response["Cache-Control"] = "max-age=0"
-#             response["Accept-Ranges"] = "none"
-#             response["Content-Disposition"] = "attachment; filename=google_com.pdf"
-#     
-#             # send the generated PDF
-#             response.write(pdf)
-#     except pdfcrowd.Error, why:
-#         response = HttpResponse(content_type="text/plain")
-#         response.write(why)
-#     return response
         
         
 
@@ -110,6 +87,7 @@ def show(request):
             full_path = ('http', ('', 's')[request.is_secure()], '://', request.META['HTTP_HOST'], request.get_full_path())
             # convert a web page and store the generated PDF to a variable
             pdf = client.convertURI(''.join(full_path).split("&pdf=yes")[0])
+            pdf = client.setPageWidth('1024')
     
              # set HTTP response headers
             response = HttpResponse(content_type="application/pdf")
@@ -141,6 +119,8 @@ def show(request):
         'profile': get_s2m_profile(request),
         'location': get_s2m_address(request, reservation.get("LocationId")),
         }
+    if request.GET.get('pdf') == 'yes':
+        context['pdf_printing'] = 'yes'
     if reservation.get("TotalSeats") != 0:
         context['price_per_person'] = reservation.get("TotalExcl") / reservation.get("TotalSeats")
         
