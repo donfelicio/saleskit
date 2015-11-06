@@ -272,7 +272,28 @@ class Command(BaseCommand):
         email = EmailMultiAlternatives(subject, text_content, from_email, [to])
         email.attach("Invoice.pdf", file_to_be_sent, "application/pdf")
         email.attach_alternative(html_content, "text/html")
-        email.send()
+        try:
+            email.send()
+        except: #The email can't be sent, send admin a message
+            subject, from_email, to = 'Invoice reminder cannot be sent %s' % item.get('Code'), 'felix@donfelicio.com', location_admin_mail
+            text_content = 'Dear admin \n\n  The invoice reminder could not be sent. Maybe the email address is missing, or another error occured.'
+            html_content = '''
+            <html><head><style> body { font: 12px 'Open Sans', Tahoma, Arial; color: #000000; } </style></head>
+            <body>
+            <p>
+            Dear Admin </br></br>
+            The invoice reminder could not be sent. Maybe the email address is missing, or another error occured.
+            </p>
+            <body></html>
+            '''
+            file_to_be_sent = self.show_invoice(item.get('Id')).getvalue()
+            email = EmailMultiAlternatives(subject, text_content, from_email, [to])
+            email.attach("Invoice.pdf", file_to_be_sent, "application/pdf")
+            email.attach_alternative(html_content, "text/html")
+            email.send()
+        else: #the email was sent
+            pass
+    
         
         
         
