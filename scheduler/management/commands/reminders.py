@@ -200,9 +200,9 @@ class Command(BaseCommand):
     
     
     def email_to_send(self, status, item):
+        print 'email: %s -' % item.get('EmailTo')
         location_name = 'Meet Berlage - S2M'
         location_admin_mail = 'info@meetberlage.com'
-        print item.get('EmailTo')
         
         if status == 1:
             subject, from_email, to = '%s invoice %s - first reminder' % (location_name, item.get('Code')), location_admin_mail, item.get('EmailTo')
