@@ -325,6 +325,10 @@ class Command(BaseCommand):
             taxes = item.get('TotalIncludingTax') - item.get('TotalExcludingTax')
             if item.get('NoTax') == True and round(taxes,0) == round(item.get('AmountOpen'),0):
                 pass #
+            elif item.get('AmountOpen') < 1.00: #als minder dan 1 euro openstaat.
+                print item.get('EmailTo')
+                print item.get('Code')
+                pass 
             else:#send them a fucking email
                 two_weeks_after = datetime.datetime.strptime(str(item.get("ExpirationDate").split("T")[0]), '%Y-%m-%d') + datetime.timedelta(weeks=2)
                 four_weeks_after = datetime.datetime.strptime(str(item.get("ExpirationDate").split("T")[0]), '%Y-%m-%d') + datetime.timedelta(weeks=4)
