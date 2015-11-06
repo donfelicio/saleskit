@@ -2,74 +2,7 @@
 {% load staticfiles %}
     {% block content %}     <!-- show page content --->
 
-        <style type="text/css">
-		body, table, td {
-			font-family: Tahoma, Arial;
-			font-size: 12px;
-			color: #001E2D;
-		}
-
-		html, body {
-		}
-
-		h1, .titleHeaderItem {
-			font-family: Tahoma, Arial;
-			font-size: 22px;
-			color: #001E2D;
-		}
-
-		h2, .headerItem {
-			font-family: Tahoma, Arial;
-			font-size: 18px;
-			color: #001E2D;
-		}
-
-		h3, .subHeaderItem {
-			font-family: Tahoma, Arial;
-			font-size: 16px;
-			color: #001E2D;
-		}
-
-		.conceptLabel {
-			font-size: 13px;
-		}
-
-		.invoiceLineNumberCell {
-			width: 80px;
-		}
-
-		.invoiceLineTextCell {
-			width: 240px;
-		}
-
-		.invoiceLinePricePerItemCell {
-			width: 100px;
-			text-align: right;
-		}
-
-		.invoiceLineTaxCell {
-			width: 90px;
-			text-align: right;
-		}
-
-		.invoiceLinePriceTotalCell {
-			width: 100px;
-			text-align: right;
-		}
-
-		@page {
-			width: 610px;
-		}
-
-		hr {
-			overflow: hidden;
-			margin: 0;
-			padding: 0;
-			height: 1px;
-			border: 0;
-			border-top: 1px solid;
-		}
-	</style>
+       
         
 {% for reference in invoice.InvoiceReferences%}
 <table id="confirmationEmailFormat" cellpadding="0" cellspacing="0" border="0" width="610">
@@ -116,20 +49,20 @@
 									<td width="248">{{reference.LocationName}} </td>
 									<td width="50">
 										<img width="14" height="14" border="0" src="https://www.seats2meet.com/content/images/phone.png" /></td>
-									<td width="248">XXtel</td>
+									<td width="248">{{location.PhoneNumber}}</td>
 								</tr>
 								<tr>
 									<td>&nbsp;</td>
-									<td>XXadres locatie</td>
+									<td>{{location.Address}}</td>
 									<td>&nbsp;</td>
-									<td><a href="mailto:XXlocemail">XXlocemail</a></td>
+									<td><a href="mailto:{{location.Email}}">{{location.Email}}</a></td>
 								</tr>
 								<tr>
 									<td>
 										<img width="14" height="14" border="0" src="https://www.seats2meet.com/content/images/email.png" /></td>
-									<td>XXpostcodestad locatie</td>
+									<td>{{location.Zipcode}} {{location.City}}</td>
 									<td><strong>C.o.C.</strong></td>
-									<td>XXkvknaamennummer</td>
+									<td>{{location.CocNumber}} - {{location.CocName}}</td>
 								</tr>
 							</table>
 						</td>
@@ -170,15 +103,15 @@
 						<td nowrap valign="top" width="300">
 							<table cellpadding="0" cellspacing="0" border="0" width="300">
 								<tr>
-									<td colspan="2"><strong>Boekingsdetails</strong></td>
+									<td colspan="2"><strong>Details</strong></td>
 								</tr>
 								
 										<tr>
-											<td valign="top" width="105" nowrap="nowrap">Boekingsnr.</td>
+											<td valign="top" width="105" nowrap="nowrap">Booking no.</td>
 											<td valign="top">{{reference.ReservationId}}</td>
 										</tr>
 										<tr>
-											<td valign="top" nowrap="nowrap">Referentie</td>
+											<td valign="top" nowrap="nowrap">Reference</td>
 											<td valign="top">{{reference.LocationName}}</td>
 										</tr>
 										<tr>
@@ -195,7 +128,7 @@
 										</tr>
 									
 								<tr>
-									<td valign="top">Debiteurnr.</td>
+									<td valign="top">Debtor no.</td>
 									<td valign="top">{{invoice.DebtorId}}</td>
 								</tr>
 								<tr>
@@ -207,47 +140,52 @@
 				</table>
 			</td>
 		</tr>
-        {% for item in invoice.InvoiceLines %}
-         {{item.Text|safe}}
-        {% endfor %}
 		<tr>
 			<td>
 				<table cellpadding="0" cellspacing="0" border="0" width="610">
 					<thead>
 						<tr>
-							<td width="80"><strong>Aantal</strong></td>
-							<td width="240"><strong>Beschrijving</strong></td>
-							<td width="95" align="right"><strong>Item prijs</strong></td>
+							<td width="80"><strong>Amount</strong></td>
+							<td width="240"><strong>Description</strong></td>
+							<td width="95" align="right"><strong>Item price</strong></td>
 							
-							<td width="90" align="right"><strong>BTW</strong></td>
+							<td width="90" align="right"><strong>VAT</strong></td>
 							
-							<td width="105" align="right"><strong>Totaal</strong></td>
+							<td width="105" align="right"><strong>Total</strong></td>
 						</tr>
 					</thead>
 					<tbody>
 						<tr>
 							<td colspan="5" height="5"></td>
 						</tr>
-						
-								<tr>
-									<td class="invoiceLineNumberCell"><span class="invoiceLineNumber"></span></td>
-									<td class="invoiceLineTextCell"><span class="invoiceLineText">{{reference.ReservationName}}</span></td>
-									<td class="invoiceLinePricePerItemCell"><span class="invoiceLinePricePerItem"></span></td>
-									
-									<td class="invoiceLineTaxCell"><span class="invoiceLineTax"></span></td>
-									
-									<td class="invoiceLinePriceTotalCell"><span class="invoiceLinePriceTotal"></span></td>
-								</tr>
-							
-								<tr>
-									<td class="invoiceLineNumberCell"><span class="invoiceLineNumber">2x</span></td>
-									<td class="invoiceLineTextCell"><span class="invoiceLineText">Meetingspace One (11:30 - 13:00)</span></td>
-									<td class="invoiceLinePricePerItemCell"><span class="invoiceLinePricePerItem">&euro;{% if item.PricePerItem != 0.0000 %}{{item.PricePerItem}}{% endif %}</span></td>
-									
-									<td class="invoiceLineTaxCell"><span class="invoiceLineTax">0.00%</span></td>
-									
-									<td class="invoiceLinePriceTotalCell"><span class="invoiceLinePriceTotal">&euro;30.60</span></td>
-								</tr>
+
+        {% for item in invoice.InvoiceLines %}
+        {% if  item.IsTextRow == True %}
+        <tr>
+            <td class="invoiceLineNumberCell"><span class="invoiceLineNumber"></span></td>
+            <td class="invoiceLineTextCell"><span class="invoiceLineText">{{item.Text|safe}}</span></td>
+            <td class="invoiceLinePricePerItemCell"><span class="invoiceLinePricePerItem"></span></td>
+            
+            <td class="invoiceLineTaxCell"><span class="invoiceLineTax"></span></td>
+            
+            <td class="invoiceLinePriceTotalCell"><span class="invoiceLinePriceTotal"></span></td>
+        </tr>   
+
+        {%endif%}
+        {% if  item.IsTextRow == False and item.TextGroupId == 1 %}
+        <tr>
+            <td class="invoiceLineNumberCell"><span class="invoiceLineNumber">{{item.Amount}}x</span></td>
+            <td class="invoiceLineTextCell"><span class="invoiceLineText">{{item.Text|safe}}</span></td>
+            <td class="invoiceLinePricePerItemCell"><span class="invoiceLinePricePerItem">{{item.CurrencySymbol|safe}}{{item.PricePerItem|floatformat:2}}</span></td>
+            
+            <td class="invoiceLineTaxCell"><span class="invoiceLineTax">{{item.TaxPercentage|floatformat:0}}%</span></td>
+            
+            <td class="invoiceLinePriceTotalCell"><span class="invoiceLinePriceTotal">{{item.CurrencySymbol|safe}}{{item.TotalPriceExcludingTax|floatformat:2}}</span></td>
+        </tr> 
+
+        {%endif%}
+        {% endfor %}	
+
 							
 						<tr>
 							<td colspan="5">
@@ -255,8 +193,8 @@
 							</td>
 						</tr>
 						<tr>
-							<td colspan="4">Subtotaal</td>
-							<td align="right" width="105">&euro;30.60</td>
+							<td colspan="4">Subtotal</td>
+							<td align="right" width="105">{{invoice.CurrencySymbol|safe}}{{first_sub|floatformat:2}}</td>
 						</tr>
 						<tr>
 							<td colspan="5">
@@ -267,26 +205,31 @@
 							<td colspan="5">&nbsp;</td>
 						</tr>
 
-						
-								<tr>
-									<td class="invoiceLineNumberCell"><span class="invoiceLineNumber">2x</span></td>
-									<td class="invoiceLineTextCell"><span class="invoiceLineText">Koffie &amp; thee</span></td>
-									<td class="invoiceLinePricePerItemCell"><span class="invoiceLinePricePerItem">&euro;4.00</span></td>
-									
-									<td class="invoiceLineTaxCell"><span class="invoiceLineTax">6.00%</span></td>
-									
-									<td class="invoiceLinePriceTotalCell"><span class="invoiceLinePriceTotal">&euro;8.00</span></td>
-								</tr>
+			
+        {% for item in invoice.InvoiceLines %}
+        {% if  item.IsTextRow == False and item.TextGroupId == 2 %}
+        <tr>
+            <td class="invoiceLineNumberCell"><span class="invoiceLineNumber">{{item.Amount}}x</span></td>
+            <td class="invoiceLineTextCell"><span class="invoiceLineText">{{item.Text|safe}}</span></td>
+            <td class="invoiceLinePricePerItemCell"><span class="invoiceLinePricePerItem">{{item.CurrencySymbol|safe}}{{item.PricePerItem|floatformat:2}}</span></td>
+            
+            <td class="invoiceLineTaxCell"><span class="invoiceLineTax">{{item.TaxPercentage|floatformat:0}}%</span></td>
+            
+            <td class="invoiceLinePriceTotalCell"><span class="invoiceLinePriceTotal">{{item.CurrencySymbol|safe}}{{item.TotalPriceExcludingTax|floatformat:2}}</span></td>
+        </tr> 
+
+		{%endif%}
+        {% endfor %}
+
 							
-						
 						<tr>
 							<td colspan="5">
 								<hr />
 							</td>
 						</tr>
 						<tr>
-							<td colspan="4">Subtotaal</td>
-							<td align="right" width="105">&euro;8.00</td>
+							<td colspan="4">Subtotal</td>
+							<td align="right" width="105">{{invoice.CurrencySymbol|safe}}{{second_sub|floatformat:2}}</td>
 						</tr>
 						<tr>
 							<td colspan="5">
@@ -296,32 +239,53 @@
 						<tr>
 							<td colspan="5">&nbsp;</td>
 						</tr>
-						
+
 
 						<tr>
 							<td colspan="4">
-								Totaal excl. BTW
+								Total excl. VAT
 								
 							</td>
-							<td align="right" width="105">&euro;38.60</td>
+							<td align="right" width="105">{{invoice.CurrencySymbol|safe}}{{invoice.TotalExcludingTax|floatformat:2}}</td>
 						</tr>
 
-						
+		{% for item in invoice.InvoiceLines %}
+        {% if  item.IsTextRow == False and item.TextGroupId == 5 and item.TaxId = 3 %}
 								<tr>
 									<td class="invoiceLineNumberCell" colspan="4">
-										Belastbaar met 6.00%
+										Accountable for 6.00% VAT 
 									</td>
 
-									<td class="invoiceLinePriceTotalCell"><span class="invoiceLinePriceTotal">&euro;8.00</span></td>
+									<td class="invoiceLinePriceTotalCell"><span class="invoiceLinePriceTotal">{{invoice.CurrencySymbol|safe}}{{item.TotalPriceExcludingTax|floatformat:2}}</span></td>
 								</tr>
-							
+		{%endif%}
+        {% endfor %}					
 						
 								<tr>
 									<td class="invoiceLineNumberCell" colspan="4">
-										Totaal BTW 6.00%
+										Total VAT 6.00%
 									</td>
 
-									<td class="invoiceLinePriceTotalCell"><span class="invoiceLinePriceTotal">&euro;0.48</span></td>
+									<td class="invoiceLinePriceTotalCell"><span class="invoiceLinePriceTotal">{{invoice.CurrencySymbol|safe}}{{sixperc|floatformat:2}}</span></td>
+								</tr>
+		{% for item in invoice.InvoiceLines %}
+        {% if  item.IsTextRow == False and item.TextGroupId == 5 and item.TaxId = 6 %}
+								<tr>
+									<td class="invoiceLineNumberCell" colspan="4">
+										Accountable for 21.00% VAT 
+									</td>
+
+									<td class="invoiceLinePriceTotalCell"><span class="invoiceLinePriceTotal">{{invoice.CurrencySymbol|safe}}{{item.TotalPriceExcludingTax|floatformat:2}}</span></td>
+								</tr>
+		{%endif%}
+        {% endfor %}					
+						
+								<tr>
+									<td class="invoiceLineNumberCell" colspan="4">
+										Total VAT 6.00%
+									</td>
+
+									<td class="invoiceLinePriceTotalCell"><span class="invoiceLinePriceTotal">{{invoice.CurrencySymbol|safe}}{{twentyoneperc|floatformat:2}}</span></td>
 								</tr>
 							
 						<tr>
@@ -330,12 +294,13 @@
 							</td>
 						</tr>
 						<tr>
-							<td colspan="4">Totaal incl. BTW</td>
-							<td align="right" width="105">&euro;39.08</td>
+							<td colspan="4">Total incl. VAT</td>
+							<td align="right" width="105">{{invoice.CurrencySymbol|safe}}{{invoice.TotalIncludingTax}}</td>
 						</tr>
-						
 
-						
+
+
+			
 					</tbody>
 					<tfoot>
 						<tr>

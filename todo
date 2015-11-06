@@ -6,15 +6,9 @@
 
 
 ---met prio top to bottom:
-Fix PDF creator bij offertes
-handmatig toevoegen van reserveringen, pro-actieve leads bijhouden dus..
-
-
-
 auto-invoicing afmaken
-onder controle: https://www.seats2meet.com/Help/Api/GET-api-invoices-location-locationId
-versturen: https://www.seats2meet.com/Help/Api/POST-api-invoices-sendmail
-mailtext erbij halen; https://www.seats2meet.com/Help/Api/POST-api-invoices-mailtext
+
+handmatig toevoegen van reserveringen, pro-actieve leads bijhouden dus..
 
 
 ---CRON----
@@ -25,14 +19,13 @@ elise: Waar we vooral behoefte hebben aan zoiets is als er veel subzalen zijn.
 
 
 -------wannahaves
+Fix PDF creator bij offertes
 grove stats 'annuleringsratio, omzet vs budget, etc...'.
 amount of money in reservations (realtime budget) VS
 https://www.seats2meet.com/Help/Api/GET-api-budget-locationId-year
 https://www.seats2meet.com/Help/Api/POST-api-stats-meetingspaceoccupancy
 
 fix snelheid cron, moet je echt ALLES ophalen? eigenlijk alleen die zijn aangemaakt en veranderd na de laatste keer..
-
-alleen ophalen wat je nodig hebt. Dus als iemand een pagina bekijkt, dan pas ophalen. (hoe track je dan updates van reserveringen?)
 
 
 -------just an idea
