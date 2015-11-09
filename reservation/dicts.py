@@ -23,4 +23,27 @@ def salestip(sales_status):
         message = "Er is geen status bekend!!"
     return message
 
+def short_salestip(sales_status):
+    if sales_status == '1':
+        message = "Call customer."
+    elif sales_status == '2':
+        message = "Invite for a tour."
+    elif sales_status == '3':
+        message = "Send an offer"
+    elif sales_status == '4':
+        message = "Call about offer"
+    elif sales_status == '5':
+        message = "Double-check the preparations"
+    elif sales_status == '6':
+        message = "Wait until after meeting."
+    elif sales_status == '7':
+        message = "Evaluate and plan ahead."
+    elif sales_status == '8':
+        message = "Nothing:)"
+    elif sales_status == '9':
+        message = "Nothing:)"
+    else:
+        message = "Er is geen status bekend!!"
+    return message
+
 

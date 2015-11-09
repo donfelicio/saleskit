@@ -217,7 +217,7 @@ def home(request):
       context = {
          'reservation': reservation,
          'status_list': Statuscode.objects.all(),
-         'no_res': no_res,         
+         'no_res': no_res,
          'userprofile': Userprofile.objects.get(user_name=request.user.username)
          }
       
@@ -226,6 +226,7 @@ def home(request):
          context['status_changes'] = Statuschange.objects.all().filter(res_id=reservation.res_id)
          context['res_open'] = len(res_list) - len(Reservationfilter.objects.all().filter(user_name=request.user.username, location_id=Userprofile.objects.get(user_name=request.user.username).active_location))
          context['sales_tip'] = salestip(reservation.res_status_sales)
+         context['short_sales_tip'] = short_salestip(reservation.res_status_sales)
          context['days_untouched'] = getattr(datetime.date.today() - reservation.res_last_change_date, "days")
          context['days_last_change'] = getattr(datetime.date.today() - reservation.res_last_change_date, "days")
          context['days_to_res'] = getattr(reservation.res_date - datetime.date.today(), "days")
@@ -256,7 +257,7 @@ def res_input(request):
    #if form is saved, save to db
    if request.method == 'POST' and 'res_id' in request.POST:
       
-      #if needed create and always update active location.
+      #update the reservation.
       instance = Reservation.objects.get(res_id=request.POST['res_id'])
       instance.res_intro=request.POST['res_intro']
       instance.save()
@@ -278,9 +279,9 @@ def status_change(request):
       
       #update the reservation
       instance = Reservation.objects.get(res_id=request.POST['res_id'])
-      instance.res_prev_status=request.POST['res_prev_status']
-      instance.res_last_change_by=request.POST['res_last_change_by']
-      instance.res_status_sales=request.POST['res_status_sales']
+      instance.res_prev_status=request.GET.get('res_prev_status')
+      instance.res_last_change_by=request.GET.get('res_last_change_by')
+      instance.res_status_sales=request.GET.get('res_status_sales')
       instance.save()
       
       #add the statuschange instance

@@ -13,38 +13,38 @@
         
     {% else %}
          
-     <h4>Only {{res_open}} to go! This customer needs your attention. Last change was {{days_untouched}} days ago. </h4><h2 style="color:red;">Do right now:</h2><p>{{sales_tip}}</p>
+     <h4>Only {{res_open}} to go!</h4><h2 style="color:red;">Do right now: {{short_sales_tip}}</h2><p>{{sales_tip}}</p>
 
      <div class="accordion">
 
           <div class="accordion-section">
                <a class="accordion-section-title active" href="#accordion-{{reservation.res_id}}">
-                    #{{reservation.res_id}} 
                     {% if reservation.res_last_change_by != None %}
-                    - Last change by: {{reservation.res_last_change_by}} from status '{{reservation.get_res_prev_status_display}}', {{days_last_change}} days ago
+                    Last change by: {{reservation.res_last_change_by}} {{days_last_change}} days ago, from status '{{reservation.get_res_prev_status_display}}'
                     {% else %}
                     - Nobody has made changes to this reservation, let's do this!
-                    
                     {% endif %}
                     
                </a>
                <div id="accordion-{{reservation.res_id}}" class="accordion-section-content open" style="display: block">
                     <p class="pull-right">
-                    <p><a href="https://www.seats2meet.com/locations/{{reservation.res_location_id}}/saleskit/manage/reservation/{{reservation.res_id}}" target="_blank">Go to reservation in Seats2meet.com: {{ reservation.res_id }}</a>
+      
+                    <p><a href="https://www.seats2meet.com/locations/{{reservation.res_location_id}}/saleskit/manage/reservation/{{reservation.res_id}}" target="_blank">Go to reservation in Seats2meet.com: {{ reservation.res_id }}
+                    
+                    </a> --- Offer Site:
+                    <!--nl--><a href="/show?r={{reservation.res_id}}&u={{userprofile.user_key}}&lang=nl" target="_blank"><button class="btn btn-primary">Nl</button></a>
+                    <!--en--><a href="/show?r={{reservation.res_id}}&u={{userprofile.user_key}}" target="_blank"><button class="btn btn-primary">Eng</button></a>
+                    <!--intro--><a href="res_input?res_id={{reservation.res_id}}"<button class="btn {% if reservation.res_intro != '' %}btn-success {% else %} btn-primary {% endif %}">Add intro text</button></a></td></tr>
                     
                       </p>
                     <table class="table">
                          <tr>
                               <td>Date:</td><td> {{reservation.res_date|date:'Y-m-d'}} - Meeting is in <b>{{days_to_res}} </b>days</td>
                          </tr> 
-                         <tr><td>Customer:</td><td> {{reservation.res_user}}</td></tr>
-                         <tr><td>Company:</td><td> {{reservation.res_company}}</td></tr>
+                         <tr><td>Company/Customer:</td><td>{{reservation.res_company}} / {{reservation.res_user}}</td></tr>
                          <tr><td>Seats:</td><td> {{reservation.res_total_seats}}pax</td></tr>
                          <tr><td>S2M status:</td><td> {{reservation.get_res_status_display}}</td></tr>
-                         <tr><td>Offer Site</td><td>
-                    <!--nl--><a href="/show?r={{reservation.res_id}}&u={{userprofile.user_key}}&lang=nl" target="_blank"><button class="btn btn-primary">Nl</button></a>
-                    <!--en--><a href="/show?r={{reservation.res_id}}&u={{userprofile.user_key}}" target="_blank"><button class="btn btn-primary">Eng</button></a>
-                    <!--intro--><a href="res_input?res_id={{reservation.res_id}}"<button class="btn {% if reservation.res_intro != '' %}btn-success {% else %} btn-primary {% endif %}">Add intro text</button></a></td></tr>
+                         
                     </table>
                     
           <div class="col-md-5 col-md-offset-3">
@@ -103,8 +103,7 @@
                    <input type="text" name="hide_days" id="datepicker">
                    </td><td>
                    <button type="submit" class="btn btn-primary">Hide</button>
-               </td><td style="padding-left:20px;"><i>Select today to hide this reservation for 60 minutes</i></td></tr></table>
-                   
+               </td><td style="padding-left:20px;"><i>Select today to hide this reservation for 60 minutes</i></td></tr></table>   
                </form>
            <!-- end of all butons -->
      </div>
