@@ -15,6 +15,30 @@ def filter_res_status_sales_8(element):
 
 def filter_res_status_sales_9(element):
     return element.res_status_sales != '9'
+
+def login_processes(request):
+   #delete all reservation instances older than 2 weeks ago
+   for reservation in Reservation.objects.all():
+      if reservation.res_date < (datetime.date.today()-datetime.timedelta(weeks=2)):#if res is older than 2 weeks
+         Reservation.objects.get(res_id=reservation.res_id).delete()
+         
+#delete all the users old hidereservation instances (older than today)
+   for resfilter in Reservationfilter.objects.all().filter(user_name=request.user.username):
+      if resfilter.hide_days < datetime.date.today():
+         Reservationfilter.objects.get(res_id=resfilter.res_id, user_name=resfilter.user_name).delete()
+      elif resfilter.hide_days == datetime.date.today() and (int(resfilter.hide_hour) - int(datetime.datetime.now().time().strftime('%H'))) * 60 + (int(resfilter.hide_minute) - int(datetime.datetime.now().time().strftime('%M'))) < 0:
+         Reservationfilter.objects.get(res_id=resfilter.res_id, user_name=resfilter.user_name).delete()
+      #try if res_id exists, anders weg
+      try: #can we find it?
+         instance = Reservation.objects.get(res_id=resfilter.res_id)
+      except: #didn't find it
+         Reservationfilter.objects.get(res_id=resfilter.res_id, user_name=resfilter.user_name).delete()
+      else: #found it
+         pass
+   
+   
+   #delete all filter instances without a reservation
+
    
    
 #the loading page that gets and updates all reservations from s2m
@@ -113,7 +137,6 @@ def create_locationlist(request,userprofile, locationlist):
       
 
 def home(request):
-
    
    #load this if user is logged in and set some empty stuff for later if it isn't used
    no_res = True
@@ -148,13 +171,13 @@ def home(request):
          b.daemon = True
          b.start()
          time.sleep(1)
-
       return redirect('/')
             
    
    #when a user clicks 'next', save the items's last change date as today 
    if request.method == 'POST' and 'hide_days' in request.POST:
       if request.POST['hide_days'] != '':
+         print request.POST['hide_days'] 
          if datetime.datetime.strptime(request.POST['hide_days'], '%m/%d/%Y').strftime('%Y-%m-%d') == str(datetime.date.today()):
             now_plus_hour = datetime.datetime.now() + datetime.timedelta(hours=1)
          else:
@@ -162,22 +185,13 @@ def home(request):
          Reservationfilter.objects.create(user_name=request.user.username, res_id=request.POST['res_id'], location_id=Userprofile.objects.get(user_name=request.user.username).active_location, hide_days=datetime.datetime.strptime(request.POST['hide_days'], '%m/%d/%Y').strftime('%Y-%m-%d'), hide_hour=now_plus_hour.strftime('%H'), hide_minute=now_plus_hour.strftime('%M'))
 
    
-   if request.user.username: #if user is logged in
-   #delete all the users old hidereservation keys (older than today)
-      for resfilter in Reservationfilter.objects.all().filter(user_name=request.user.username):
-         if resfilter.hide_days < datetime.date.today():
-            Reservationfilter.objects.get(res_id=resfilter.res_id, user_name=resfilter.user_name).delete()
-         elif resfilter.hide_days == datetime.date.today() and (int(resfilter.hide_hour) - int(datetime.datetime.now().time().strftime('%H'))) * 60 + (int(resfilter.hide_minute) - int(datetime.datetime.now().time().strftime('%M'))) < 0:
-            Reservationfilter.objects.get(res_id=resfilter.res_id, user_name=resfilter.user_name).delete()
-            
+   if request.user.username: #if user is logged in            
       #check if it's the same day as last_login, otherwise checkout
       if Userprofile.objects.get(user_name=request.user.username).last_login != datetime.date.today():
          return redirect('/logout')
       
-      #maak nu de locationlist terwijl de gebruiker wacht
-      
+      #maak nu de locationlist terwijl de gebruiker wacht, firstrun only
       if Userprofile.objects.get(user_name=request.user.username).loc_updated == 'no':
-
          p = Thread(target=create_locationlist, args=(request, Userprofile.objects.get(user_name=request.user.username),s2m_locationlist()))
          p.daemon = True
          p.start()
@@ -221,8 +235,7 @@ def home(request):
          'userprofile': Userprofile.objects.get(user_name=request.user.username)
          }
       
-      if reservation: #if there is a reservation.. (might be empty list?)
-         
+      if reservation: #if there is a reservation.. (might be empty list?)   
          context['status_changes'] = Statuschange.objects.all().filter(res_id=reservation.res_id)
          context['res_open'] = len(res_list) - len(Reservationfilter.objects.all().filter(user_name=request.user.username, location_id=Userprofile.objects.get(user_name=request.user.username).active_location))
          context['sales_tip'] = salestip(reservation.res_status_sales)
@@ -254,7 +267,7 @@ def help(request):
 
 
 def res_input(request):
-   #if form is saved, save to db
+   #Let user add input to offer site
    if request.method == 'POST' and 'res_id' in request.POST:
       
       #update the reservation.
@@ -274,7 +287,7 @@ def res_input(request):
 
 
 def status_change(request):
-   #if form is saved, save to db
+   #if change of sales status and note are added, save to db
    if request.method == 'POST' and 'res_id' in request.POST:
       
       #update the reservation
@@ -314,4 +327,6 @@ def logout(request):
 
 def login(request):
    s2m_login(request)
+   #run the login processes (removal of old filters, reservations, etc..)
+   login_processes(request)
    return redirect('/')

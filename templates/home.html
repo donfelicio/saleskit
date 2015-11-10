@@ -18,14 +18,15 @@
      <div class="accordion">
 
           <div class="accordion-section">
+               
                <a class="accordion-section-title active" href="#accordion-{{reservation.res_id}}">
                     {% if reservation.res_last_change_by != None %}
                     Last change by: {{reservation.res_last_change_by}} {{days_last_change}} days ago, from status '{{reservation.get_res_prev_status_display}}'
                     {% else %}
-                    - Nobody has made changes to this reservation, let's do this!
+                    Nobody has made changes to this reservation, let's do this!
                     {% endif %}
-                    
                </a>
+               
                <div id="accordion-{{reservation.res_id}}" class="accordion-section-content open" style="display: block">
                     <p class="pull-right">
       
@@ -96,14 +97,18 @@
 
     <div class="jumbotron" style="height:70px;padding-top:1px;padding-bottom: 50px;background-color: #7a7a7a">
           <h3 class="col-md-4"><span style="color:red;">3. Save </span>and show again on: </h3>
-               <form style="margin-top:15px;" action="" method="POST" class="col-md-8">{% csrf_token %}
-                   <input type="hidden" name="res_id" value="{{reservation.res_id}}">
-                   <input type="hidden" name="user_name" value="{{request.user.username}}">
-                   <table><tr><td>
-                   <input type="text" name="hide_days" id="datepicker">
-                   </td><td>
-                   <button type="submit" class="btn btn-primary">Next</button>
-               </td><td style="padding-left:20px;"><i>Select today to hide this reservation for 60 minutes</i></td></tr></table>   
+               <form style="margin-top:15px;" action="" method="POST" class="col-md-6">{% csrf_token %}
+                    <input type="hidden" name="res_id" value="{{reservation.res_id}}">
+                    <input type="hidden" name="user_name" value="{{request.user.username}}">
+                    <input type="text" name="hide_days" id="datepicker">
+                    <button type="submit" class="btn btn-primary">Next</button>
+                    <i>Select 'today' to hide for 60 minutes</i>   
+               </form>
+               <form style="margin-top:15px;" action="" method="POST">{% csrf_token %}
+                    <input type="hidden" name="res_id" value="{{reservation.res_id}}">
+                    <input type="hidden" name="user_name" value="{{request.user.username}}">
+                    <input type="hidden" name="hide_days" value="01/01/9999">
+                    <button type="submit" class="btn btn-primary">Not my reservation</button>
                </form>
            <!-- end of all butons -->
      </div>
