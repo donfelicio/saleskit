@@ -374,6 +374,7 @@ def status_change(request):
 def logout(request):
    instance = Userprofile.objects.get(user_name=request.user.username)
    instance.active_location = False
+   instance.active_reservation = '0'
    instance.res_updated = 'done'
    instance.save()
    request.session.flush()
