@@ -13,7 +13,7 @@
         
     {% else %}
          
-     <h4>Only {{res_open}} to go!</h4><h2 style="color:red;">Do right now: {{short_sales_tip}}</h2><p>{{sales_tip}}</p>
+     <h4>Only {{res_open}} to go!</h4><h2 style="color:red;">1. Do right now: {{short_sales_tip}}</h2><p>{{sales_tip}}</p>
 
      <div class="accordion">
 
@@ -47,10 +47,10 @@
                          
                     </table>
                     
-          <div class="col-md-5 col-md-offset-3">
+          <div class="col-md-6 col-md-offset-3">
                <span class="step-links">
                     <span class="current" style="font-size: 18px;font-weight: bold">
-                         <h3>Status of reservation in sales funnel</h3>
+                         <h3><span style="color:red;">2. Update </span>Status in sales funnel</h3>
                     </span>
                </span>
           </div>
@@ -95,14 +95,14 @@
     </div><!--end .accordion-->
 
     <div class="jumbotron" style="height:70px;padding-top:1px;padding-bottom: 50px;background-color: #7a7a7a">
-          <h3 class="col-md-2">Hide until: </h3>
+          <h3 class="col-md-4"><span style="color:red;">3. Save </span>and show again on: </h3>
                <form style="margin-top:15px;" action="" method="POST" class="col-md-8">{% csrf_token %}
                    <input type="hidden" name="res_id" value="{{reservation.res_id}}">
                    <input type="hidden" name="user_name" value="{{request.user.username}}">
                    <table><tr><td>
                    <input type="text" name="hide_days" id="datepicker">
                    </td><td>
-                   <button type="submit" class="btn btn-primary">Hide</button>
+                   <button type="submit" class="btn btn-primary">Next</button>
                </td><td style="padding-left:20px;"><i>Select today to hide this reservation for 60 minutes</i></td></tr></table>   
                </form>
            <!-- end of all butons -->
