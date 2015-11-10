@@ -1,15 +1,9 @@
 #README
 #scheduler /management/commands draait op heroku services elke dag om 01:00 om alle reserveringen bij te werken van alle bekende locaties
 
---sinds laatste update
-'refresh button' toegevoegd
-updates in het uiterlijk
-'not my reservation' knop
-reservations over 2 weeks old are removed
-specific edit mode
-overview list
-
 ---met prio top to bottom:
+'not my res knop', reserveringen vallen nu tussen medewerkers door..
+stap 3. andere kleur.
 handmatig toevoegen van reserveringen, pro-actieve leads bijhouden dus..
 
 

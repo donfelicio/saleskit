@@ -26,7 +26,7 @@
                
                <a class="accordion-section-title active" href="#accordion-{{reservation.res_id}}">
                     {% if reservation.res_last_change_by != None %}
-                    Last change by: {{reservation.res_last_change_by}} {{days_last_change}} days ago, from status '{{reservation.get_res_prev_status_display}}'
+                    Last change by: {{reservation.res_last_change_by}} {{days_last_change}} days ago'
                     {% else %}
                     Nobody has made changes to this reservation, let's do this!
                     {% endif %}
@@ -53,7 +53,7 @@
                          
                     </table>
                     
-          <div class="col-md-6 col-md-offset-3">
+          <div class="col-md-6">
                <span class="step-links">
                     <span class="current" style="font-size: 18px;font-weight: bold">
                          <h3><span style="color:red;">2. Update </span>Status in sales funnel</h3>
@@ -61,7 +61,7 @@
                </span>
           </div>
           
-          <div id="row" class="col-md-12 col-md-offset-1">
+          <div id="row" class="col-md-12">
           {% for status in status_list %}    
                {% if reservation.res_status_sales == status.status_code %}
                  
@@ -101,7 +101,7 @@
     </div><!--end .accordion-->
 
     <div class="jumbotron" style="height:70px;padding-top:1px;padding-bottom: 50px;background-color: #7a7a7a">
-          <h3 class="col-md-4"><span style="color:red;">3. Save </span>and show again on: </h3>
+          <h3 class="col-md-4"><span style="color:#990000;">3. Save </span>and show again on: </h3>
                <form style="margin-top:15px;" action="" method="POST" class="col-md-3">{% csrf_token %}
                     <input type="hidden" name="res_id" value="{{reservation.res_id}}">
                     <input type="hidden" name="user_name" value="{{request.user.username}}">
