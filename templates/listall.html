@@ -130,6 +130,7 @@
                          <tr><td>Company/Customer:</td><td>{{reservation.res_company}} / {{reservation.res_user}}</td></tr>
                          <tr><td>Seats:</td><td> {{reservation.res_total_seats}}pax</td></tr>
                          <tr><td>S2M status:</td><td> {{reservation.get_res_status_display}}</td></tr>
+                         <tr><td>Sales funnel status:</td><td> {{reservation.get_res_status_sales_display}}</td></tr>
                          <tr><td><a href="/?active_res={{reservation.res_id}}"><button class="btn btn-primary">Go to funnel</button></a></td></tr>
                     </table>
                     </p>
