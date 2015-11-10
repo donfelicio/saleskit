@@ -6,6 +6,7 @@ from .s2m import *
 from .dicts import *
 from django.http import *
 import time
+from django.db.models import Q
 from threading import Thread
 
 
@@ -50,7 +51,6 @@ def loadpage(request):
    ran_before = instance.res_updated
    instance.res_updated = 'busy'
    instance.save()
-   
    
    for reservation in get_s2m_res(request):
       #cut loose date
@@ -103,8 +103,6 @@ def loadpage(request):
 
 
 
-
-
 def create_locationlist(request,userprofile, locationlist):
    
    if userprofile.loc_updated != 'busy' and userprofile.loc_updated != 'done':
@@ -130,10 +128,42 @@ def create_locationlist(request,userprofile, locationlist):
       instance = Userprofile.objects.get(user_name=request.user.username)
       instance.loc_updated = 'done'
       instance.save()
+   
     
     
     
-    
+def listall(request):
+   if request.user.username: #if user is logged in 
+      if request.method == 'POST' and 'q' in request.POST:
+         print request.POST['q']
+         res_list = Reservation.objects.filter(res_location_id=Userprofile.objects.get(user_name=request.user.username).active_location).exclude(res_status_sales=8).exclude(res_status_sales=9).filter(Q(res_user__icontains=request.POST['q']) | Q(res_company__icontains=request.POST['q']) | Q(res_id__icontains=request.POST['q']))
+      else:
+         res_list = Reservation.objects.all().filter(res_location_id=Userprofile.objects.get(user_name=request.user.username).active_location).exclude(res_status_sales=8).exclude(res_status_sales=9)
+      
+      list_size = len(res_list)
+      paginator = Paginator(res_list, 25) # Show 25 contacts per page
+   
+      page = request.GET.get('page')
+      try:
+          res_list = paginator.page(page)
+      except PageNotAnInteger:
+          # If page is not an integer, deliver first page.
+          res_list = paginator.page(1)
+      except EmptyPage:
+          # If page is out of range (e.g. 9999), deliver last page of results.
+          res_list = paginator.page(paginator.num_pages)
+      
+      
+      context={
+         'reservationlist':res_list,
+         'list_size': list_size,
+        }
+      template="listall.html"
+      return render(request, template, context)
+   else:
+      return redirect ('/')
+     
+     
       
 
 def home(request):
@@ -172,7 +202,12 @@ def home(request):
          b.start()
          time.sleep(1)
       return redirect('/')
-            
+   
+   #if a specific reservation is selected from the list to edit, update DB to this res
+   if request.GET.get('active_res'):
+      instance = Userprofile.objects.get(user_name=request.user.username)
+      instance.active_reservation = request.GET.get('active_res')
+      instance.save()
    
    #when a user clicks 'next', save the items's last change date as today 
    if request.method == 'POST' and 'hide_days' in request.POST:
@@ -183,7 +218,17 @@ def home(request):
          else:
             now_plus_hour = datetime.datetime.strptime('00:00', '%H:%M')
          Reservationfilter.objects.create(user_name=request.user.username, res_id=request.POST['res_id'], location_id=Userprofile.objects.get(user_name=request.user.username).active_location, hide_days=datetime.datetime.strptime(request.POST['hide_days'], '%m/%d/%Y').strftime('%Y-%m-%d'), hide_hour=now_plus_hour.strftime('%H'), hide_minute=now_plus_hour.strftime('%M'))
-
+   #make sure the userprofile doesn't have an active reservation anymore that selects the res to edit
+      instance = Userprofile.objects.get(user_name=request.user.username)
+      instance.active_reservation = '0'
+      instance.save()
+      
+   #if someone cancels the 'now editing active_reservation' mode
+   if request.GET.get('no_active_res'):
+      #make sure the userprofile doesn't have an active reservation anymore that selects the res to edit
+      instance = Userprofile.objects.get(user_name=request.user.username)
+      instance.active_reservation = '0'
+      instance.save()
    
    if request.user.username: #if user is logged in            
       #check if it's the same day as last_login, otherwise checkout
@@ -210,24 +255,32 @@ def home(request):
 
 
          
+
       #get list of all reservations !! i just want the next one that isn't processed yet
-      res_list = Reservation.objects.all().filter(res_location_id=Userprofile.objects.get(user_name=request.user.username).active_location)
+      active_reservation_id = Userprofile.objects.get(user_name=request.user.username).active_reservation
+      print active_reservation_id
+      if active_reservation_id != '0': #deze uit DB gaan halen, niet uit url 
+         reservation = Reservation.objects.get(res_id=active_reservation_id)
+         no_res = False
+      else:
+         res_list = Reservation.objects.all().filter(res_location_id=Userprofile.objects.get(user_name=request.user.username).active_location)
       #filter away stuff we don't need
-      res_list = filter(filter_res_status_sales_8, res_list) #success we don't need to show
-      res_list = filter(filter_res_status_sales_9, res_list) #failed we don't need to show
-      reservation = []
-      if res_list:
-         filtered_res_list = []
-         #get the first reservation that's not in the hidereservation table
-         for reservation in res_list:
-            try:
-               Reservationfilter.objects.get(res_id=reservation.res_id, user_name=request.user.username)
-            except: #No 'hide this res' filter was found
-               no_res = False
-               break
-            else: #a 'hide this res' filter was found
-               pass
-      
+         res_list = filter(filter_res_status_sales_8, res_list) #success we don't need to show
+         res_list = filter(filter_res_status_sales_9, res_list) #failed we don't need to show
+         
+         reservation = []
+         if res_list:
+            filtered_res_list = []
+            #get the first reservation that's not in the hidereservation table
+            for reservation in res_list:
+               try:
+                  Reservationfilter.objects.get(res_id=reservation.res_id, user_name=request.user.username)
+               except: #No 'hide this res' filter was found
+                  no_res = False
+                  break
+               else: #a 'hide this res' filter was found
+                  pass
+         
       context = {
          'reservation': reservation,
          'status_list': Statuscode.objects.all(),
@@ -237,13 +290,17 @@ def home(request):
       
       if reservation: #if there is a reservation.. (might be empty list?)   
          context['status_changes'] = Statuschange.objects.all().filter(res_id=reservation.res_id)
-         context['res_open'] = len(res_list) - len(Reservationfilter.objects.all().filter(user_name=request.user.username, location_id=Userprofile.objects.get(user_name=request.user.username).active_location))
          context['sales_tip'] = salestip(reservation.res_status_sales)
          context['short_sales_tip'] = short_salestip(reservation.res_status_sales)
          context['days_untouched'] = getattr(datetime.date.today() - reservation.res_last_change_date, "days")
          context['days_last_change'] = getattr(datetime.date.today() - reservation.res_last_change_date, "days")
          context['days_to_res'] = getattr(reservation.res_date - datetime.date.today(), "days")
-         
+      
+      if Userprofile.objects.get(user_name=request.user.username).active_reservation == '0':
+         context['res_open'] = len(res_list) - len(Reservationfilter.objects.all().filter(user_name=request.user.username, location_id=Userprofile.objects.get(user_name=request.user.username).active_location))
+      
+      if Userprofile.objects.get(user_name=request.user.username).active_reservation != '0':
+         context['active_res'] = True
          
       template = 'home.html'
       return render(request, template, context)

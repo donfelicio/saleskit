@@ -4,10 +4,12 @@
 --sinds laatste update
 'refresh button' toegevoegd
 updates in het uiterlijk
+'not my reservation' knop
+reservations over 2 weeks old are removed
+specific edit mode
+overview list
 
 ---met prio top to bottom:
-'not mine' knop -> eeuwig filter 
-lijst overzicht (res, comp/name, pax, date_to_res, last_edit_by)
 handmatig toevoegen van reserveringen, pro-actieve leads bijhouden dus..
 
 
@@ -19,6 +21,7 @@ elise: Waar we vooral behoefte hebben aan zoiets is als er veel subzalen zijn.
 
 
 -------wannahaves
+aftersales status -> success geen success -> invloed op proactieve sales
 Fix PDF creator bij offertes
 grove stats 'annuleringsratio, omzet vs budget, etc...'.
 amount of money in reservations (realtime budget) VS

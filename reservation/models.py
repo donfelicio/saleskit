@@ -53,6 +53,7 @@ class Userprofile(models.Model):
     user_name = models.CharField(max_length = 255, null=True)
     user_key = models.CharField(max_length = 255, null=True)
     active_location = models.CharField(max_length = 255, default=False)
+    active_reservation = models.CharField(max_length = 255, default=0)
     last_login = models.DateField(auto_now=True, null=True)
     res_updated = models.CharField(max_length = 255, default='no')
     loc_updated = models.CharField(max_length = 255, default='no')

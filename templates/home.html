@@ -13,7 +13,12 @@
         
     {% else %}
          
-     <h4>Only {{res_open}} to go!</h4><h2 style="color:red;">1. Do right now: {{short_sales_tip}}</h2><p>{{sales_tip}}</p>
+     {% if active_res == True %}
+     <h4>Now editing #{{reservation.res_id}} <a href="/?no_active_res=yes"<button class="btn btn-danger">Cancel</button></a></h4>
+     {% else %}
+     <h4>Only {{res_open}} to go!</h4>
+     {%endif%}
+     <h2 style="color:red;">1. Do right now: {{short_sales_tip}}</h2><p>{{sales_tip}}</p>
 
      <div class="accordion">
 
@@ -97,17 +102,19 @@
 
     <div class="jumbotron" style="height:70px;padding-top:1px;padding-bottom: 50px;background-color: #7a7a7a">
           <h3 class="col-md-4"><span style="color:red;">3. Save </span>and show again on: </h3>
-               <form style="margin-top:15px;" action="" method="POST" class="col-md-6">{% csrf_token %}
+               <form style="margin-top:15px;" action="" method="POST" class="col-md-3">{% csrf_token %}
                     <input type="hidden" name="res_id" value="{{reservation.res_id}}">
                     <input type="hidden" name="user_name" value="{{request.user.username}}">
                     <input type="text" name="hide_days" id="datepicker">
                     <button type="submit" class="btn btn-primary">Next</button>
-                    <i>Select 'today' to hide for 60 minutes</i>   
+                    <br><i>Select 'today' to hide for 60 minutes</i>  
                </form>
+               <h3 class="col-md-1">Or</h3>
                <form style="margin-top:15px;" action="" method="POST">{% csrf_token %}
                     <input type="hidden" name="res_id" value="{{reservation.res_id}}">
                     <input type="hidden" name="user_name" value="{{request.user.username}}">
                     <input type="hidden" name="hide_days" value="01/01/9999">
+                    
                     <button type="submit" class="btn btn-primary">Not my reservation</button>
                </form>
            <!-- end of all butons -->
