@@ -19,9 +19,9 @@ def filter_res_status_sales_9(element):
 
 def login_processes(request):
    #delete all reservation instances older than 2 weeks ago
-   for reservation in Reservation.objects.all():
-      if reservation.res_date < (datetime.date.today()-datetime.timedelta(weeks=2)):#if res is older than 2 weeks
-         Reservation.objects.get(res_id=reservation.res_id).delete()
+   # for reservation in Reservation.objects.all():
+   #    if reservation.res_date < (datetime.date.today()-datetime.timedelta(weeks=2)):#if res is older than 2 weeks
+   #       Reservation.objects.get(res_id=reservation.res_id).delete()
          
 #delete all the users old hidereservation instances (older than today)
    for resfilter in Reservationfilter.objects.all().filter(user_name=request.user.username):
