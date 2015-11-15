@@ -36,6 +36,12 @@
                          
                          <tr>
                               <td><a href="https://www.seats2meet.com/locations/{{reservation.res_location_id}}/saleskit/manage/reservation/{{reservation.res_id}}" target="_blank">Go to reservation in Seats2meet.com: {{ reservation.res_id }}
+                              </td><td>
+                                   {% if reservation.res_last_change_by != None %}
+                                   Last change by: {{reservation.res_last_change_by}}, {{days_last_change}} days ago
+                                   {% else %}
+                                   Last change by: Nobody has contacted this customer
+                                   {% endif %}
                               </td>
                          </tr>
                          <tr>
@@ -57,16 +63,7 @@
                     <!--en--><a href="/show?r={{reservation.res_id}}&u={{userprofile.user_key}}" target="_blank"><button class="btn btn-primary">Eng</button></a>
                               
                          </td></tr>
-                         <tr>
-                              <td>Last change made by:</td>
-                              <td>
-                                   {% if reservation.res_last_change_by != None %}
-                                   Last change by: {{reservation.res_last_change_by}} {{days_last_change}} days ago
-                                   {% else %}
-                                   Nobody has made changes to this reservation, let's do this!
-                                   {% endif %}
-                              </td>
-                         </tr>
+                       
                     </table>
                     
           <div class="col-md-6">
