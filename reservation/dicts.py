@@ -4,7 +4,7 @@ def salestip(sales_status):
     if sales_status == '1':
         message = "A new request showed up in your S2M reservations, give the client a call and get to know them and find a great collaboration. If they are happy as is and don't need a tour, offer or any other help, just change the status to 'success'"
     elif sales_status == '2':
-        message = "You have called the customer, invite them for a tour of the location, or send them an offer."
+        message = "You have called the customer. Invite them for a tour of the location, or send them an offer."
     elif sales_status == '3':
         message = "You've met the customer and gave them a tour. Now it's time to send them a great offer!"
     elif sales_status == '4':
