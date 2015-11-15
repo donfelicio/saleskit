@@ -286,14 +286,11 @@ def home(request):
          'no_res': no_res,
          'userprofile': Userprofile.objects.get(user_name=request.user.username)
          }
-      print reservation.res_last_change_date
-      print 'test'
       if reservation: #if there is a reservation.. (might be empty list?)   
          context['status_changes'] = Statuschange.objects.all().filter(res_id=reservation.res_id)
          context['sales_tip'] = salestip(reservation.res_status_sales)
          context['short_sales_tip'] = short_salestip(reservation.res_status_sales)
          context['days_untouched'] = getattr(datetime.date.today() - reservation.res_last_change_date, "days")
-         context['days_last_change'] = getattr(datetime.date.today() - reservation.res_last_change_date, "days")
          context['days_to_res'] = getattr(reservation.res_date - datetime.date.today(), "days")
       
       if Userprofile.objects.get(user_name=request.user.username).active_reservation == '0':

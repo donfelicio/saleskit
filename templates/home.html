@@ -31,14 +31,13 @@
                <div id="accordion-{{reservation.res_id}}" class="accordion-section-content open" style="display: block">
                     <p class="pull-right">
       
-                    {{reservation.res_last_change_date}}                    
                     <table class="table">
                          
                          <tr>
                               <td><a href="https://www.seats2meet.com/locations/{{reservation.res_location_id}}/saleskit/manage/reservation/{{reservation.res_id}}" target="_blank">Go to reservation in Seats2meet.com: {{ reservation.res_id }}
                               </td><td>
                                    {% if reservation.res_last_change_by != None %}
-                                   Last change by: {{reservation.res_last_change_by}}, {{days_last_change}} days ago
+                                   Last change by: {{reservation.res_last_change_by}}
                                    {% else %}
                                    Last change by: Nobody has contacted this customer
                                    {% endif %}
