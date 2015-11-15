@@ -258,7 +258,6 @@ def home(request):
 
       #get list of all reservations !! i just want the next one that isn't processed yet
       active_reservation_id = Userprofile.objects.get(user_name=request.user.username).active_reservation
-      print active_reservation_id
       if active_reservation_id != '0': #deze uit DB gaan halen, niet uit url 
          reservation = Reservation.objects.get(res_id=active_reservation_id)
          no_res = False
@@ -354,9 +353,17 @@ def status_change(request):
       instance.res_status_sales=request.GET.get('res_status_sales')
       instance.save()
       
+      #if success or failure: make sure the userprofile doesn't have an active reservation anymore that selects the res to edit
+      if request.GET.get('res_status_sales') == '8' or request.GET.get('res_status_sales') == '9':
+         instance = Userprofile.objects.get(user_name=request.user.username)
+         instance.active_reservation = '0'
+         instance.save()
+      
       #add the statuschange instance
       instance = Statuschange.objects.create(res_id=request.POST['res_id'], user_name=request.user.username, res_status_sales_code=request.POST['res_status_sales'], res_status_sales=Statuscode.objects.get(status_code=request.GET.get('res_status_sales', '')).description_short, change_note=request.POST['change_note'])      
       return redirect('/')
+   
+      
    
    context={
       'res_id':request.GET.get('res_id', ''),
