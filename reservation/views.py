@@ -286,7 +286,8 @@ def home(request):
          'no_res': no_res,
          'userprofile': Userprofile.objects.get(user_name=request.user.username)
          }
-      
+      print reservation.res_last_change_date
+      print 'test'
       if reservation: #if there is a reservation.. (might be empty list?)   
          context['status_changes'] = Statuschange.objects.all().filter(res_id=reservation.res_id)
          context['sales_tip'] = salestip(reservation.res_status_sales)
