@@ -18,7 +18,7 @@ def filter_res_status_sales_9(element):
     return element.res_status_sales != '9'
    
 def filter_over20(element):
-    return element.res_total_seats >= '20'
+    return int(element.res_total_seats) >= 20
    
 def filter_attention(element):
     return element.res_status == '1'
