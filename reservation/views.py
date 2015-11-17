@@ -171,11 +171,6 @@ def listall(request):
 
 def home(request):
    
-   
-   for row in Statuschange.objects.all():
-    if Statuschange.objects.filter(res_id=row.res_id, res_status_sales=row.res_status_sales).count() > 1:
-        row.delete()
-
    #load this if user is logged in and set some empty stuff for later if it isn't used
    no_res = True
    sales_tip = ''
