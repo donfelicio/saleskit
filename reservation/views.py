@@ -170,13 +170,6 @@ def listall(request):
       
 
 def home(request):
-
-   for reservation in Reservation.objects.all():
-      if reservation.get('res_status') == '2' and reservation.get('res_status_sales') == '1':
-         reservation.res_status_sales = '5'
-         reservation.save()
-         instance = Statuschange.objects.create(res_id=reservation.get("Id"), user_name="system", res_status_sales_code='5', res_status_sales=Statuscode.objects.get(status_code='5').description_short, change_note="This reservation was via the website, or it was finalized by your team")
-
    
    #load this if user is logged in and set some empty stuff for later if it isn't used
    no_res = True
