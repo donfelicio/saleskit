@@ -14,8 +14,15 @@
          
      {% if active_res == True %}
      <h4>Now editing #{{reservation.res_id}} <a href="/?no_active_res=yes"<button class="btn btn-danger">Cancel</button></a></h4>
+     {% elif critical %}
+     <h4>{{critical}} 'Critical' reservations to go</h4>
+     <i>Showing all reservations over 20 people, that need your immediate attention</i><hr>
+     {% elif important %}
+     <h4>{{important}} 'Important' reservations to go</h4>
+     <i>Showing all non-critical reservations that need your attention</i><hr>
      {% else %}
-     <h4>Only {{res_open}} to go!</h4><hr>
+     <h4>{{res_open}} reservations to go!</h4>
+     <i>Showing all reservations that you really shouldn't forget about</i><hr>
      {%endif%}
 
      <div id="row" class="col-md-12 col-md-offset-2" >

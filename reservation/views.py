@@ -16,7 +16,18 @@ def filter_res_status_sales_8(element):
 
 def filter_res_status_sales_9(element):
     return element.res_status_sales != '9'
-
+   
+def filter_over20(element):
+    return element.res_total_seats >= '20'
+   
+def filter_attention(element):
+    return element.res_status == '1'
+   
+def filter_request_received(element):
+    return element.res_status_sales == '1'
+   
+   
+   
 def login_processes(request):
    #delete all reservation instances older than 2 weeks ago
    # for reservation in Reservation.objects.all():
@@ -180,7 +191,11 @@ def home(request):
    status_list = ''
    res_open = ''
    loading = ''
-   filtered_res_list = ''
+   filtered_res_list = []
+   critical = []
+   important = []
+   res_list = []
+   
    
    #is user clicked 'refresh', do the refresh.
    if request.GET.get('refresh', '') == 'yes' and Userprofile.objects.get(user_name=request.user.username).res_updated != 'busy':
@@ -278,27 +293,51 @@ def home(request):
       #filter away stuff we don't need
          res_list = filter(filter_res_status_sales_8, res_list) #success we don't need to show
          res_list = filter(filter_res_status_sales_9, res_list) #failed we don't need to show
+         #now remove al filtered items
+         print len(res_list)
+         for reservation in res_list:
+            try:
+               Reservationfilter.objects.get(res_id=reservation.res_id, user_name=request.user.username)
+            except: #not found
+               filtered_res_list.append(reservation)
+            else: #found it
+               pass
          
-         reservation = []
-         if res_list:
-            filtered_res_list = []
-            #get the first reservation that's not in the hidereservation table
-            for reservation in res_list:
-               try:
-                  Reservationfilter.objects.get(res_id=reservation.res_id, user_name=request.user.username)
-               except: #No 'hide this res' filter was found
-                  no_res = False
-                  break
-               else: #a 'hide this res' filter was found
-                  pass
          
+         
+         #now test for stage of critical, important or dontforget
+         critical = filter(filter_over20, filtered_res_list)
+         critical = filter(filter_attention, critical)
+         critical = filter(filter_request_received, critical)
+         
+         important = filter(filter_attention, filtered_res_list)
+         
+         if len(critical) > 0:
+            res_list = critical
+            no_res = False
+            pass
+         elif len(important) > 0:
+            print 'YEEY'
+            res_list = important
+            no_res = False
+            pass
+         elif len(res_list) > 0: #if critical is empty, make important list
+            no_res = False
+      print res_list[0].res_id
+      reservation = res_list[0]
       context = {
          'reservation': reservation,
          'status_list': Statuscode.objects.all(),
          'no_res': no_res,
          'userprofile': Userprofile.objects.get(user_name=request.user.username)
          }
-      if reservation: #if there is a reservation.. (might be empty list?)   
+      
+      if len(critical) > 0:
+         context['critical'] = len(critical)
+      if len(important) > 0:
+         context['important'] = len(important)
+         
+      if no_res == False: #if there is a reservation.. (might be empty list?)   
          context['status_changes'] = Statuschange.objects.all().filter(res_id=reservation.res_id)
          context['sales_tip'] = salestip(reservation.res_status_sales)
          context['short_sales_tip'] = short_salestip(reservation.res_status_sales)
