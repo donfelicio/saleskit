@@ -4,11 +4,6 @@
 
 
 --today
-update db reservations if status 'final' and not 'success or failure / 8 or 9' to status 5 + code
-elif reservation.get("StatusId") == 2:
-                        sales_status = '5' #if status is final, set to 'second call', and add to status change that this was made online, or was handled directly. 
-                        instance = Statuschange.objects.create(res_id=reservation.get("Id"), user_name="system", res_status_sales_code='5', res_status_sales=Statuscode.objects.get(status_code='5').description_short, change_note="This reservation was via the website, or it was finalized by your team")
-
 
 
 ---met prio top to bottom:

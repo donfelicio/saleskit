@@ -85,15 +85,6 @@ class Command(BaseCommand):
                     findres = Reservation.objects.get(res_id=reservation.get("Id"))
                       
                 except: #didn't find it
-                    #if the res with s2m is cancelled, make the sales status a failure
-                    if reservation.get("StatusId") == 3:
-                        sales_status = '9'
-                    elif reservation.get("StatusId") == 2:
-                        sales_status = '5' #if status is final, set to 'second call', and add to status change that this was made online, or was handled directly. 
-                        instance = Statuschange.objects.create(res_id=reservation.get("Id"), user_name="system", res_status_sales_code='5', res_status_sales=Statuscode.objects.get(status_code='5').description_short, change_note="This reservation was via the website, or it was finalized by your team")
-                    else: #status is 'attention required', so set it to the first sales status
-                        sales_status = '1'
-                    
                     new_res = Reservation.objects.create(
                     res_id=reservation.get("Id"),
                     res_location_id=reservation.get("LocationId"),
@@ -115,9 +106,6 @@ class Command(BaseCommand):
                     #if the res with s2m is updated to cancelled, make the sales status a failure
                     if reservation.get("StatusId") == 3:
                         findres.res_status_sales = '9'
-                    if reservation.get("StatusId") == 1 and findres.res_status_sales != 8 and findres.res_status_sales != 9: #final 
-                        findres.res_status_sales = '5'
-                        instance = Statuschange.objects.create(res_id=reservation.get("Id"), user_name="system", res_status_sales_code='5', res_status_sales=Statuscode.objects.get(status_code='5').description_short, change_note="This reservation was via the website, or it was finalized by your team")
                       
                     findres.res_total_seats=reservation.get("TotalSeats")
                     findres.save()
