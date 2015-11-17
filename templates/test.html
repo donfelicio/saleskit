@@ -97,12 +97,12 @@
                          <a href="/show?r={{reservation.res_id}}&u={{userprofile.user_key}}&lang=nl" target="_blank"><button type="submit" class="btn btn-default" style="width:200px;">Show offer</button></a>
                     </p>
                     <p>
-                         <a href="/status_change?res_id={{reservation.res_id}}&res_prev_status={{reservation.res_status_sales}}&res_last_change_by={{request.user.first_name}} {{request.user.last_name}}&res_status_sales=8">
+                         <a href="/status_change?res_id={{reservation.res_id}}&res_prev_status={{reservation.res_status_sales}}&res_last_change_by={{request.user.first_name}} {{request.user.last_name}}&res_status_sales={{status.status_code}}">
                               <button type="submit" class="btn btn-success" style="width:200px;">Success</button>
                          </a>
                     </p>
                     <p>
-                         <a href="/status_change?res_id={{reservation.res_id}}&res_prev_status={{reservation.res_status_sales}}&res_last_change_by={{request.user.first_name}} {{request.user.last_name}}&res_status_sales=9">
+                         <a href="/status_change?res_id={{reservation.res_id}}&res_prev_status={{reservation.res_status_sales}}&res_last_change_by={{request.user.first_name}} {{request.user.last_name}}&res_status_sales={{status.status_code}}">
                               <button type="submit" class="btn btn-danger" style="width:200px;">Failed</button>
                          </a>
                     </p>

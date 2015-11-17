@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+     
+    {% block content %}     <!-- show page content --->
+       
+ {% if user.is_authenticated %}
+     {% if userprofile.res_updated == 'busy' or userprofile.loc_updated == 'busy' %}
+    <h4>Please wait while loading!</h4>
+    
+    {% elif no_res == True %}
+    <h4>There are no reservations to process, enjoy your day!</h4>
+        
+    {% else %}
+         
+     {% if active_res == True %}
+     <h4>Now editing #{{reservation.res_id}} <a href="/?no_active_res=yes"<button class="btn btn-danger">Cancel</button></a></h4>
+     {% else %}
+     <h4>Only {{res_open}} to go!</h4>
+     {%endif%}
+     <h2 style="color:red;">1. Do right now: {{short_sales_tip}}</h2><p>{{sales_tip}}</p>
+
+     <div class="accordion">
+
+          <div class="accordion-section">
+               
+               <a class="accordion-section-title active" href="#accordion-{{reservation.res_id}}">
+                    Reservation {{reservation.res_id}} - {{reservation.res_desc}}
+               </a>
+               
+               <div id="accordion-{{reservation.res_id}}" class="accordion-section-content open" style="display: block">
+                    <p class="pull-right">
+      
+                    <table class="table">
+                         
+                         <tr>
+                              <td><a href="https://www.seats2meet.com/locations/{{reservation.res_location_id}}/saleskit/manage/reservation/{{reservation.res_id}}" target="_blank">Go to reservation in Seats2meet.com: {{ reservation.res_id }}
+                              </td><td>
+                                   {% if reservation.res_last_change_by != None %}
+                                   Last change by: {{reservation.res_last_change_by}}
+                                   {% else %}
+                                   Last change by: Nobody has contacted this customer
+                                   {% endif %}
+                              </td>
+                         </tr>
+                         <tr>
+                              <td>Date:</td><td> {{reservation.res_date|date:'Y-m-d'}} - Meeting is in <b>{{days_to_res}} </b>days</td>
+                         </tr> 
+                         <tr><td>Company/Customer:</td><td>{{reservation.res_company}} / {{reservation.res_user}}</td></tr>
+                         <tr><td>Seats:</td><td> {{reservation.res_total_seats}}pax</td></tr>
+                         <tr><td>S2M status:</td><td> {{reservation.get_res_status_display}}</td></tr>
+                         <tr><td>
+                         Add into tekst to their offer:
+                         </td><td>
+                         <!--intro--><a href="res_input?res_id={{reservation.res_id}}"<button class="btn {% if reservation.res_intro != '' %}btn-success {% else %} btn-primary {% endif %}">Add intro text</button></a>
+                         </td></tr>
+                         <tr><td>
+                                                  
+                    </a>The website with their offer:
+                    </td><td>
+                    <!--nl--><a href="/show?r={{reservation.res_id}}&u={{userprofile.user_key}}&lang=nl" target="_blank"><button class="btn btn-primary">Nl</button></a>
+                    <!--en--><a href="/show?r={{reservation.res_id}}&u={{userprofile.user_key}}" target="_blank"><button class="btn btn-primary">Eng</button></a>
+                              
+                         </td></tr>
+                       
+                    </table>
+                    
+          <div class="col-md-6">
+               <span class="step-links">
+                    <span class="current" style="font-size: 18px;font-weight: bold">
+                         <h3><span style="color:red;">2. Update </span>Status in sales funnel</h3>
+                    </span>
+               </span>
+          </div>
+          
+          <div id="row" class="col-md-12">
+          {% for status in status_list %}    
+               {% if reservation.res_status_sales == status.status_code %}
+                 
+               <!-- no link needed, this already is the current status -->
+               <p class="col-md-1">
+                  <button type="submit" class="btn btn-primary" style="width:90px;font-size:12px;" data-toggle="tooltip" title="{{ status.description }}">{{status.description_short}}</button>
+               </p>
+                    
+               {% elif status.description_short == 'Success' %}
+               <p class="col-md-1">
+                    <a href="/status_change?res_id={{reservation.res_id}}&res_prev_status={{reservation.res_status_sales}}&res_last_change_by={{request.user.first_name}} {{request.user.last_name}}&res_status_sales={{status.status_code}}">
+                         <button type="submit" class="btn btn-success" style="width:90px;font-size:12px;" data-toggle="tooltip" title="{{ status.description }}">{{status.description_short}}</button>
+                    </a>
+               </p>
+               
+               {% elif status.description_short == 'Failed' %}
+               
+               <p class="col-md-1">
+                    <a href="/status_change?res_id={{reservation.res_id}}&res_prev_status={{reservation.res_status_sales}}&res_last_change_by={{request.user.first_name}} {{request.user.last_name}}&res_status_sales={{status.status_code}}">
+                         <button type="submit" class="btn btn-danger" style="width:90px;font-size:12px;" data-toggle="tooltip" title="{{ status.description }}">{{status.description_short}}</button>
+                    </a>
+               </p>
+                
+               {% else %}
+
+               <p class="col-md-1">
+                    <a href="/status_change?res_id={{reservation.res_id}}&res_prev_status={{reservation.res_status_sales}}&res_last_change_by={{request.user.first_name}} {{request.user.last_name}}&res_status_sales={{status.status_code}}">
+                         <button type="submit" class="btn btn-default" style="width:90px;font-size:12px;" data-toggle="tooltip" title="{{ status.description }}">{{status.description_short}}</button>
+                    </a>
+               </p>
+          
+             {% endif %}
+          {% endfor %}
+          </div>
+               </div><!--end .accordion-section-content-->
+         </div><!--end .accordion-section-->
+    </div><!--end .accordion-->
+
+    <div class="jumbotron" style="height:70px;padding-top:1px;padding-bottom: 50px;background-color: #7a7a7a">
+          <h3 class="col-md-4"><span style="color:#990000;">3. Save </span>and show again on: </h3>
+               <form style="margin-top:15px;" action="" method="POST" class="col-md-3">{% csrf_token %}
+                    <input type="hidden" name="res_id" value="{{reservation.res_id}}">
+                    <input type="hidden" name="user_name" value="{{request.user.username}}">
+                    <input type="text" name="hide_days" id="datepicker">
+                    <button type="submit" class="btn btn-primary">Next</button>
+                    <br><i>Select 'today' to hide for 60 minutes</i>  
+               </form>
+               <h3 class="col-md-1">Or</h3>
+               <form style="margin-top:15px;" action="" method="POST">{% csrf_token %}
+                    <input type="hidden" name="res_id" value="{{reservation.res_id}}">
+                    <input type="hidden" name="user_name" value="{{request.user.username}}">
+                    <input type="hidden" name="hide_days" value="01/01/9999">
+                    
+                    <button type="submit" class="btn btn-primary">Not my reservation</button>
+               </form>
+           <!-- end of all butons -->
+     </div>
+    <table class="table table-striped">
+    {% for change in status_changes %}
+    <tr><td>
+    <strong>Status: {{change.res_status_sales}}          </strong>Changed: {{change.change_date}} by {{change.user_name}}
+    </tr></td><tr><td>
+    Note: {{change.change_note}}
+    </td></tr>
+    {% endfor %}
+    </table> 
+   {% endif %}
+   {% endif %}
+    {% endblock %}     <!-- end page content -->
+    
+    
+

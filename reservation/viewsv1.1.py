@@ -63,7 +63,7 @@ def loadpage(request):
          sales_status = '9'
       elif reservation.get("StatusId") == 2:
          sales_status = '5' #if status is final, set to 'second call', and add to status change that this was made online, or was handled directly. 
-         instance = Statuschange.objects.create(res_id=reservation.get("Id"), user_name="system", res_status_sales_code='5', res_status_sales=Statuscode.objects.get(status_code='5').description_short, change_note="This reservation was via the website, or it was finalized by your team")
+         instance = Statuschange.objects.create(res_id=reservation.get("Id"), user_name="system", res_status_sales_code='5', res_status_sales=Statuscode.objects.get(status_code='5').description_short, change_note="This reservation was created via the website, or it was finalized by your team")
       else: #status is 'attention required, so set it to the first sales status
          sales_status = '1'
          
@@ -215,21 +215,12 @@ def home(request):
    #when a user clicks 'next', save the items's last change date as today 
    if request.method == 'POST' and 'hide_days' in request.POST:
       if request.POST['hide_days'] != '':
-         
-         # #old version with datepicker
-         # if datetime.datetime.strptime(request.POST['hide_days'], '%m/%d/%Y').strftime('%Y-%m-%d') == str(datetime.date.today()):
-         #    now_plus_hour = datetime.datetime.now() + datetime.timedelta(hours=1)
-         # else:
-         #    now_plus_hour = datetime.datetime.strptime('00:00', '%H:%M')
-         if request.POST['hide_days'] == "today":
+         print request.POST['hide_days'] 
+         if datetime.datetime.strptime(request.POST['hide_days'], '%m/%d/%Y').strftime('%Y-%m-%d') == str(datetime.date.today()):
             now_plus_hour = datetime.datetime.now() + datetime.timedelta(hours=1)
-            Reservationfilter.objects.create(user_name=request.user.username, res_id=request.POST['res_id'], location_id=Userprofile.objects.get(user_name=request.user.username).active_location, hide_days=(datetime.datetime.now()), hide_hour=now_plus_hour.strftime('%H'), hide_minute=now_plus_hour.strftime('%M'))
-         elif request.POST['hide_days'] == "forever":
-            now_plus_hour = datetime.datetime.strptime('00:00', '%H:%M')
-            Reservationfilter.objects.create(user_name=request.user.username, res_id=request.POST['res_id'], location_id=Userprofile.objects.get(user_name=request.user.username).active_location, hide_days=(datetime.datetime.now() + datetime.timedelta(days=999999)), hide_hour=now_plus_hour.strftime('%H'), hide_minute=now_plus_hour.strftime('%M'))
          else:
             now_plus_hour = datetime.datetime.strptime('00:00', '%H:%M')
-            Reservationfilter.objects.create(user_name=request.user.username, res_id=request.POST['res_id'], location_id=Userprofile.objects.get(user_name=request.user.username).active_location, hide_days=(datetime.datetime.now() + datetime.timedelta(days=1)), hide_hour=now_plus_hour.strftime('%H'), hide_minute=now_plus_hour.strftime('%M'))
+         Reservationfilter.objects.create(user_name=request.user.username, res_id=request.POST['res_id'], location_id=Userprofile.objects.get(user_name=request.user.username).active_location, hide_days=datetime.datetime.strptime(request.POST['hide_days'], '%m/%d/%Y').strftime('%Y-%m-%d'), hide_hour=now_plus_hour.strftime('%H'), hide_minute=now_plus_hour.strftime('%M'))
    #make sure the userprofile doesn't have an active reservation anymore that selects the res to edit
       instance = Userprofile.objects.get(user_name=request.user.username)
       instance.active_reservation = '0'
@@ -340,7 +331,8 @@ def res_input(request):
       instance = Reservation.objects.get(res_id=request.POST['res_id'])
       instance.res_intro=request.POST['res_intro']
       instance.save()
-      return redirect('/')
+      url = '/show?r=%s&u=%s' % (request.POST['res_id'], Userprofile.objects.get(user_name=request.user.username).user_key)
+      return redirect(url)
    
    context={
       'res_id':request.GET.get('res_id', ''),
@@ -363,46 +355,27 @@ def status_change(request):
       instance.res_status_sales=request.GET.get('res_status_sales')
       instance.save()
       
-      #make sure the userprofile doesn't have an active reservation anymore that selects the res to edit
-      instance = Userprofile.objects.get(user_name=request.user.username)
-      instance.active_reservation = '0'
-      instance.save()
-      
-      #now hide the reservation until tomorrow
-      now_plus_hour = datetime.datetime.strptime('00:00', '%H:%M')
-      Reservationfilter.objects.create(user_name=request.user.username, res_id=request.POST['res_id'], location_id=Userprofile.objects.get(user_name=request.user.username).active_location, hide_days=(datetime.datetime.now() + datetime.timedelta(days=1)), hide_hour=now_plus_hour.strftime('%H'), hide_minute=now_plus_hour.strftime('%M'))
+      #if success or failure: make sure the userprofile doesn't have an active reservation anymore that selects the res to edit
+      if request.GET.get('res_status_sales') == '8' or request.GET.get('res_status_sales') == '9':
+         instance = Userprofile.objects.get(user_name=request.user.username)
+         instance.active_reservation = '0'
+         instance.save()
       
       #add the statuschange instance
       instance = Statuschange.objects.create(res_id=request.POST['res_id'], user_name=request.user.username, res_status_sales_code=request.POST['res_status_sales'], res_status_sales=Statuscode.objects.get(status_code=request.GET.get('res_status_sales', '')).description_short, change_note=request.POST['change_note'])      
       return redirect('/')
    
-   elif request.GET.get('res_status_sales') == '8' or request.GET.get('res_status_sales') == '9':
-      #update the reservation
-      instance = Reservation.objects.get(res_id=request.GET.get('res_id'))
-      instance.res_prev_status=request.GET.get('res_prev_status')
-      instance.res_last_change_by=request.GET.get('res_last_change_by')
-      instance.res_status_sales=request.GET.get('res_status_sales')
-      instance.save()
       
-      #make sure the userprofile doesn't have an active reservation anymore that selects the res to edit
-      instance = Userprofile.objects.get(user_name=request.user.username)
-      instance.active_reservation = '0'
-      instance.save()
-      
-      #add the statuschange instance
-      instance = Statuschange.objects.create(res_id=request.GET.get('res_id'), user_name=request.user.username, res_status_sales_code=request.GET.get('res_status_sales'), res_status_sales=Statuscode.objects.get(status_code=request.GET.get('res_status_sales', '')).description_short, change_note="last change")      
-      return redirect('/')
-      
-   else:
-      context={
-         'res_id':request.GET.get('res_id', ''),
-         'res_prev_status':request.GET.get('res_prev_status', ''),
-         'res_last_changed_by':request.GET.get('res_last_changed_by', ''),
-         'res_status_sales_code':request.GET.get('res_status_sales'),
-         'res_status_sales':Statuscode.objects.get(status_code=request.GET.get('res_status_sales', '')).description_short,
-        }
-      template="status_change.html"
-      return render(request, template, context)
+   
+   context={
+      'res_id':request.GET.get('res_id', ''),
+      'res_prev_status':request.GET.get('res_prev_status', ''),
+      'res_last_changed_by':request.GET.get('res_last_changed_by', ''),
+      'res_status_sales_code':request.GET.get('res_status_sales'),
+      'res_status_sales':Statuscode.objects.get(status_code=request.GET.get('res_status_sales', '')).description_short,
+     }
+   template="status_change.html"
+   return render(request, template, context)
 
 
 

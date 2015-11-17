@@ -3,8 +3,6 @@
 #open scheduler met in terminal: heroku addons:open scheduler
 
 
---today
-
 
 ---met prio top to bottom:
 handmatig toevoegen van reserveringen, pro-actieve leads bijhouden dus..

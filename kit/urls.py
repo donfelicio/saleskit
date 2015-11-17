@@ -19,6 +19,7 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 urlpatterns = [
     url(r'^$', 'reservation.views.home', name='home'),
+    url(r'^test', 'reservation.test.home', name='test'),
     url(r'^show', 'show.views.show', name='show'),
     url(r'^listall', 'reservation.views.listall', name='listall'),
     url(r'^res_input', 'reservation.views.res_input', name='res_input'),

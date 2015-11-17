@@ -85,6 +85,12 @@ class Command(BaseCommand):
                     findres = Reservation.objects.get(res_id=reservation.get("Id"))
                       
                 except: #didn't find it
+                    if reservation.get('StatusId') == 2: #if status is final, go to sales_step 5 and note it in log
+                        sales_status = '5'
+                        instance = Statuschange.objects.create(res_id=reservation.get("Id"), user_name="system", res_status_sales_code='5', res_status_sales=Statuscode.objects.get(status_code='5').description_short, change_note="This reservation was created via the website, or it was finalized by your team")
+                    else: #else, just make it a 1
+                        sales_status = '1'
+                    
                     new_res = Reservation.objects.create(
                     res_id=reservation.get("Id"),
                     res_location_id=reservation.get("LocationId"),
@@ -93,6 +99,7 @@ class Command(BaseCommand):
                     res_desc=reservation.get("ReservationName"),
                     res_date_created=res_date_created_split[0],
                     res_date=res_date_split[0],
+                    res_status_sales=sales_status,
                     res_status=reservation.get("StatusId"),
                     res_total_seats=reservation.get("TotalSeats")
                     )

@@ -363,46 +363,27 @@ def status_change(request):
       instance.res_status_sales=request.GET.get('res_status_sales')
       instance.save()
       
-      #make sure the userprofile doesn't have an active reservation anymore that selects the res to edit
-      instance = Userprofile.objects.get(user_name=request.user.username)
-      instance.active_reservation = '0'
-      instance.save()
-      
-      #now hide the reservation until tomorrow
-      now_plus_hour = datetime.datetime.strptime('00:00', '%H:%M')
-      Reservationfilter.objects.create(user_name=request.user.username, res_id=request.POST['res_id'], location_id=Userprofile.objects.get(user_name=request.user.username).active_location, hide_days=(datetime.datetime.now() + datetime.timedelta(days=1)), hide_hour=now_plus_hour.strftime('%H'), hide_minute=now_plus_hour.strftime('%M'))
+      #if success or failure: make sure the userprofile doesn't have an active reservation anymore that selects the res to edit
+      if request.GET.get('res_status_sales') == '8' or request.GET.get('res_status_sales') == '9':
+         instance = Userprofile.objects.get(user_name=request.user.username)
+         instance.active_reservation = '0'
+         instance.save()
       
       #add the statuschange instance
       instance = Statuschange.objects.create(res_id=request.POST['res_id'], user_name=request.user.username, res_status_sales_code=request.POST['res_status_sales'], res_status_sales=Statuscode.objects.get(status_code=request.GET.get('res_status_sales', '')).description_short, change_note=request.POST['change_note'])      
       return redirect('/')
    
-   elif request.GET.get('res_status_sales') == '8' or request.GET.get('res_status_sales') == '9':
-      #update the reservation
-      instance = Reservation.objects.get(res_id=request.GET.get('res_id'))
-      instance.res_prev_status=request.GET.get('res_prev_status')
-      instance.res_last_change_by=request.GET.get('res_last_change_by')
-      instance.res_status_sales=request.GET.get('res_status_sales')
-      instance.save()
       
-      #make sure the userprofile doesn't have an active reservation anymore that selects the res to edit
-      instance = Userprofile.objects.get(user_name=request.user.username)
-      instance.active_reservation = '0'
-      instance.save()
-      
-      #add the statuschange instance
-      instance = Statuschange.objects.create(res_id=request.GET.get('res_id'), user_name=request.user.username, res_status_sales_code=request.GET.get('res_status_sales'), res_status_sales=Statuscode.objects.get(status_code=request.GET.get('res_status_sales', '')).description_short, change_note="last change")      
-      return redirect('/')
-      
-   else:
-      context={
-         'res_id':request.GET.get('res_id', ''),
-         'res_prev_status':request.GET.get('res_prev_status', ''),
-         'res_last_changed_by':request.GET.get('res_last_changed_by', ''),
-         'res_status_sales_code':request.GET.get('res_status_sales'),
-         'res_status_sales':Statuscode.objects.get(status_code=request.GET.get('res_status_sales', '')).description_short,
-        }
-      template="status_change.html"
-      return render(request, template, context)
+   
+   context={
+      'res_id':request.GET.get('res_id', ''),
+      'res_prev_status':request.GET.get('res_prev_status', ''),
+      'res_last_changed_by':request.GET.get('res_last_changed_by', ''),
+      'res_status_sales_code':request.GET.get('res_status_sales'),
+      'res_status_sales':Statuscode.objects.get(status_code=request.GET.get('res_status_sales', '')).description_short,
+     }
+   template="status_change.html"
+   return render(request, template, context)
 
 
 
