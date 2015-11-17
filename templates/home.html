@@ -62,8 +62,10 @@
           
      <!-- show last status log -->
      {% for change in status_changes %}
+          {% if change.change_note|length > 0 %}
     
      <p style="font-size:12px;">{{change.change_date}}: {{change.change_note}}</p>
+          {% endif %}
      {% endfor %}
      </div>
 

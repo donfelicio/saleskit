@@ -64,7 +64,6 @@ def loadpage(request):
    instance.save()
    
    for reservation in get_s2m_res(request):
-      print reservation.get('Id')
       #cut loose date
       res_date_created_split = reservation.get("CreatedOn").split("T")
       res_date_split = reservation.get("StartTime").split("T")
@@ -295,7 +294,6 @@ def home(request):
          res_list = filter(filter_res_status_sales_8, res_list) #success we don't need to show
          res_list = filter(filter_res_status_sales_9, res_list) #failed we don't need to show
          #now remove al filtered items
-         print len(res_list)
          for reservation in res_list:
             try:
                Reservationfilter.objects.get(res_id=reservation.res_id, user_name=request.user.username)
