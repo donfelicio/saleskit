@@ -64,6 +64,7 @@ def loadpage(request):
    instance.save()
    
    for reservation in get_s2m_res(request):
+      print reservation.get('Id')
       #cut loose date
       res_date_created_split = reservation.get("CreatedOn").split("T")
       res_date_split = reservation.get("StartTime").split("T")
@@ -74,7 +75,7 @@ def loadpage(request):
          sales_status = '9'
       elif reservation.get("StatusId") == 2:
          sales_status = '5' #if status is final, set to 'second call', and add to status change that this was made online, or was handled directly. 
-         instance = Statuschange.objects.create(res_id=reservation.get("Id"), user_name="system", res_status_sales_code='5', res_status_sales=Statuscode.objects.get(status_code='5').description_short, change_note="This reservation was via the website, or it was finalized by your team")
+         instance = Statuschange.objects.get_or_create(res_id=reservation.get("Id"), user_name="system", res_status_sales_code='5', res_status_sales=Statuscode.objects.get(status_code='5').description_short, change_note="This reservation was created via the website, or it was finalized by your team")
       else: #status is 'attention required, so set it to the first sales status
          sales_status = '1'
          
@@ -313,18 +314,17 @@ def home(request):
          important = filter(filter_attention, filtered_res_list)
          
          if len(critical) > 0:
-            res_list = critical
+            reservation = critical[0]
             no_res = False
-            pass
          elif len(important) > 0:
-            print 'YEEY'
-            res_list = important
+            reservation = important[0]
             no_res = False
-            pass
          elif len(res_list) > 0: #if critical is empty, make important list
+            reservation = res_list[0]
             no_res = False
-      print res_list[0].res_id
-      reservation = res_list[0]
+         else:
+            reservation = ''
+      
       context = {
          'reservation': reservation,
          'status_list': Statuscode.objects.all(),
