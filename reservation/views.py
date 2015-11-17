@@ -170,11 +170,6 @@ def listall(request):
       
 
 def home(request):
-   
-   for row in Statuschange.objects.all():
-      if row.change_note == "This reservation was via the website, or it was finalized by your team":
-         row.change_note = "This reservation was created via the website, or it was finalized by your team"
-         row.save()
 
    #load this if user is logged in and set some empty stuff for later if it isn't used
    no_res = True
