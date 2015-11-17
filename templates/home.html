@@ -19,8 +19,9 @@
      {%endif%}
 
      <div id="row" class="col-md-12 col-md-offset-2" >
-          <h5 class="col-md-12">{{reservation.res_company}} / {{reservation.res_user}} - {{reservation.res_desc}} -- {{reservation.res_id}}</h5>
-          
+          <p class="col-md-12"><h4>{{reservation.res_desc}}</h4>
+          {{reservation.res_company}} / {{reservation.res_user}}
+          </p>
           {% for status in status_list %}    
                {% if reservation.res_status_sales == status.status_code %}
                                 
