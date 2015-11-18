@@ -2,6 +2,8 @@
 #scheduler /management/commands draait op heroku services elke dag om 01:00 om alle reserveringen bij te werken van alle bekende locaties
 #open scheduler met in terminal: heroku addons:open scheduler
 
+id live: 1256
+id dev: 5539
 
 
 ---met prio top to bottom:

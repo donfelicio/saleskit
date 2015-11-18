@@ -72,6 +72,7 @@ class Loginlog(models.Model):
     login_date = models.DateTimeField(auto_now=True, null=True)
     
 class Statuschange(models.Model):
+    reservation = models.ForeignKey(Reservation)
     user_name = models.CharField(max_length = 255, null=True)
     change_date = models.DateTimeField(auto_now=True, null=True)
     res_id = models.CharField(max_length = 255, null=True)
