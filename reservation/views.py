@@ -174,17 +174,6 @@ def listall(request):
 
 def home(request):
    
-   if request.user.username == "Felix":
-      for item in Statuschange.objects.all():
-         try:
-            instance = Reservation.objects.get(res_id=item.res_id)
-         except:
-            pass
-         else:
-            instance.reservation = item
-            instance.save()
-      
-
    #load this if user is logged in and set some empty stuff for later if it isn't used
    no_res = True
    sales_tip = ''
