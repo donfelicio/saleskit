@@ -180,16 +180,6 @@ def listall(request):
       
 
 def home(request):
-   
-   for item in Reservation.objects.all():
-      try:
-         instance = Reservationfilter.objects.get(res_id=item.res_id)
-      except:
-         pass
-      else:
-         instance.reservation = item
-         instance.save
-   
       
    #load this if user is logged in and set some empty stuff for later if it isn't used
    no_res = True
