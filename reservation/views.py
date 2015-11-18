@@ -9,13 +9,6 @@ import time
 from django.db.models import Q
 from threading import Thread
 
-
-#some filters for later views    
-def filter_res_status_sales_8(element):
-    return element.res_status_sales != '8'
-
-def filter_res_status_sales_9(element):
-    return element.res_status_sales != '9'
    
 def filter_over20(element):
     return int(element.res_total_seats) >= 20
@@ -288,12 +281,8 @@ def home(request):
          reservation = Reservation.objects.get(res_id=active_reservation_id)
          no_res = False
       else:
-         res_list = Reservation.objects.all().filter(res_location_id=Userprofile.objects.get(user_name=request.user.username).active_location).exclude(reservationfilter__isnull=False)
-         
-         print len(res_list)
-      #filter away stuff we don't need
-         res_list = filter(filter_res_status_sales_8, res_list) #success we don't need to show
-         res_list = filter(filter_res_status_sales_9, res_list) #failed we don't need to show         
+         #make res list, filter out any reservations that have a filter from this user, and are final or success
+         res_list = Reservation.objects.all().filter(res_location_id=Userprofile.objects.get(user_name=request.user.username).active_location).exclude(reservationfilter__isnull=False).exclude(res_status_sales='8').exclude(res_status_sales='9')
          
          #now test for stage of critical, important or dontforget
          critical = filter(filter_over20, res_list)
@@ -334,7 +323,7 @@ def home(request):
          context['days_to_res'] = getattr(reservation.res_date - datetime.date.today(), "days")
       
       if Userprofile.objects.get(user_name=request.user.username).active_reservation == '0':
-         context['res_open'] = len(res_list) - len(Reservationfilter.objects.all().filter(user_name=request.user.username, location_id=Userprofile.objects.get(user_name=request.user.username).active_location))
+         context['res_open'] = len(res_list)
       
       if Userprofile.objects.get(user_name=request.user.username).active_reservation != '0':
          context['active_res'] = True
