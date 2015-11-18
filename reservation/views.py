@@ -203,6 +203,7 @@ def home(request):
       b.start()
       time.sleep(1)
       return redirect('/')
+   
       
    #If user has selected a location when he has access to multiple, save the active_location now
    if request.method == 'POST' and 'location_id' in request.POST:
@@ -332,10 +333,7 @@ def home(request):
       if len(important) > 0:
          context['important'] = len(important)
          
-      if no_res == False: #if there is a reservation.. (might be empty list?)
-         for item in Reservation.objects.all():
-            context['superitem'] = item.id
-            break
+      if no_res == False: #if there is a reservation.. (might be empty list?)   
          context['status_changes'] = Statuschange.objects.all().filter(res_id=reservation.res_id)
          context['sales_tip'] = salestip(reservation.res_status_sales)
          context['short_sales_tip'] = short_salestip(reservation.res_status_sales)
