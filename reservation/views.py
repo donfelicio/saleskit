@@ -180,7 +180,7 @@ def listall(request):
       
 
 def home(request):
-   
+      
    #load this if user is logged in and set some empty stuff for later if it isn't used
    no_res = True
    sales_tip = ''
