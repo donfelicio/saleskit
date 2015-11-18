@@ -180,6 +180,7 @@ def listall(request):
       
 
 def home(request):
+   
       
    #load this if user is logged in and set some empty stuff for later if it isn't used
    no_res = True
@@ -190,7 +191,6 @@ def home(request):
    status_list = ''
    res_open = ''
    loading = ''
-   filtered_res_list = []
    critical = []
    important = []
    res_list = []
@@ -288,25 +288,18 @@ def home(request):
          reservation = Reservation.objects.get(res_id=active_reservation_id)
          no_res = False
       else:
-         res_list = Reservation.objects.all().filter(res_location_id=Userprofile.objects.get(user_name=request.user.username).active_location)
+         res_list = Reservation.objects.all().filter(res_location_id=Userprofile.objects.get(user_name=request.user.username).active_location).exclude(reservationfilter__isnull=False)
+         
+         print len(res_list)
       #filter away stuff we don't need
          res_list = filter(filter_res_status_sales_8, res_list) #success we don't need to show
-         res_list = filter(filter_res_status_sales_9, res_list) #failed we don't need to show
-         #now remove al filtered items
-         for reservation in res_list:
-            try:
-               Reservationfilter.objects.get(res_id=reservation.res_id, user_name=request.user.username)
-            except: #not found
-               filtered_res_list.append(reservation)
-            else: #found it
-               pass
-         
+         res_list = filter(filter_res_status_sales_9, res_list) #failed we don't need to show         
          
          #now test for stage of critical, important or dontforget
-         critical = filter(filter_over20, filtered_res_list)
+         critical = filter(filter_over20, res_list)
          critical = filter(filter_attention, critical)
          critical = filter(filter_request_received, critical)
-         important = filter(filter_attention, filtered_res_list)
+         important = filter(filter_attention, res_list)
          
          
          if len(critical) > 0:
@@ -353,8 +346,6 @@ def home(request):
    context = {}
    template = 'home.html'
    return render(request, template, context)
-
-
 
 
 
