@@ -14,7 +14,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='reservationfilter',
             name='reservation',
-            field=models.ForeignKey(default=5539, to='reservation.Reservation'),
+            field=models.ForeignKey(default=1256, to='reservation.Reservation'),
             preserve_default=False,
         ),
     ]
