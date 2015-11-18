@@ -4,6 +4,7 @@
     {% block content %}     <!-- show page content --->
        
  {% if user.is_authenticated %}
+ {{superitem}}
      {% if userprofile.res_updated == 'busy' or userprofile.loc_updated == 'busy' %}
     <h4>Please wait while loading!</h4>
     

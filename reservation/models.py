@@ -59,6 +59,7 @@ class Userprofile(models.Model):
     loc_updated = models.CharField(max_length = 255, default='no')
     
 class Reservationfilter(models.Model):
+    #reservation = models.ForeignKey(Reservation)
     res_id = models.CharField(max_length = 255, null=True)
     location_id = models.CharField(max_length = 255, null=True)
     user_name = models.CharField(max_length = 255, null=True)

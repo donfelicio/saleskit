@@ -176,12 +176,11 @@ def listall(request):
       return render(request, template, context)
    else:
       return redirect ('/')
-     
-     
+
       
 
 def home(request):
-
+   
    #load this if user is logged in and set some empty stuff for later if it isn't used
    no_res = True
    sales_tip = ''
@@ -204,7 +203,6 @@ def home(request):
       b.start()
       time.sleep(1)
       return redirect('/')
-   
       
    #If user has selected a location when he has access to multiple, save the active_location now
    if request.method == 'POST' and 'location_id' in request.POST:
@@ -238,13 +236,13 @@ def home(request):
          #    now_plus_hour = datetime.datetime.strptime('00:00', '%H:%M')
          if request.POST['hide_days'] == "today":
             now_plus_hour = datetime.datetime.now() + datetime.timedelta(hours=1)
-            Reservationfilter.objects.create(user_name=request.user.username, res_id=request.POST['res_id'], location_id=Userprofile.objects.get(user_name=request.user.username).active_location, hide_days=(datetime.datetime.now()), hide_hour=now_plus_hour.strftime('%H'), hide_minute=now_plus_hour.strftime('%M'))
+            Reservationfilter.objects.create(reservation=Reservation.objects.get(res_id=request.POST['res_id']), user_name=request.user.username, res_id=request.POST['res_id'], location_id=Userprofile.objects.get(user_name=request.user.username).active_location, hide_days=(datetime.datetime.now()), hide_hour=now_plus_hour.strftime('%H'), hide_minute=now_plus_hour.strftime('%M'))
          elif request.POST['hide_days'] == "forever":
             now_plus_hour = datetime.datetime.strptime('00:00', '%H:%M')
-            Reservationfilter.objects.create(user_name=request.user.username, res_id=request.POST['res_id'], location_id=Userprofile.objects.get(user_name=request.user.username).active_location, hide_days=(datetime.datetime.now() + datetime.timedelta(days=999999)), hide_hour=now_plus_hour.strftime('%H'), hide_minute=now_plus_hour.strftime('%M'))
+            Reservationfilter.objects.create(reservation=Reservation.objects.get(res_id=request.POST['res_id']), user_name=request.user.username, res_id=request.POST['res_id'], location_id=Userprofile.objects.get(user_name=request.user.username).active_location, hide_days=(datetime.datetime.now() + datetime.timedelta(days=999999)), hide_hour=now_plus_hour.strftime('%H'), hide_minute=now_plus_hour.strftime('%M'))
          else:
             now_plus_hour = datetime.datetime.strptime('00:00', '%H:%M')
-            Reservationfilter.objects.create(user_name=request.user.username, res_id=request.POST['res_id'], location_id=Userprofile.objects.get(user_name=request.user.username).active_location, hide_days=(datetime.datetime.now() + datetime.timedelta(days=1)), hide_hour=now_plus_hour.strftime('%H'), hide_minute=now_plus_hour.strftime('%M'))
+            Reservationfilter.objects.create(reservation=Reservation.objects.get(res_id=request.POST['res_id']), user_name=request.user.username, res_id=request.POST['res_id'], location_id=Userprofile.objects.get(user_name=request.user.username).active_location, hide_days=(datetime.datetime.now() + datetime.timedelta(days=1)), hide_hour=now_plus_hour.strftime('%H'), hide_minute=now_plus_hour.strftime('%M'))
    #make sure the userprofile doesn't have an active reservation anymore that selects the res to edit
       instance = Userprofile.objects.get(user_name=request.user.username)
       instance.active_reservation = '0'
@@ -303,13 +301,12 @@ def home(request):
                pass
          
          
-         
          #now test for stage of critical, important or dontforget
          critical = filter(filter_over20, filtered_res_list)
          critical = filter(filter_attention, critical)
          critical = filter(filter_request_received, critical)
-         
          important = filter(filter_attention, filtered_res_list)
+         
          
          if len(critical) > 0:
             reservation = critical[0]
@@ -335,7 +332,10 @@ def home(request):
       if len(important) > 0:
          context['important'] = len(important)
          
-      if no_res == False: #if there is a reservation.. (might be empty list?)   
+      if no_res == False: #if there is a reservation.. (might be empty list?)
+         for item in Reservation.objects.all():
+            context['superitem'] = item.id
+            break
          context['status_changes'] = Statuschange.objects.all().filter(res_id=reservation.res_id)
          context['sales_tip'] = salestip(reservation.res_status_sales)
          context['short_sales_tip'] = short_salestip(reservation.res_status_sales)
