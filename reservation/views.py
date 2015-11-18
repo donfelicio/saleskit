@@ -19,19 +19,7 @@ def filter_attention(element):
 def filter_request_received(element):
     return element.res_status_sales == '1'
    
-   
-   
-def login_processes(request):
-#delete all the users old hidereservation instances (older than today)
-   for resfilter in Reservationfilter.objects.all().filter(user_name=request.user.username):
-      if resfilter.hide_days < datetime.date.today():
-         resfilter.delete()
-      elif resfilter.hide_days == datetime.date.today() and (int(resfilter.hide_hour) - int(datetime.datetime.now().time().strftime('%H'))) * 60 + (int(resfilter.hide_minute) - int(datetime.datetime.now().time().strftime('%M'))) < 0:
-         resfilter.delete()
 
-
-
-   
    
 #the loading page that gets and updates all reservations from s2m
 def loadpage(request):
@@ -161,6 +149,14 @@ def listall(request):
 
 def home(request):
    
+   #delete all the users old hidereservation instances (older than today)
+   for resfilter in Reservationfilter.objects.all().filter(user_name=request.user.username):
+      if resfilter.hide_days < datetime.date.today():
+         resfilter.delete()
+      elif resfilter.hide_days == datetime.date.today() and (int(resfilter.hide_hour) - int(datetime.datetime.now().time().strftime('%H'))) * 60 + (int(resfilter.hide_minute) - int(datetime.datetime.now().time().strftime('%M'))) < 0:
+         resfilter.delete()
+
+   
    #load this if user is logged in and set some empty stuff for later if it isn't used
    no_res = True
    sales_tip = ''
@@ -216,13 +212,16 @@ def home(request):
          #    now_plus_hour = datetime.datetime.strptime('00:00', '%H:%M')
          if request.POST['hide_days'] == "today":
             now_plus_hour = datetime.datetime.now() + datetime.timedelta(hours=1)
-            Reservationfilter.objects.create(reservation=Reservation.objects.get(res_id=request.POST['res_id']), user_name=request.user.username, res_id=request.POST['res_id'], location_id=Userprofile.objects.get(user_name=request.user.username).active_location, hide_days=(datetime.datetime.now()), hide_hour=now_plus_hour.strftime('%H'), hide_minute=now_plus_hour.strftime('%M'))
+            Reservationfilter.objects.create(reservation=Reservation.objects.get(res_id=request.POST['res_id']), user_name=request.user.username, location_id=Userprofile.objects.get(user_name=request.user.username).active_location, hide_days=(datetime.datetime.now()), hide_hour=now_plus_hour.strftime('%H'), hide_minute=now_plus_hour.strftime('%M'))
          elif request.POST['hide_days'] == "forever":
             now_plus_hour = datetime.datetime.strptime('00:00', '%H:%M')
-            Reservationfilter.objects.create(reservation=Reservation.objects.get(res_id=request.POST['res_id']), user_name=request.user.username, res_id=request.POST['res_id'], location_id=Userprofile.objects.get(user_name=request.user.username).active_location, hide_days=(datetime.datetime.now() + datetime.timedelta(days=999999)), hide_hour=now_plus_hour.strftime('%H'), hide_minute=now_plus_hour.strftime('%M'))
-         else:
+            Reservationfilter.objects.create(reservation=Reservation.objects.get(res_id=request.POST['res_id']), user_name=request.user.username, location_id=Userprofile.objects.get(user_name=request.user.username).active_location, hide_days=(datetime.datetime.now() + datetime.timedelta(days=999999)), hide_hour=now_plus_hour.strftime('%H'), hide_minute=now_plus_hour.strftime('%M'))
+         elif request.POST['hide_days'] == "month":
             now_plus_hour = datetime.datetime.strptime('00:00', '%H:%M')
-            Reservationfilter.objects.create(reservation=Reservation.objects.get(res_id=request.POST['res_id']), user_name=request.user.username, res_id=request.POST['res_id'], location_id=Userprofile.objects.get(user_name=request.user.username).active_location, hide_days=(datetime.datetime.now() + datetime.timedelta(days=1)), hide_hour=now_plus_hour.strftime('%H'), hide_minute=now_plus_hour.strftime('%M'))
+            Reservationfilter.objects.create(reservation=Reservation.objects.get(res_id=request.POST['res_id']), user_name=request.user.username, location_id=Userprofile.objects.get(user_name=request.user.username).active_location, hide_days=(datetime.datetime.now() + datetime.timedelta(weeks=4)), hide_hour=now_plus_hour.strftime('%H'), hide_minute=now_plus_hour.strftime('%M'))
+         else: #tomorrow
+            now_plus_hour = datetime.datetime.strptime('00:00', '%H:%M')
+            Reservationfilter.objects.create(reservation=Reservation.objects.get(res_id=request.POST['res_id']), user_name=request.user.username, location_id=Userprofile.objects.get(user_name=request.user.username).active_location, hide_days=(datetime.datetime.now() + datetime.timedelta(days=1)), hide_hour=now_plus_hour.strftime('%H'), hide_minute=now_plus_hour.strftime('%M'))
    #make sure the userprofile doesn't have an active reservation anymore that selects the res to edit
       instance = Userprofile.objects.get(user_name=request.user.username)
       instance.active_reservation = '0'
@@ -371,7 +370,7 @@ def status_change(request):
       
       #now hide the reservation until tomorrow
       now_plus_hour = datetime.datetime.strptime('00:00', '%H:%M')
-      Reservationfilter.objects.create(reservation=Reservation.objects.get(res_id=request.POST['res_id']), user_name=request.user.username, res_id=request.POST['res_id'], location_id=Userprofile.objects.get(user_name=request.user.username).active_location, hide_days=(datetime.datetime.now() + datetime.timedelta(days=1)), hide_hour=now_plus_hour.strftime('%H'), hide_minute=now_plus_hour.strftime('%M'))
+      Reservationfilter.objects.create(reservation=Reservation.objects.get(res_id=request.POST['res_id']), user_name=request.user.username, location_id=Userprofile.objects.get(user_name=request.user.username).active_location, hide_days=(datetime.datetime.now() + datetime.timedelta(days=1)), hide_hour=now_plus_hour.strftime('%H'), hide_minute=now_plus_hour.strftime('%M'))
       
       #add the statuschange instance
       instance = Statuschange.objects.create(reservation=Reservation.objects.get(res_id=request.POST['res_id']), user_name=request.user.username, res_status_sales_code=request.POST['res_status_sales'], res_status_sales=Statuscode.objects.get(status_code=request.GET.get('res_status_sales', '')).description_short, change_note=request.POST['change_note'])      
@@ -423,5 +422,4 @@ def logout(request):
 def login(request):
    s2m_login(request)
    #run the login processes (removal of old filters, reservations, etc..)
-   login_processes(request)
    return redirect('/')
