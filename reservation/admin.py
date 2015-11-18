@@ -47,8 +47,7 @@ class Loginlogadmin(admin.ModelAdmin):
 admin.site.register(Loginlog, Loginlogadmin)
 
 class Statuschangeadmin(admin.ModelAdmin):
-    list_display = ['user_name', 'res_id']
-    search_fields = ['res_id']
+    list_display = ['user_name']
     class Meta:
         model = Statuschange
         

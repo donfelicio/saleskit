@@ -22,27 +22,14 @@ def filter_request_received(element):
    
    
 def login_processes(request):
-   #delete all reservation instances older than 2 weeks ago
-   # for reservation in Reservation.objects.all():
-   #    if reservation.res_date < (datetime.date.today()-datetime.timedelta(weeks=2)):#if res is older than 2 weeks
-   #       Reservation.objects.get(res_id=reservation.res_id).delete()
-         
 #delete all the users old hidereservation instances (older than today)
    for resfilter in Reservationfilter.objects.all().filter(user_name=request.user.username):
       if resfilter.hide_days < datetime.date.today():
-         Reservationfilter.objects.get(res_id=resfilter.res_id, user_name=resfilter.user_name).delete()
+         resfilter.delete()
       elif resfilter.hide_days == datetime.date.today() and (int(resfilter.hide_hour) - int(datetime.datetime.now().time().strftime('%H'))) * 60 + (int(resfilter.hide_minute) - int(datetime.datetime.now().time().strftime('%M'))) < 0:
-         Reservationfilter.objects.get(res_id=resfilter.res_id, user_name=resfilter.user_name).delete()
-      #try if res_id exists, anders weg
-      try: #can we find it?
-         instance = Reservation.objects.get(res_id=resfilter.res_id)
-      except: #didn't find it
-         Reservationfilter.objects.get(res_id=resfilter.res_id, user_name=resfilter.user_name).delete()
-      else: #found it
-         pass
-   
-   
-   #delete all filter instances without a reservation
+         resfilter.delete()
+
+
 
    
    
@@ -67,7 +54,7 @@ def loadpage(request):
          sales_status = '9'
       elif reservation.get("StatusId") == 2:
          sales_status = '5' #if status is final, set to 'second call', and add to status change that this was made online, or was handled directly. 
-         instance = Statuschange.objects.get_or_create(res_id=reservation.get("Id"), user_name="system", res_status_sales_code='5', res_status_sales=Statuscode.objects.get(status_code='5').description_short, change_note="This reservation was created via the website, or it was finalized by your team")
+         instance = Statuschange.objects.get_or_create(reservation=Reservation.objects.get(res_id=reservation.get("Id")), user_name="system", res_status_sales_code='5', res_status_sales=Statuscode.objects.get(status_code='5').description_short, change_note="This reservation was created via the website, or it was finalized by your team")
       else: #status is 'attention required, so set it to the first sales status
          sales_status = '1'
          
@@ -315,7 +302,7 @@ def home(request):
          context['important'] = len(important)
          
       if no_res == False: #if there is a reservation.. (might be empty list?)   
-         context['status_changes'] = Statuschange.objects.all().filter(res_id=reservation.res_id)
+         context['status_changes'] = Statuschange.objects.all().filter(reservation=reservation)
          context['sales_tip'] = salestip(reservation.res_status_sales)
          context['short_sales_tip'] = short_salestip(reservation.res_status_sales)
          context['days_untouched'] = getattr(datetime.date.today() - reservation.res_last_change_date, "days")
@@ -387,7 +374,7 @@ def status_change(request):
       Reservationfilter.objects.create(reservation=Reservation.objects.get(res_id=request.POST['res_id']), user_name=request.user.username, res_id=request.POST['res_id'], location_id=Userprofile.objects.get(user_name=request.user.username).active_location, hide_days=(datetime.datetime.now() + datetime.timedelta(days=1)), hide_hour=now_plus_hour.strftime('%H'), hide_minute=now_plus_hour.strftime('%M'))
       
       #add the statuschange instance
-      instance = Statuschange.objects.create(res_id=request.POST['res_id'], user_name=request.user.username, res_status_sales_code=request.POST['res_status_sales'], res_status_sales=Statuscode.objects.get(status_code=request.GET.get('res_status_sales', '')).description_short, change_note=request.POST['change_note'])      
+      instance = Statuschange.objects.create(reservation=Reservation.objects.get(res_id=request.POST['res_id']), user_name=request.user.username, res_status_sales_code=request.POST['res_status_sales'], res_status_sales=Statuscode.objects.get(status_code=request.GET.get('res_status_sales', '')).description_short, change_note=request.POST['change_note'])      
       return redirect('/')
    
    elif request.GET.get('res_status_sales') == '8' or request.GET.get('res_status_sales') == '9':
@@ -404,7 +391,7 @@ def status_change(request):
       instance.save()
       
       #add the statuschange instance
-      instance = Statuschange.objects.create(res_id=request.GET.get('res_id'), user_name=request.user.username, res_status_sales_code=request.GET.get('res_status_sales'), res_status_sales=Statuscode.objects.get(status_code=request.GET.get('res_status_sales', '')).description_short, change_note="final change - by system")      
+      instance = Statuschange.objects.create(reservation=Reservation.objects.get(res_id=request.GET.get('res_id')), user_name=request.user.username, res_status_sales_code=request.GET.get('res_status_sales'), res_status_sales=Statuscode.objects.get(status_code=request.GET.get('res_status_sales', '')).description_short, change_note="final change - by system")      
       return redirect('/')
       
    else:

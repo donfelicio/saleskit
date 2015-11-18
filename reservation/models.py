@@ -75,7 +75,6 @@ class Statuschange(models.Model):
     reservation = models.ForeignKey(Reservation)
     user_name = models.CharField(max_length = 255, null=True)
     change_date = models.DateTimeField(auto_now=True, null=True)
-    res_id = models.CharField(max_length = 255, null=True)
     res_status_sales_code = models.CharField(max_length = 255, null=True)
     res_status_sales = models.CharField(max_length = 255, null=True)
     change_note = models.TextField(null=True, default='')
