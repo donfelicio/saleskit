@@ -87,7 +87,6 @@ class Command(BaseCommand):
                 except: #didn't find it
                     if reservation.get('StatusId') == 2: #if status is final, go to sales_step 5 and note it in log
                         sales_status = '5'
-                        instance = Statuschange.objects.create(res_id=reservation.get("Id"), user_name="system", res_status_sales_code='5', res_status_sales=Statuscode.objects.get(status_code='5').description_short, change_note="This reservation was created via the website, or it was finalized by your team")
                     else: #else, just make it a 1
                         sales_status = '1'
                     
@@ -103,6 +102,10 @@ class Command(BaseCommand):
                     res_status=reservation.get("StatusId"),
                     res_total_seats=reservation.get("TotalSeats")
                     )
+                    if res.get("StatusId") == 2:
+                        #if status is final, set to 'second call', and add to status change that this was made online, or was handled directly. 
+                        instance = Statuschange.objects.get_or_create(reservation=Reservation.objects.get(res_id=res.get("Id")), user_name="system", res_status_sales_code='5', res_status_sales=Statuscode.objects.get(status_code='5').description_short, change_note="This reservation was created via the website, or it was finalized by your team")
+
                 else: #found it
                     findres.res_company=reservation.get("CompanyName")
                     findres.res_user=reservation.get("ProfileName")
