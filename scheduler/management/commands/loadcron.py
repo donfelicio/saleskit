@@ -7,6 +7,7 @@ from django.core.mail import send_mail
 from django.contrib.auth.models import User
 from django.utils.timesince import timesince
 from datetime import date
+from django.utils import timezone
 
 
 class Command(BaseCommand):
@@ -105,7 +106,7 @@ class Command(BaseCommand):
                     if res.get("StatusId") == 2:
                         #if status is final, set to 'second call', and add to status change that this was made online, or was handled directly. 
                         instance = Statuschange.objects.get_or_create(reservation=Reservation.objects.get(res_id=res.get("Id")), user_name="system", res_status_sales_code='5', res_status_sales=Statuscode.objects.get(status_code='5').description_short, change_note="This reservation was created via the website, or it was finalized by your team")
-
+        
                 else: #found it
                     findres.res_company=res.get("CompanyName")
                     findres.res_user=res.get("ProfileName")
@@ -124,13 +125,22 @@ class Command(BaseCommand):
         
         #and now email all users that they have to move their ass (only first 14 days)
         for user in User.objects.all():
-
-            if int(str(datetime.datetime.strptime(str(datetime.date.today()).split(" ")[0], '%Y-%m-%d') - datetime.datetime.strptime(str(user.date_joined).split(" ")[0], '%Y-%m-%d')).split(' ')[0]) < 15 and datetime.date.today().weekday() != 5 and datetime.date.today().weekday() != 6:
-                days_left = 14 - int(str(datetime.datetime.strptime(str(datetime.date.today()).split(" ")[0], '%Y-%m-%d') - datetime.datetime.strptime(str(user.date_joined).split(" ")[0], '%Y-%m-%d')).split(' ')[0])
-                send_mail('Good Morning, it\'s saleskitting time!',
-                          'Hey there, \n\n Good Morning! \nIt\'s about time to grab a cup of coffee and work your way down to the end of your Seats2meet saleskit. \nThis daily email is here to help you get used to the process, and will dissapear in %s days. \n\n http://saleskit.meetberlage.com \n\n ' % days_left,
-                          'felix@donfelicio.com',
-                [user.email], fail_silently=False)
+            #if it's not today (brings errors)
+            if user.date_joined.replace(tzinfo=None).date() != datetime.date.today():
+                #check if within first 15 days after registration
+                if int(str(datetime.datetime.strptime(str(datetime.date.today()).split(" ")[0], '%Y-%m-%d') - datetime.datetime.strptime(str(user.date_joined).split(" ")[0], '%Y-%m-%d')).split(' ')[0]) < 15 and datetime.date.today().weekday() != 5 and datetime.date.today().weekday() != 6:
+                    #only at 7 AM CET (scheduler works every hour)
+                    if Userprofile.objects.get(user_name=user.username).reminder_sent != datetime.date.today():
+                        #save to userprofile that mail was sent today
+                        instance = Userprofile.objects.get(user_name=user.username)
+                        instance.reminder_sent = datetime.date.today()
+                        instance.save()
+                        #get email contents
+                        days_left = 14 - int(str(datetime.datetime.strptime(str(datetime.date.today()).split(" ")[0], '%Y-%m-%d') - datetime.datetime.strptime(str(user.date_joined).split(" ")[0], '%Y-%m-%d')).split(' ')[0])
+                        # send_mail('Good Morning, it\'s saleskitting time!',
+                        #           'Hey there, \n\n Good Morning! \nIt\'s about time to grab a cup of coffee and work your way down to the end of your Seats2meet saleskit. \nThis daily email is here to help you get used to the process, and will dissapear in %s days. \n\n http://saleskit.meetberlage.com \n\n ' % days_left,
+                        #           'felix@donfelicio.com',
+                        # [user.email], fail_silently=False)
     
     
         

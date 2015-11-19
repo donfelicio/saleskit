@@ -57,6 +57,7 @@ class Userprofile(models.Model):
     last_login = models.DateField(auto_now=True, null=True)
     res_updated = models.CharField(max_length = 255, default='no')
     loc_updated = models.CharField(max_length = 255, default='no')
+    reminder_sent = models.DateField(null=True)
     
 class Reservationfilter(models.Model):
     reservation = models.ForeignKey(Reservation)
