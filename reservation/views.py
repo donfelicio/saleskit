@@ -32,7 +32,8 @@ def loadpage(request):
    instance.save()
    
    #if some other user already added the location, we don't have to do this now..
-   if len(Userlocation.objects.all().filter(location_id=Userprofile.objects.get(user_name=request.user.username).active_location)) == 1 and request.GET.get('refresh', '') != 'yes':
+   if len(Userlocation.objects.all().filter(location_id=Userprofile.objects.get(user_name=request.user.username).active_location)) == 1 or request.GET.get('refresh', '') == 'yes':
+      print 'test felix'
       for res in get_s2m_res(request):
          #cut loose date
          res_date_created_split = res.get("CreatedOn").split("T")
