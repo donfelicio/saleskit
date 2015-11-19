@@ -117,29 +117,28 @@ def create_locationlist(request,userprofile, locationlist):
 def listall(request):
    if request.user.username: #if user is logged in 
       if request.method == 'POST' and 'q' in request.POST:
-         print request.POST['q']
          res_list = Reservation.objects.filter(res_location_id=Userprofile.objects.get(user_name=request.user.username).active_location).exclude(res_status_sales=8).exclude(res_status_sales=9).filter(Q(res_user__icontains=request.POST['q']) | Q(res_company__icontains=request.POST['q']) | Q(res_id__icontains=request.POST['q']))
       else:
-         res_list = Reservation.objects.all().filter(res_location_id=Userprofile.objects.get(user_name=request.user.username).active_location).exclude(res_status_sales=8).exclude(res_status_sales=9)
+         res_list = Reservation.objects.all().filter(res_location_id=Userprofile.objects.get(user_name=request.user.username).active_location).exclude(res_status_sales='8').exclude(res_status_sales='9')
       
-      list_size = len(res_list)
-      paginator = Paginator(res_list, 25) # Show 25 contacts per page
-   
-      page = request.GET.get('page')
-      try:
-          res_list = paginator.page(page)
-      except PageNotAnInteger:
-          # If page is not an integer, deliver first page.
-          res_list = paginator.page(1)
-      except EmptyPage:
-          # If page is out of range (e.g. 9999), deliver last page of results.
-          res_list = paginator.page(paginator.num_pages)
+      #now test for stage of critical, important or dontforget
+      critical = filter(filter_over20, res_list)
+      critical = filter(filter_attention, critical)
+      critical = filter(filter_request_received, critical)
+      
+      important = filter(filter_attention, res_list)
+      important = set(important) - set(critical)
+      res_list = set(res_list) - set(important) - set(critical)
       
       
       context={
          'reservationlist':res_list,
-         'list_size': list_size,
         }
+      if len(critical) > 0:
+         context['critical'] = critical
+      if len(important) > 0:
+         context['important'] = important
+         
       template="listall.html"
       return render(request, template, context)
    else:

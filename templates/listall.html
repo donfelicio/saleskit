@@ -62,28 +62,133 @@
           <input type="input" name="q" value="" placeholder="Search...">
           <button type="submit" class="btn btn-primary btn-xs" style="width:90px;font-size:12px;" data-toggle="tooltip" title="Search for users, companies and reservation id's">Search</button>
      </form>   
-
-
-     <h4>Results - {{list_size}} items</h4>
-     <div class="row" style="margin:20px;">
-     <div class="col-md-4 col-md-offset-5">
-          <span class="step-links">
-              {% if reservationlist.has_previous %}
-                  <a href="?page={{ reservationlist.previous_page_number }}"><button class="btn btn-primary">Previous</button></a>
-              {% endif %}
-      
-              <span class="current" style="font-size: 18px;font-weight: bold">
-               {{ reservationlist.number }} of {{ reservationlist.paginator.num_pages }}
-              </span>
-      
-              {% if reservationlist.has_next %}
-                  <a href="?page={{ reservationlist.next_page_number }}"><button class="btn btn-primary">Next</button></a>
-              {% endif %}
-          </span>
-     </div>
-     </div>
      
+     
+     <!--- show critical list -->
+     {% if critical|length > 0 %} <h3>Critical reservations - {{critical|length}}</h3> {% endif %}
      <div class="accordion">
+         {% for reservation in critical %}
+         {% if reservation.res_id == updated_item.res_id %}
+         <div class="accordion-section">
+               <a class="accordion-section-title active" href="#accordion-{{reservation.res_id}}">
+                    #{{reservation.res_id}} -
+                    {{reservation.res_date|date:'Y-m-d'}} -
+                    {{reservation.res_user}} -
+                    {{reservation.res_company}} -
+                    {{reservation.res_total_seats}}pax -
+                    {{reservation.get_res_status_sales_display}} -
+                    {{reservation.get_res_status_display}}
+               </a>
+               <div id="accordion-{{reservation.res_id}}" class="accordion-section-content open" style="display: block;">
+          {% else %}
+          <div class="accordion-section">
+               {% if reservation.res_status == '1' and reservation.res_status_sales == '1' %}
+               <a style="background-color: #990000;" class="accordion-section-title" href="#accordion-{{reservation.res_id}}"><!-- red -->
+               {% elif reservation.res_status_sales == '1' or reservation.res_status == '1' %}
+               <a style="background-color: #d66a00;" class="accordion-section-title" href="#accordion-{{reservation.res_id}}"><!-- orange -->
+               {% else %}
+               <a style="background-color: #006600;" class="accordion-section-title" href="#accordion-{{reservation.res_id}}"><!-- green -->
+               {% endif %}
+                    #{{reservation.res_id}} -
+                    {{reservation.res_date|date:'Y-m-d'}} -
+                    {{reservation.res_user}} -
+                    {{reservation.res_company}} -
+                    {{reservation.res_total_seats}}pax -
+                    {{reservation.get_res_status_sales_display}} -
+                    {{reservation.get_res_status_display}}
+                    
+                    {% if reservation.res_last_change_by != None %}
+                     - {{reservation.res_last_change_by}}
+                    {% else %}
+                     - Nobody
+                    {% endif %}
+               </a>
+               <div id="accordion-{{reservation.res_id}}" class="accordion-section-content">
+          {% endif %}
+                    <p><a href="https://www.seats2meet.com/locations/{{reservation.res_location_id}}/saleskit/manage/reservation/{{reservation.res_id}}" target="_blank">#{{ reservation.res_id }} - Go to reservation in Seats2meet.com</a>
+                    <table class="table">
+                         <tr>
+                              <td>Date:</td><td> {{reservation.res_date|date:'Y-m-d'}}</td>
+                         </tr> 
+                         <tr><td>Company/Customer:</td><td>{{reservation.res_company}} / {{reservation.res_user}}</td></tr>
+                         <tr><td>Seats:</td><td> {{reservation.res_total_seats}}pax</td></tr>
+                         <tr><td>S2M status:</td><td> {{reservation.get_res_status_display}}</td></tr>
+                         <tr><td>Sales funnel status:</td><td> {{reservation.get_res_status_sales_display}}</td></tr>
+                         <tr><td><a href="/?active_res={{reservation.res_id}}"><button class="btn btn-primary">Go to funnel</button></a></td></tr>
+                    </table>
+                    </p>
+         
+               </div><!--end .accordion-section-content-->
+         </div><!--end .accordion-section-->
+        {% endfor %}
+    </div><!--end .accordion-->
+    
+    
+    
+    
+    <!--- show important list -->
+          {% if important|length > 0 %} <h3>Important reservations - {{important|length}}</h3> {% endif %}
+    <div class="accordion">
+         {% for reservation in important %}
+         {% if reservation.res_id == updated_item.res_id %}
+         <div class="accordion-section">
+               <a class="accordion-section-title active" href="#accordion-{{reservation.res_id}}">
+                    #{{reservation.res_id}} -
+                    {{reservation.res_date|date:'Y-m-d'}} -
+                    {{reservation.res_user}} -
+                    {{reservation.res_company}} -
+                    {{reservation.res_total_seats}}pax -
+                    {{reservation.get_res_status_sales_display}} -
+                    {{reservation.get_res_status_display}}
+               </a>
+               <div id="accordion-{{reservation.res_id}}" class="accordion-section-content open" style="display: block;">
+          {% else %}
+          <div class="accordion-section">
+               {% if reservation.res_status == '1' and reservation.res_status_sales == '1' %}
+               <a style="background-color: #990000;" class="accordion-section-title" href="#accordion-{{reservation.res_id}}"><!-- red -->
+               {% elif reservation.res_status_sales == '1' or reservation.res_status == '1' %}
+               <a style="background-color: #d66a00;" class="accordion-section-title" href="#accordion-{{reservation.res_id}}"><!-- orange -->
+               {% else %}
+               <a style="background-color: #006600;" class="accordion-section-title" href="#accordion-{{reservation.res_id}}"><!-- green -->
+               {% endif %}
+                    #{{reservation.res_id}} -
+                    {{reservation.res_date|date:'Y-m-d'}} -
+                    {{reservation.res_user}} -
+                    {{reservation.res_company}} -
+                    {{reservation.res_total_seats}}pax -
+                    {{reservation.get_res_status_sales_display}} -
+                    {{reservation.get_res_status_display}}
+                    
+                    {% if reservation.res_last_change_by != None %}
+                     - {{reservation.res_last_change_by}}
+                    {% else %}
+                     - Nobody
+                    {% endif %}
+               </a>
+               <div id="accordion-{{reservation.res_id}}" class="accordion-section-content">
+          {% endif %}
+                    <p><a href="https://www.seats2meet.com/locations/{{reservation.res_location_id}}/saleskit/manage/reservation/{{reservation.res_id}}" target="_blank">#{{ reservation.res_id }} - Go to reservation in Seats2meet.com</a>
+                    <table class="table">
+                         <tr>
+                              <td>Date:</td><td> {{reservation.res_date|date:'Y-m-d'}}</td>
+                         </tr> 
+                         <tr><td>Company/Customer:</td><td>{{reservation.res_company}} / {{reservation.res_user}}</td></tr>
+                         <tr><td>Seats:</td><td> {{reservation.res_total_seats}}pax</td></tr>
+                         <tr><td>S2M status:</td><td> {{reservation.get_res_status_display}}</td></tr>
+                         <tr><td>Sales funnel status:</td><td> {{reservation.get_res_status_sales_display}}</td></tr>
+                         <tr><td><a href="/?active_res={{reservation.res_id}}"><button class="btn btn-primary">Go to funnel</button></a></td></tr>
+                    </table>
+                    </p>
+         
+               </div><!--end .accordion-section-content-->
+         </div><!--end .accordion-section-->
+        {% endfor %}
+    </div><!--end .accordion-->
+    
+    
+    <!--- show regular list -->
+     {% if reservationlist|length > 0 %} <h3>Regular reservations - {{reservationlist|length}}</h3> {% endif %}
+    <div class="accordion">
          {% for reservation in reservationlist %}
          {% if reservation.res_id == updated_item.res_id %}
          <div class="accordion-section">
