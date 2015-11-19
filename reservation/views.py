@@ -132,7 +132,6 @@ def listall(request):
       important = set(important) - set(critical)
       res_list = set(res_list) - set(important) - set(critical)
       
-      
       context={
          'reservationlist':res_list,
         }
@@ -249,8 +248,20 @@ def home(request):
          #p.join()
          #create_locationlist(request, Userprofile.objects.get(user_name=request.user.username))
 
-      #als geen actieve locatie, dan laten kiezen
+      #als geen actieve locatie, dan laten kiezen. Of kies auto als er maar 1 is
       if Userprofile.objects.get(user_name=request.user.username).active_location == 'False':
+         if len(Userlocation.objects.all().filter(user_name=request.user.username)) == 1:
+            instance, created = Userprofile.objects.get_or_create(user_name=request.user.username)
+            instance.active_location=Userlocation.objects.get(user_name=request.user.username).location_id
+            instance.save()
+      
+            if Userprofile.objects.get(user_name=request.user.username).res_updated == 'no':      
+               b = Thread(target=loadpage, args=(request,)) 
+               b.daemon = True
+               b.start()
+               time.sleep(1)
+            return redirect('/')
+            
          context = {
             'locationlist': Userlocation.objects.all().filter(user_name=request.user.username),
             'userprofile': Userprofile.objects.get(user_name=request.user.username)
