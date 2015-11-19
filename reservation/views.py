@@ -31,7 +31,8 @@ def loadpage(request):
    instance.res_updated = 'busy'
    instance.save()
    
-   #if some other user already added the location, we don't have to do this now..
+   #if some other user already added the location, we don't have to do this now. There's just 1 location if this hasn't happend
+   #or if user clicks refresh
    if len(Userlocation.objects.all().filter(location_id=Userprofile.objects.get(user_name=request.user.username).active_location)) == 1 or request.GET.get('refresh', '') == 'yes':
       print 'test felix'
       for res in get_s2m_res(request):
