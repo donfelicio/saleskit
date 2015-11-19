@@ -105,15 +105,15 @@
                <td style="width:20%;margin: 0 auto;">
                  <!-- show actions for reservation -->
                     <p>
-                         <a href="/show?r={{reservation.res_id}}&u={{userprofile.user_key}}&lang=nl" target="_blank"><button type="submit" class="btn btn-default" style="width:200px;">Show offer</button></a>
+                         <a href="/show?r={{reservation.res_id}}&u={{userprofile.user_key}}&lang=nl" target="_blank" data-toggle="tooltip" title="Send your customer a great offer, using this page."><button type="submit" class="btn btn-default" style="width:200px;">Show offer</button></a>
                     </p>
                     <p>
-                         <a href="/status_change?res_id={{reservation.res_id}}&res_prev_status={{reservation.res_status_sales}}&res_last_change_by={{request.user.first_name}} {{request.user.last_name}}&res_status_sales=8">
+                         <a href="/status_change?res_id={{reservation.res_id}}&res_prev_status={{reservation.res_status_sales}}&res_last_change_by={{request.user.first_name}} {{request.user.last_name}}&res_status_sales=8" data-toggle="tooltip" title="The sale was a success!">
                               <button type="submit" class="btn btn-success" style="width:200px;">Success</button>
                          </a>
                     </p>
                     <p>
-                         <a href="/status_change?res_id={{reservation.res_id}}&res_prev_status={{reservation.res_status_sales}}&res_last_change_by={{request.user.first_name}} {{request.user.last_name}}&res_status_sales=9">
+                         <a href="/status_change?res_id={{reservation.res_id}}&res_prev_status={{reservation.res_status_sales}}&res_last_change_by={{request.user.first_name}} {{request.user.last_name}}&res_status_sales=9" data-toggle="tooltip" title="No luck with this sale, it failed.">
                               <button type="submit" class="btn btn-danger" style="width:200px;">Failed</button>
                          </a>
                     </p>
@@ -121,25 +121,25 @@
                          <input type="hidden" name="res_id" value="{{reservation.res_id}}">
                          <input type="hidden" name="user_name" value="{{request.user.username}}">
                          <input type="hidden" name="hide_days" value="forever">
-                         <button type="submit" class="btn btn-primary" style="width:200px;">Not my reservation</button>
+                         <button type="submit" class="btn btn-primary" style="width:200px;" data-toggle="tooltip" title="One of my colleagues will handle this reservation">Not my reservation</button>
                     </form></p>
                     <p><form action="" method="POST">{% csrf_token %}
                          <input type="hidden" name="res_id" value="{{reservation.res_id}}">
                          <input type="hidden" name="user_name" value="{{request.user.username}}">
                          <input type="hidden" name="hide_days" value="today">
-                         <button type="submit" class="btn btn-primary" style="width:200px;">Postpone - 1 hour</button>
+                         <button type="submit" class="btn btn-primary" style="width:200px;padding-left: 30px;text-align: left" data-toggle="tooltip" title="Show me this reservation again 1 hour from now">Postpone - 1 hour</button>
                     </form></p>
                     <p><form action="" method="POST">{% csrf_token %}
                          <input type="hidden" name="res_id" value="{{reservation.res_id}}">
                          <input type="hidden" name="user_name" value="{{request.user.username}}">
                          <input type="hidden" name="hide_days" value="tomorrow">
-                         <button type="submit" class="btn btn-primary" style="width:200px;">Postpone - Tomorrow</button>
+                         <button type="submit" class="btn btn-primary" style="width:200px;padding-left: 30px;text-align: left" data-toggle="tooltip" title="Show me this reservation again Tomorrow">Postpone - Tomorrow</button>
                     </form></p>
                     <p><form action="" method="POST">{% csrf_token %}
                          <input type="hidden" name="res_id" value="{{reservation.res_id}}">
                          <input type="hidden" name="user_name" value="{{request.user.username}}">
                          <input type="hidden" name="hide_days" value="month">
-                         <button type="submit" class="btn btn-primary" style="width:200px;">Postpone - 1 month</button>
+                         <button type="submit" class="btn btn-primary" style="width:200px;padding-left: 30px;text-align: left" data-toggle="tooltip" title="Show me this reservation again in 30 days">Postpone - 1 month</button>
                     </form></p>
 
                </td>
