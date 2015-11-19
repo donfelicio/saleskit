@@ -14,12 +14,8 @@ handmatig toevoegen van reserveringen, pro-actieve leads bijhouden dus..
 ---CRON----
 you should check user's allowed access location list every night or so if they have new locations
 
-----USER input----
-elise: Waar we vooral behoefte hebben aan zoiets is als er veel subzalen zijn.
-
 
 -------wannahaves
-'not my res knop', reserveringen vallen nu tussen medewerkers door?
 aftersales status -> success geen success -> invloed op proactieve sales
 Fix PDF creator bij offertes
 grove stats 'annuleringsratio, omzet vs budget, etc...'.
