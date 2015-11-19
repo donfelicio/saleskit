@@ -88,16 +88,16 @@ def loadpage(request):
 
 
 def create_locationlist(request, userprofile, locationlist):
+   print 'nolocationhere'
+   #set DB userprofile res_updated to 'busy'
+   instance = Userprofile.objects.get(user_name=request.user.username)
+   instance.loc_updated = 'busy'
+   instance.save()
    
-   if userprofile.loc_updated != 'busy' and userprofile.loc_updated != 'done':
-      #set DB userprofile res_updated to 'busy'
-      instance = Userprofile.objects.get(user_name=request.user.username)
-      instance.loc_updated = 'busy'
-      instance.save()
-      
-      #get all locations to check if a user is allowed in list
-      for location in locationlist:
-         print location.get("Id")
+   #get all locations to check if a user is allowed in list
+   for location in locationlist:
+      if 1 in location.get('MeetingTypeIds'):
+         print location.get('Id')
          url = 'https://apiv2.seats2meet.com/api/accounts/hasaccess/%s/%s' % (location.get("Id"), userprofile.user_key)
          headers = {'content-type':'application/json'}
          data = {}
@@ -108,10 +108,10 @@ def create_locationlist(request, userprofile, locationlist):
           # if true, add to the list
             Userlocation.objects.get_or_create(location_id=location.get("Id"), user_name=userprofile.user_name, location_name=location.get("Name"))
    
-      #set DB userprofile res_updated to 'done'
-      instance = Userprofile.objects.get(user_name=request.user.username)
-      instance.loc_updated = 'done'
-      instance.save()
+   #set DB userprofile res_updated to 'done'
+   instance = Userprofile.objects.get(user_name=request.user.username)
+   instance.loc_updated = 'done'
+   instance.save()
    
     
     
@@ -119,7 +119,7 @@ def create_locationlist(request, userprofile, locationlist):
 def listall(request):
    if request.user.username: #if user is logged in 
       if request.method == 'POST' and 'q' in request.POST:
-         res_list = Reservation.objects.filter(res_location_id=Userprofile.objects.get(user_name=request.user.username).active_location).exclude(res_status_sales=8).exclude(res_status_sales=9).filter(Q(res_user__icontains=request.POST['q']) | Q(res_company__icontains=request.POST['q']) | Q(res_id__icontains=request.POST['q']))
+         res_list = Reservation.objects.filter(res_location_id=Userprofile.objects.get(user_name=request.user.username).active_location).exclude(res_status_sales=8).exclude(res_status_sales=9).filter(Q(res_user__icontains=request.POST['q']) | Q(res_company__icontains=request.POST['q']) | Q(res_id__icontains=request.POST['q']) | Q(res_desc__icontains=request.POST['q']))
       else:
          res_list = Reservation.objects.all().filter(res_location_id=Userprofile.objects.get(user_name=request.user.username).active_location).exclude(res_status_sales='8').exclude(res_status_sales='9')
       
@@ -241,7 +241,7 @@ def home(request):
          return redirect('/logout')
       
       #maak nu de locationlist terwijl de gebruiker wacht, firstrun only
-      if Userprofile.objects.get(user_name=request.user.username).loc_updated == 'no':
+      if len(Userlocation.objects.all().filter(user_name=request.user.username)) == 0:
          p = Thread(target=create_locationlist, args=(request, Userprofile.objects.get(user_name=request.user.username),s2m_locationlist()))
          p.daemon = True
          p.start()

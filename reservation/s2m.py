@@ -53,6 +53,8 @@ def get_s2m_res(request): #you should only do this in background, or when user p
 
    return results
 
+
+
    
 
 def s2m_login(request):
