@@ -87,7 +87,7 @@ def loadpage(request):
 
 
 
-def create_locationlist(request,userprofile, locationlist):
+def create_locationlist(request, userprofile, locationlist):
    
    if userprofile.loc_updated != 'busy' and userprofile.loc_updated != 'done':
       #set DB userprofile res_updated to 'busy'
@@ -98,7 +98,7 @@ def create_locationlist(request,userprofile, locationlist):
       #get all locations to check if a user is allowed in list
       for location in locationlist:
          print location.get("Id")
-         url = 'https://www.seats2meet.com/api/accounts/hasaccess/%s/%s' % (location.get("Id"), userprofile.user_key)
+         url = 'https://apiv2.seats2meet.com/api/accounts/hasaccess/%s/%s' % (location.get("Id"), userprofile.user_key)
          headers = {'content-type':'application/json'}
          data = {}
      

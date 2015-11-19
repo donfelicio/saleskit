@@ -20,7 +20,7 @@ class Command(BaseCommand):
         userlocation = Userlocation.objects.all().filter(location_id=location_id)[:1]#need to do this to get userkey for approval of accessing reservations
         for location in userlocation:
             while rowsleft > 0:
-                url = 'http://www.seats2meet.com/api/reservation/location/%s' % location_id
+                url = 'https://apiv2.seats2meet.com/api/reservation/location/%s' % location_id
                 headers = {'content-type':'application/json', 'Connection':'close'}
                 data = {
                 "ApiKey":91216637,

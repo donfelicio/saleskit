@@ -7,7 +7,7 @@ id dev: 5539
 
 
 ---met prio top to bottom:
-test update knop, test nacht update (knop blijft hangen op live?)
+
 list filteren en colors weg. list was voor overzicht marcel. (datum, naam, s2mstatus, todo)
 firstrun locatie search versnellen
 handmatig toevoegen van reserveringen, pro-actieve leads bijhouden dus..
@@ -19,13 +19,10 @@ you should check user's allowed access location list every night or so if they h
 
 -------wannahaves
 aftersales status -> success geen success -> invloed op proactieve sales
-Fix PDF creator bij offertes
 grove stats 'annuleringsratio, omzet vs budget, etc...'.
 amount of money in reservations (realtime budget) VS
 https://www.seats2meet.com/Help/Api/GET-api-budget-locationId-year
 https://www.seats2meet.com/Help/Api/POST-api-stats-meetingspaceoccupancy
-
-fix snelheid cron, moet je echt ALLES ophalen? eigenlijk alleen die zijn aangemaakt en veranderd na de laatste keer..
 
 
 -------just an idea

@@ -27,7 +27,7 @@ class Command(BaseCommand):
         itemsleft = 100000
         results=[]
         while itemsleft > -20:
-            url = 'http://www.seats2meet.com/api/invoices/location/563'
+            url = 'https://apiv2.seats2meet.com/api/invoices/location/563'
             headers = {'content-type':'application/json', 'Connection':'close'}
             data = {
             "ApiKey":91216637,
@@ -116,7 +116,7 @@ class Command(BaseCommand):
     
     
     def s2m_get_invoice(self, invoice_id):
-        url = 'http://www.seats2meet.com/api/invoices/%s' % invoice_id
+        url = 'http://apiv2.seats2meet.com/api/invoices/%s' % invoice_id
         headers = {'content-type':'application/json', 'Connection':'close'}
         data = {
         "ApiKey":91216637,
@@ -132,7 +132,7 @@ class Command(BaseCommand):
     
     #get directions to location
     def get_s2m_address(self, location):
-        url = 'http://www.seats2meet.com/api/locations/%s' % location
+        url = 'http://apiv2.seats2meet.com/api/locations/%s' % location
         headers = {'content-type':'application/json'}
         data = {
         "ApiKey":91216637,
