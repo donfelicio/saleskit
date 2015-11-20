@@ -356,7 +356,7 @@ def res_input(request):
       instance = Reservation.objects.get(res_id=request.POST['res_id'])
       instance.res_intro=request.POST['res_intro']
       instance.save()
-      return redirect('/')
+      return redirect('/show?r=%s&u=%s' % (request.POST['res_id'],Userprofile.objects.get(user_name=request.user.username).user_key))
    
    context={
       'res_id':request.GET.get('res_id', ''),
