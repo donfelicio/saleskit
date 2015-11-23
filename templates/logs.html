@@ -5,12 +5,12 @@
      {% if user.is_authenticated %}
           <h4>Loginlog</h4>
           {% for login in loginlog %}
-          <p>{{login.user_name}} - {{login.login_date}}</p>
+          <p>{{login.login_date}} - {{login.user_name}}</p>
           {% endfor %}
           
           <h4>Invoice reminder log</h4>
           {% for reminder in invoicelog %}
-          <p>Status: {{reminder.invoice_status}} - {{reminder.date_updated}}</p>
+          <p>{{reminder.date_updated}} - Status: {{reminder.invoice_status}}</p>
           {% endfor %}
           
           <h4>Hourly Refreshlog</h4>
