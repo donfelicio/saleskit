@@ -7,5 +7,7 @@ class Invoicereminder(models.Model):
     invoice_status = models.IntegerField(default=0)
     sent_stage = models.CharField(max_length=255, default='no')
     date_updated = models.DateField(auto_now = True)
+    class Meta:
+        ordering = ['-date_updated']
     
     
