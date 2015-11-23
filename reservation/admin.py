@@ -52,3 +52,10 @@ class Statuschangeadmin(admin.ModelAdmin):
         model = Statuschange
         
 admin.site.register(Statuschange, Statuschangeadmin)
+
+class Refreshlogadmin(admin.ModelAdmin):
+    list_display = ['status']
+    class Meta:
+        model = Refreshlog
+        
+admin.site.register(Refreshlog, Refreshlogadmin)

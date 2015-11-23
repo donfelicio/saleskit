@@ -63,66 +63,71 @@ class Command(BaseCommand):
             return results
     
     #lijst met alle locaties ophalen
-    def handle(self, *args, **options):    
-        locationlist = Userlocation.objects.all()
-        
-        finallist = []
-        for location in locationlist:
-            finallist.append(location.location_id)
-        
-        finallist = list(set(finallist)) #this list was made to cancel out duplicates
-        
-        for location in finallist:
+    def handle(self, *args, **options):
+        try:
+            locationlist = Userlocation.objects.all()
             
-            print location
-            for res in self.get_s2m_res(location):
-                #cut loose date
-                res_date_created_split = res.get("CreatedOn").split("T")
-                res_date_split = res.get("StartTime").split("T")
-                #now poor into model and save
-                   
-                #now check if the reservation already exists
-                try: #can we find it?
-                    findres = Reservation.objects.get(res_id=res.get("Id"))
-                      
-                except: #didn't find it
-                    if res.get('StatusId') == 2: #if status is final, go to sales_step 5 and note it in log
-                        sales_status = '5'
-                    else: #else, just make it a 1
-                        sales_status = '1'
-                    
-                    new_res = Reservation.objects.create(
-                    res_id=res.get("Id"),
-                    res_location_id=res.get("LocationId"),
-                    res_company=res.get("CompanyName"),
-                    res_user=res.get("ProfileName"),
-                    res_desc=res.get("ReservationName"),
-                    res_date_created=res_date_created_split[0],
-                    res_date=res_date_split[0],
-                    res_status_sales=sales_status,
-                    res_status=res.get("StatusId"),
-                    res_total_seats=res.get("TotalSeats")
-                    )
-                    if res.get("StatusId") == 2:
-                        #if status is final, set to 'second call', and add to status change that this was made online, or was handled directly. 
-                        instance = Statuschange.objects.get_or_create(reservation=Reservation.objects.get(res_id=res.get("Id")), user_name="system", res_status_sales_code='5', res_status_sales=Statuscode.objects.get(status_code='5').description_short, change_note="This reservation was created via the website, or it was finalized by your team")
-        
-                else: #found it
-                    findres.res_company=res.get("CompanyName")
-                    findres.res_user=res.get("ProfileName")
-                    findres.res_desc=res.get("ReservationName")
-                    findres.res_date=res_date_split[0]
-                    findres.res_status=res.get("StatusId")
-              
-                    #if the res with s2m is updated to cancelled, make the sales status a failure
-                    if res.get("StatusId") == 3:
-                        findres.res_status_sales = '9'
-                      
-                    findres.res_total_seats=res.get("TotalSeats")
-                    findres.save()
-        
-        
-        
+            finallist = []
+            for location in locationlist:
+                finallist.append(location.location_id)
+            
+            finallist = list(set(finallist)) #this list was made to cancel out duplicates
+            
+            for location in finallist:
+                
+                print location
+                for res in self.get_s2m_res(location):
+                    #cut loose date
+                    res_date_created_split = res.get("CreatedOn").split("T")
+                    res_date_split = res.get("StartTime").split("T")
+                    #now poor into model and save
+                       
+                    #now check if the reservation already exists
+                    try: #can we find it?
+                        findres = Reservation.objects.get(res_id=res.get("Id"))
+                          
+                    except: #didn't find it
+                        if res.get('StatusId') == 2: #if status is final, go to sales_step 5 and note it in log
+                            sales_status = '5'
+                        else: #else, just make it a 1
+                            sales_status = '1'
+                        
+                        new_res = Reservation.objects.create(
+                        res_id=res.get("Id"),
+                        res_location_id=res.get("LocationId"),
+                        res_company=res.get("CompanyName"),
+                        res_user=res.get("ProfileName"),
+                        res_desc=res.get("ReservationName"),
+                        res_date_created=res_date_created_split[0],
+                        res_date=res_date_split[0],
+                        res_status_sales=sales_status,
+                        res_status=res.get("StatusId"),
+                        res_total_seats=res.get("TotalSeats")
+                        )
+                        if res.get("StatusId") == 2:
+                            #if status is final, set to 'second call', and add to status change that this was made online, or was handled directly. 
+                            instance = Statuschange.objects.get_or_create(reservation=Reservation.objects.get(res_id=res.get("Id")), user_name="system", res_status_sales_code='5', res_status_sales=Statuscode.objects.get(status_code='5').description_short, change_note="This reservation was created via the website, or it was finalized by your team")
+            
+                    else: #found it
+                        findres.res_company=res.get("CompanyName")
+                        findres.res_user=res.get("ProfileName")
+                        findres.res_desc=res.get("ReservationName")
+                        findres.res_date=res_date_split[0]
+                        findres.res_status=res.get("StatusId")
+                  
+                        #if the res with s2m is updated to cancelled, make the sales status a failure
+                        if res.get("StatusId") == 3:
+                            findres.res_status_sales = '9'
+                          
+                        findres.res_total_seats=res.get("TotalSeats")
+                        findres.save()
+        except: #fail
+            Refreshlog.objects.create(status="Failed")
+        else: #success
+            Refreshlog.objects.create(status="Success")
+            
+            
+            
         #and now email all users that they have to move their ass (only first 14 days)
         for user in User.objects.all():
             #if it's not today (brings errors)
