@@ -133,7 +133,13 @@
                          <input type="hidden" name="res_id" value="{{reservation.res_id}}">
                          <input type="hidden" name="user_name" value="{{request.user.username}}">
                          <input type="hidden" name="hide_days" value="tomorrow">
-                         <button type="submit" class="btn btn-primary" style="width:200px;padding-left: 30px;text-align: left" data-toggle="tooltip" title="Show me this reservation again Tomorrow">Postpone - Tomorrow</button>
+                         <button type="submit" class="btn btn-primary" style="width:200px;padding-left: 30px;text-align: left" data-toggle="tooltip" title="Show me this reservation again Tomorrow">Postpone - 1 day</button>
+                    </form></p>
+                    <p><form action="" method="POST">{% csrf_token %}
+                         <input type="hidden" name="res_id" value="{{reservation.res_id}}">
+                         <input type="hidden" name="user_name" value="{{request.user.username}}">
+                         <input type="hidden" name="hide_days" value="week">
+                         <button type="submit" class="btn btn-primary" style="width:200px;padding-left: 30px;text-align: left" data-toggle="tooltip" title="Show me this reservation again in 1 week">Postpone - 1 week</button>
                     </form></p>
                     <p><form action="" method="POST">{% csrf_token %}
                          <input type="hidden" name="res_id" value="{{reservation.res_id}}">
