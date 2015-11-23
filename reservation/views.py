@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from reservation.models import *
 from reservation.forms import *
+from invoice.models import *
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .s2m import *
 from .dicts import *
@@ -441,6 +442,15 @@ def logout(request):
    request.session.flush()
    return redirect('/')
 
+def logs(request):
+   context={
+         'loginlog':Loginlog.objects.all()[:10],
+         'refreshlog':Refreshlog.objects.all()[:1],
+         'invoicelog':Invoicereminder.objects.all()[:10],
+        }
+   template="logs.html"
+   return render(request, template, context)
+   
 
 
 
