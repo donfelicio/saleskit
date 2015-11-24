@@ -9,7 +9,7 @@
     <!-- show search results if search -->
      <h1>Search results - <a href='/listall'>Back</a></h1>
     <div class="accordion">
-              {% for reservation in res_list %}
+              {% for reservation in res_list|dictsort:"res_date" %}
          <div class="accordion-section">
  
                <a class="accordion-section-title" href="#accordion-{{reservation.res_id}}">
@@ -67,7 +67,7 @@
      <!--- show critical list -->
      {% if critical|length > 0 %} <h3>Critical reservations - {{critical|length}}</h3> {% endif %}
      <div class="accordion">
-         {% for reservation in critical %}
+         {% for reservation in critical|dictsort:"res_date" %}
 
           <div class="accordion-section">
                <a class="accordion-section-title" href="#accordion-{{reservation.res_id}}">
@@ -102,7 +102,7 @@
     <!--- show important list -->
 {% if important|length > 0 %} <h3>Important reservations - {{important|length}}</h3> {% endif %}
      <div class="accordion">
-         {% for reservation in important %}
+         {% for reservation in important|dictsort:"res_date" %}
 
           <div class="accordion-section">
                <a class="accordion-section-title" href="#accordion-{{reservation.res_id}}">
@@ -135,7 +135,7 @@
     <!--- show regular list -->
      {% if reservationlist|length > 0 %} <h3>Regular reservations - {{reservationlist|length}}</h3> {% endif %}
      <div class="accordion">
-         {% for reservation in reservationlist %}
+         {% for reservation in reservationlist|dictsort:"res_date" %}
 
           <div class="accordion-section">
                <a class="accordion-section-title" href="#accordion-{{reservation.res_id}}">
