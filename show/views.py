@@ -8,7 +8,7 @@ from multiprocessing import Process
 
 #get reservation from S2M API
 def get_s2m_res(request):
-    url = 'http://www.seats2meet.com/api/reservation//%s' % request.GET.get('r', '')
+    url = 'https://apiv2.seats2meet.com/api/reservation/%s' % request.GET.get('r', '')
     headers = {'content-type':'application/json'}
     data = {
     "ApiKey":91216637,
@@ -17,12 +17,11 @@ def get_s2m_res(request):
       
     r = requests.get(url, params=json.dumps(data), headers=headers)
     r = json.loads(r.text)
-    
     return r
 
 #get meetingspaces from S2M API
 def get_s2m_meetingspaces(request, location):
-    url = 'http://www.seats2meet.com/api/unit/meetingspaces/%s' % location
+    url = 'https://apiv2.seats2meet.com/api/unit/meetingspaces/%s' % location
     headers = {'content-type':'application/json'}
     data = {
     "locationId": location,
@@ -36,12 +35,11 @@ def get_s2m_meetingspaces(request, location):
       
     r = requests.get(url, params=json.dumps(data), headers=headers)
     r = json.loads(r.text)
-    
     return r
 
 #get user of sender
 def get_s2m_profile(request):
-    url = 'http://www.seats2meet.com/api/profiles/getbykey/%s' % request.GET.get('u', '')
+    url = 'https://apiv2.seats2meet.com/api/profiles/getbykey/%s' % request.GET.get('u', '')
     headers = {'content-type':'application/json'}
     data = {
     "profileKey": request.GET.get('u', ''),
@@ -57,7 +55,7 @@ def get_s2m_profile(request):
 
 #get directions to location
 def get_s2m_address(request, location):
-    url = 'http://www.seats2meet.com/api/locations/%s' % location
+    url = 'https://apiv2.seats2meet.com/api/locations/%s' % location
     headers = {'content-type':'application/json'}
     data = {
     "ApiKey":91216637,
