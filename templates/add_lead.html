@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+     
+    {% block content %}     <!-- show page content --->
+
+ {% if user.is_authenticated %}
+ 
+ <p>Add a sales lead</p>
+ <form action="" method="post">{% csrf_token %}
+   <table><tr><td>
+   <tr><td><p><label for="company">Company</label></td><td><input type="text" id="company" name="company"></p></td><tr>
+   <tr><td><p><label for="profile">Customer</label></td><td><input type="text" id="profile" name="profile"></p></td></tr>
+   <tr><td><p><label for="description">Meeting name</label></td><td><input type="text" id="description" name="description"></p></td></tr>
+   <tr><td><p><label for="total_seats">Total seats</label></td><td><input type="text" id="total_seats" name="total_seats"></p></td></tr>
+   <tr><td><p><label for="date">Date</label></td><td><input type="text" id="datepicker" name="date"></p></td></tr>
+   </td></tr></table>
+   </br></br>
+<!--   <label>Comment</label>
+   <p><textarea name="change_note" placeholder="I've spoken to Jim Jones, he is quite grumpy! He really doesn't want the big room, just the small one." rows="10" cols="80">{% if res_intro != None %}{{res_intro}} {% endif %}</textarea></p>
+-->
+   <button type="submit">Add lead</button>
+   <a href="/"><button type="submit">Cancel</button></a>
+ </form>
+
+{% endif %}   
+    {% endblock %}     <!-- end page content -->
+

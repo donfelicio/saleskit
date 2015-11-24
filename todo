@@ -6,9 +6,6 @@ id live: 1256
 id dev: 5539
 
 ---met prio top to bottom:
-pagina met loginlogs (laatste 10)
-pagina met uurlijkse update (ok of niet)
-pagina met mails verzonden (laatste 10)
 handmatig toevoegen van reserveringen, pro-actieve leads bijhouden dus..
 
 ---CRON----

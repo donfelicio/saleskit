@@ -4,7 +4,7 @@
     {% block content %}     <!-- show page content --->
        
  {% if user.is_authenticated %}
- {{superitem}}
+<div id="row" class="col-md-9">
      {% if userprofile.res_updated == 'busy' or userprofile.loc_updated == 'busy' %}
     <h4>Please wait while loading!</h4>
     
@@ -25,7 +25,8 @@
      <h4>{{res_open}} reservations to go!</h4>
      <i>Showing all reservations that you really shouldn't forget about</i><hr>
      {%endif%}
-
+     </div><div class="col-md-1"><test><a href="/add_lead"><button class="btn btn-primary btn-lg">Add lead</button></a></div>
+     
      <div id="row" class="col-md-12 col-md-offset-2" >
           <p class="col-md-12"><h4>{{reservation.res_desc}}</h4>
           {{reservation.res_company}} / {{reservation.res_user}}
@@ -61,6 +62,10 @@
      </div>
      <div id="row" class="col-md-12 col-md-offset-2">
           
+     <!-- if manual, show note here -->
+     {% if reservation.res_manual == 'yes' %}
+     <p style="font-size:12px;"><strong>This reservation was added manually</strong></p>
+     {% endif %}
      <!-- show last status log -->
      {% for change in status_changes %}
           {% if change.change_note|length > 0 %}
@@ -81,8 +86,13 @@
                     <table class="table">
                          
                          <tr>
+                              {% if reservation.res_manual_added == 'no' %}
                               <td><a href="https://www.seats2meet.com/locations/{{reservation.res_location_id}}/saleskit/manage/reservation/{{reservation.res_id}}" target="_blank">Go to reservation in Seats2meet.com: {{ reservation.res_id }}
-                              </td><td>
+                              </td>
+                              {% else %}
+                              <td>Lead was added manually, no s2m reservation to view</td>
+                              {% endif %}
+                              <td>
                                    {% if reservation.res_last_change_by != None %}
                                    Last change by: {{reservation.res_last_change_by}}
                                    {% else %}

@@ -1,140 +1,50 @@
-{% extends "base.html" %}
+{% extends "test_base.html" %}
 {% load staticfiles %}
 
     {% block content %}     <!-- show page content --->
-       
- {% if user.is_authenticated %}
-     {% if userprofile.res_updated == 'busy' or userprofile.loc_updated == 'busy' %}
-    <h4>Please wait while loading!</h4>
-    
-    {% elif no_res == True %}
-    <h4>There are no reservations to process, enjoy your day!</h4>
-        
-    {% else %}
-         
-     {% if active_res == True %}
-     <h4>Now editing #{{reservation.res_id}} <a href="/?no_active_res=yes"<button class="btn btn-danger">Cancel</button></a></h4>
-     {% else %}
-     <h4>Only {{res_open}} to go!</h4><hr>
-     {%endif%}
 
-     <div id="row" class="col-md-12 col-md-offset-2" >
-          <h5 class="col-md-12">{{reservation.res_company}} / {{reservation.res_user}} - {{reservation.res_desc}} -- {{reservation.res_id}}</h5>
-          
-          {% for status in status_list %}    
-               {% if reservation.res_status_sales == status.status_code %}
-                                
-               <!-- no link needed, this already is the current status -->
-               <p class="col-md-1">
-                  <button type="submit" class="btn btn-primary" style="width:90px;font-size:12px;" data-toggle="tooltip" title="{{ status.description }}">{{status.description_short}}
-                  <span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span>
-                  </button>
-               </p>
 
-               
-                    
-               {% elif status.description_short == 'Success' or status.description_short == 'Failed' %}
-               <!-- show nothing -->
-               {% else %}
-               
 
-               <p class="col-md-1">
-                    <a href="/status_change?res_id={{reservation.res_id}}&res_prev_status={{reservation.res_status_sales}}&res_last_change_by={{request.user.first_name}} {{request.user.last_name}}&res_status_sales={{status.status_code}}">
-                         <button type="submit" class="btn btn-default" style="width:90px;font-size:12px;" data-toggle="tooltip" title="{{ status.description }}">{{status.description_short}}
-                         <span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span>
-                         </button>
-                    </a>
-               </p>
-          
-             {% endif %}
-          {% endfor %}
-     </div>
-     </div>
-     <div id="row" class="col-md-12 col-md-offset-2">
-          
-     <!-- show last status log -->
-     {% for change in status_changes %}
-    
-     <p style="font-size:12px;">{{change.change_date}}: {{change.change_note}}</p>
-     {% endfor %}
-     </div>
-
-      <!-- show reservation info -->
-     <div id="row" class="col-md-12" style="margin-top:20px;">
-          
-     <table style="width:100%;">
-          <tr>
-               <td style="width:50%;padding-right:50px;">
-                    <!-- Show next action-->
-                    <h2 style="color:red;">1. Do right now: {{short_sales_tip}}</h2><p>{{sales_tip}}</p>
-                    <table class="table">
-                         
-                         <tr>
-                              <td><a href="https://www.seats2meet.com/locations/{{reservation.res_location_id}}/saleskit/manage/reservation/{{reservation.res_id}}" target="_blank">Go to reservation in Seats2meet.com: {{ reservation.res_id }}
-                              </td><td>
-                                   {% if reservation.res_last_change_by != None %}
-                                   Last change by: {{reservation.res_last_change_by}}
-                                   {% else %}
-                                   Last change by: Nobody has contacted this customer
-                                   {% endif %}
-                              </td>
-                         </tr>
-                         <tr>
-                              <td>Date:</td><td> {{reservation.res_date|date:'Y-m-d'}} - Meeting is in <b>{{days_to_res}} </b>days</td>
-                         </tr> 
-                         <tr><td>Company/Customer:</td><td>{{reservation.res_company}} / {{reservation.res_user}}</td></tr>
-                         <tr><td>Seats:</td><td> {{reservation.res_total_seats}}pax</td></tr>
-                         <tr><td>S2M status:</td><td> {{reservation.get_res_status_display}}</td></tr>
-                         
-                       
-                    </table>
-               
-               </td>
-               
-               <td style="width:20%;margin: 0 auto;">
-                 <!-- show actions for reservation -->
-                    <p>
-                         <a href="/show?r={{reservation.res_id}}&u={{userprofile.user_key}}&lang=nl" target="_blank"><button type="submit" class="btn btn-default" style="width:200px;">Show offer</button></a>
-                    </p>
-                    <p>
-                         <a href="/status_change?res_id={{reservation.res_id}}&res_prev_status={{reservation.res_status_sales}}&res_last_change_by={{request.user.first_name}} {{request.user.last_name}}&res_status_sales={{status.status_code}}">
-                              <button type="submit" class="btn btn-success" style="width:200px;">Success</button>
-                         </a>
-                    </p>
-                    <p>
-                         <a href="/status_change?res_id={{reservation.res_id}}&res_prev_status={{reservation.res_status_sales}}&res_last_change_by={{request.user.first_name}} {{request.user.last_name}}&res_status_sales={{status.status_code}}">
-                              <button type="submit" class="btn btn-danger" style="width:200px;">Failed</button>
-                         </a>
-                    </p>
-                    <p><form action="" method="POST">{% csrf_token %}
-                         <input type="hidden" name="res_id" value="{{reservation.res_id}}">
-                         <input type="hidden" name="user_name" value="{{request.user.username}}">
-                         <input type="hidden" name="hide_days" value="forever">
-                         <button type="submit" class="btn btn-primary" style="width:200px;">Not my reservation</button>
-                    </form></p>
-                    <p><form action="" method="POST">{% csrf_token %}
-                         <input type="hidden" name="res_id" value="{{reservation.res_id}}">
-                         <input type="hidden" name="user_name" value="{{request.user.username}}">
-                         <input type="hidden" name="hide_days" value="today">
-                         <button type="submit" class="btn btn-primary" style="width:200px;">Postpone - 1 hour</button>
-                    </form></p>
-                    <p><form action="" method="POST">{% csrf_token %}
-                         <input type="hidden" name="res_id" value="{{reservation.res_id}}">
-                         <input type="hidden" name="user_name" value="{{request.user.username}}">
-                         <input type="hidden" name="hide_days" value="tomorrow">
-                         <button type="submit" class="btn btn-primary" style="width:200px;">Postpone - Tomorrow</button>
-                    </form></p>
-
-               </td>
-          </tr>
-     </table>       
-     </div>          
-               
-               
-               
-        
-   {% endif %}
-   {% endif %}
+<div id="dialog-form" title="Create new user">
+  <p class="validateTips">All form fields are required.</p>
+ 
+  <form>
+    <fieldset>
+      <label for="name">Name</label>
+      <input type="text" name="name" id="name" value="Jane Smith" class="text ui-widget-content ui-corner-all">
+      <label for="email">Email</label>
+      <input type="text" name="email" id="email" value="jane@smith.com" class="text ui-widget-content ui-corner-all">
+      <label for="password">Password</label>
+      <input type="password" name="password" id="password" value="xxxxxxx" class="text ui-widget-content ui-corner-all">
+ 
+      <!-- Allow form submission with keyboard without duplicating the dialog button -->
+      <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+    </fieldset>
+  </form>
+</div>
+ 
+ 
+<div id="users-contain" class="ui-widget">
+  <h1>Existing Users:</h1>
+  <table id="users" class="ui-widget ui-widget-content">
+    <thead>
+      <tr class="ui-widget-header ">
+        <th>Name</th>
+        <th>Email</th>
+        <th>Password</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>John Doe</td>
+        <td>john.doe@example.com</td>
+        <td>johndoe1</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<button id="create-user">Create new user</button>
+ 
     {% endblock %}     <!-- end page content -->
     
     

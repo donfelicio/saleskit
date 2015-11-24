@@ -6,9 +6,10 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .s2m import *
 from .dicts import *
 from django.http import *
-import time
+import time, random
 from django.db.models import Q
 from threading import Thread
+
 
    
 def filter_over20(element):
@@ -433,6 +434,37 @@ def status_change(request):
 
 
 
+def add_lead(request):
+   
+   if request.method == 'POST':
+      
+      #error handling
+      try: #check if total seats is a number
+        int(request.POST['total_seats'])  
+      except: #not
+         total_seats = 0
+      else: #yes
+         total_seats = request.POST['total_seats']
+         
+      
+      if request.POST['date'] != '':
+         res_date_input = request.POST['date']
+      else:
+         res_date_input = datetime.date.today()
+      
+      #define current user full name   
+      current_user = "%s %s" %(request.user.first_name, request.user.last_name)
+      
+      #add the reservation.
+      Reservation.objects.create(res_id=random.randint(1000000000,9999999999), res_user=request.POST['profile'], res_company=request.POST['company'], res_desc=request.POST['description'], res_total_seats=total_seats, res_date=res_date_input, res_date_created=datetime.date.today(), res_location_id=Userprofile.objects.get(user_name=request.user.username).active_location, res_last_change_by=current_user, res_manual_added='yes')
+      return redirect('/')
+   
+   context={}
+   template="add_lead.html"
+   return render(request, template, context)
+
+
+
 def logout(request):
    instance = Userprofile.objects.get(user_name=request.user.username)
    instance.active_location = False
@@ -441,6 +473,8 @@ def logout(request):
    instance.save()
    request.session.flush()
    return redirect('/')
+
+
 
 def logs(request):
    context={
