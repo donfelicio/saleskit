@@ -446,6 +446,7 @@ def logs(request):
    context={
          'loginlog':Loginlog.objects.all()[:10],
          'refreshlog':Refreshlog.objects.all()[:1],
+         'remindlog':Remindlog.objects.all()[:1],
          'invoicelog':Invoicereminder.objects.all()[:10],
         }
    template="logs.html"

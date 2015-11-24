@@ -15,7 +15,12 @@
           
           <h4>Hourly Refreshlog</h4>
           {% for refresh in refreshlog %}
-          <p>Last refresh: {{refresh.status}}</p>
+          <p>{{refresh.log_date}} - {{refresh.status}}</p>
+          {% endfor %}
+          
+          <h4>Daily Remindlog</h4>
+          {% for remind in remindlog %}
+          <p>{{remind.log_date}} - {{remind.status}}</p>
           {% endfor %}
         
     {% endif %}

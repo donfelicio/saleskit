@@ -75,9 +75,15 @@ class Loginlog(models.Model):
     
 class Refreshlog(models.Model):
     status = models.CharField(max_length = 255, null=True)
-    login_date = models.DateTimeField(auto_now=True, null=True)
+    log_date = models.DateTimeField(auto_now=True, null=True)
     class Meta:
-        ordering = ['-login_date']
+        ordering = ['-log_date']
+        
+class Remindlog(models.Model):
+    status = models.CharField(max_length = 255, null=True)
+    log_date = models.DateTimeField(auto_now=True, null=True)
+    class Meta:
+        ordering = ['-log_date']
     
 class Statuschange(models.Model):
     reservation = models.ForeignKey(Reservation)
