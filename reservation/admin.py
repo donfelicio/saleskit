@@ -54,8 +54,15 @@ class Statuschangeadmin(admin.ModelAdmin):
 admin.site.register(Statuschange, Statuschangeadmin)
 
 class Refreshlogadmin(admin.ModelAdmin):
-    list_display = ['status']
+    list_display = ['status', 'log_date']
     class Meta:
         model = Refreshlog
         
 admin.site.register(Refreshlog, Refreshlogadmin)
+
+class Remindlogadmin(admin.ModelAdmin):
+    list_display = ['status', 'log_date']
+    class Meta:
+        model = Remindlog
+        
+admin.site.register(Remindlog, Remindlogadmin)
