@@ -118,6 +118,13 @@
                     <p>
                          <a href="/show?r={{reservation.res_id}}&u={{userprofile.user_key}}&lang=nl" target="_blank" data-toggle="tooltip" title="Send your customer a great offer, using this page."><button type="submit" class="btn btn-default" style="width:200px;">Show offer</button></a>
                     </p>
+                    {% if reservation.res_manual_added == 'yes' %}
+                    <p>
+                         <a href="/status_change?res_id={{reservation.res_id}}&res_prev_status={{reservation.res_status_sales}}&res_last_change_by={{request.user.first_name}} {{request.user.last_name}}&res_status_sales=8" data-toggle="tooltip" title="This manually added lead became a reservation. We'll remove it to prevent double leads!">
+                              <button type="submit" class="btn btn-primary" style="width:200px;">Lead > Reservation</button>
+                         </a>
+                    </p>
+                    {% endif %}
                     <p>
                          <a href="/status_change?res_id={{reservation.res_id}}&res_prev_status={{reservation.res_status_sales}}&res_last_change_by={{request.user.first_name}} {{request.user.last_name}}&res_status_sales=8" data-toggle="tooltip" title="The sale was a success!">
                               <button type="submit" class="btn btn-success" style="width:200px;">Success</button>
