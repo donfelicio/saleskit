@@ -5,10 +5,6 @@
 id live: 1256
 id dev: 5539
 
----since last update
-- Je kunt nu op de huidige status klikken, om comments toe te voegen als je nog niet naar de volgende status gaat
-- Filter stond niet goed waardoor filters van collega's voor de hele locatie effectief waren, werkt nu weer goed.
-
 
 ---met prio top to bottom:
 When user clicks lead -> reservation, make user select reservation from list (search for date or name), save comments and status to new reservation, and delete them manual added lead reservation instance 
