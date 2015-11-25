@@ -185,6 +185,13 @@ def home(request):
       time.sleep(1)
       return redirect('/')
    
+   #if user clicks 'change location', set active location to False
+   if request.GET.get('loc_change', '') == 'yes' and Userprofile.objects.get(user_name=request.user.username).res_updated != 'busy':
+      instance = Userprofile.objects.get(user_name=request.user.username)
+      instance.active_location = False
+      instance.save()
+      return redirect('/')
+   
       
    #If user has selected a location when he has access to multiple, save the active_location now
    if request.method == 'POST' and 'location_id' in request.POST:
@@ -313,7 +320,8 @@ def home(request):
          'reservation': reservation,
          'status_list': Statuscode.objects.all(),
          'no_res': no_res,
-         'userprofile': Userprofile.objects.get(user_name=request.user.username)
+         'userprofile': Userprofile.objects.get(user_name=request.user.username),
+         'locationlist': Userlocation.objects.all().filter(user_name=request.user.username)
          }
       
       if len(critical) > 0:
@@ -321,7 +329,7 @@ def home(request):
       if len(important) > 0:
          context['important'] = len(important)
          
-      if no_res == False: #if there is a reservation.. (might be empty list?)   
+      if no_res == False: #if there is a reservation.. (might be empty list?)
          context['status_changes'] = Statuschange.objects.all().filter(reservation=reservation)
          context['sales_tip'] = salestip(reservation.res_status_sales)
          context['short_sales_tip'] = short_salestip(reservation.res_status_sales)
