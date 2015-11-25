@@ -5,8 +5,13 @@
 id live: 1256
 id dev: 5539
 
+---since last update
+- Je kunt nu op de huidige status klikken, om comments toe te voegen als je nog niet naar de volgende status gaat
+- Filter stond niet goed waardoor filters van collega's voor de hele locatie effectief waren, werkt nu weer goed.
+
+
 ---met prio top to bottom:
-handmatig toevoegen van reserveringen, pro-actieve leads bijhouden dus..
+When user clicks lead -> reservation, make user select reservation from list (search for date or name), save comments and status to new reservation, and delete them manual added lead reservation instance 
 
 ---CRON----
 you should check user's allowed access location list every night or so if they have new locations
