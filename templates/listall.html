@@ -3,60 +3,6 @@
 
     {% block content %}
      {% if user.is_authenticated %}
-        
-     <!-- if there are search results, show this section -->
-        {% if found_entries != None %}
-    <!-- show search results if search -->
-     <h1>Search results - <a href='/listall'>Back</a></h1>
-    <div class="accordion">
-              {% for reservation in res_list|dictsort:"res_date" %}
-         <div class="accordion-section">
- 
-               <a class="accordion-section-title" href="#accordion-{{reservation.res_id}}">
-                    #{{reservation.res_id}} -
-                    {{reservation.res_date|date:'Y-m-d'}} -
-                    {{reservation.res_user}} -
-                    {{reservation.res_company}} -
-                    {{reservation.res_total_seats}}pax -
-                    {{reservation.get_res_status_sales_display}} -
-                    {{reservation.get_res_status_display}}
-               </a>
-               <div id="accordion-{{reservation.res_id}}" class="accordion-section-content">
-          <p><a href="https://www.seats2meet.com/locations/{{reservation.res_location_id}}/saleskit/manage/resertion/{{reservation.res_id}}" target="_blank">{{ reservation.res_id }}</a> - {{ reservation.res_user }} - {{ reservation.get_res_status_sales_display }}</p>
-          {% for status in status_list %}    
-
-               {% if reservation.res_status_sales == status.status_code %}
-                 
-                    <!-- no form needed, this already is the current status -->
-                    <p class="col-md-1">
-                       <button type="submit" class="btn btn-primary" style="width:90px;font-size:12px;" data-toggle="tooltip" title="{{ status.description }}">{{status.description_short}}</button>
-                    </p>        
-                 
-               {% else %}
-                    <form action="" method="POST" name="form3"> {% csrf_token %}
-                      <p class="col-md-1">
-                         <input type="hidden" name="res_id" value="{{reservation.res_id}}">
-                         <input type="hidden" name="res_untouched" value="no">
-                         <input type="hidden" name="res_status_sales" value="{{status.status_code}}">
-                         <button type="submit" class="btn btn-default" style="width:90px;font-size:12px;" data-toggle="tooltip" title="{{ status.description }}">{{status.description_short}}</button>
-                      </p>        
-                    </form>
-                    
-               {% endif %}
-          {% endfor %}
-
-               </div><!--end .accordion-section-content-->
-         </div><!--end .accordion-section-->
-          {% endfor %}
-    </div><!--end .accordion-->
-    
-   
-     {% endif %}
-     
-    <!-- if there are search results, dont show the rest -->
-
-    <!-- end search results -->
-        {% if found_entries == None %}
     
      <form action="" method="POST" name="form1">{% csrf_token %}
           <input type="input" name="q" value="" placeholder="Search...">
@@ -77,8 +23,11 @@
                     {{reservation.get_res_status_display}}
                </a>
                <div id="accordion-{{reservation.res_id}}" class="accordion-section-content">
-
+                    {% if reservation.res_manual_added == "yes" %}
+                    <p>Reservation was added manually</p>
+                    {% else %}
                     <p><a href="https://www.seats2meet.com/locations/{{reservation.res_location_id}}/saleskit/manage/reservation/{{reservation.res_id}}" target="_blank">#{{ reservation.res_id }} - Go to reservation in Seats2meet.com</a>
+                    {% endif %}
                     <table class="table">
                          <tr>
                               <td>Date:</td><td> {{reservation.res_date|date:'Y-m-d'}}</td>
@@ -113,7 +62,11 @@
                </a>
                <div id="accordion-{{reservation.res_id}}" class="accordion-section-content">
 
+                    {% if reservation.res_manual_added == "yes" %}
+                    <p>Reservation was added manually</p>
+                    {% else %}
                     <p><a href="https://www.seats2meet.com/locations/{{reservation.res_location_id}}/saleskit/manage/reservation/{{reservation.res_id}}" target="_blank">#{{ reservation.res_id }} - Go to reservation in Seats2meet.com</a>
+                    {% endif %}
                     <table class="table">
                          <tr>
                               <td>Date:</td><td> {{reservation.res_date|date:'Y-m-d'}}</td>
@@ -146,7 +99,11 @@
                </a>
                <div id="accordion-{{reservation.res_id}}" class="accordion-section-content">
 
+                    {% if reservation.res_manual_added == "yes" %}
+                    <p>Reservation was added manually</p>
+                    {% else %}
                     <p><a href="https://www.seats2meet.com/locations/{{reservation.res_location_id}}/saleskit/manage/reservation/{{reservation.res_id}}" target="_blank">#{{ reservation.res_id }} - Go to reservation in Seats2meet.com</a>
+                    {% endif %}
                     <table class="table">
                          <tr>
                               <td>Date:</td><td> {{reservation.res_date|date:'Y-m-d'}}</td>
@@ -163,8 +120,7 @@
          </div><!--end .accordion-section-->
         {% endfor %}
     </div><!--end .accordion-->
-    
-    {% endif %}
+
     {% endif %}
     
    
