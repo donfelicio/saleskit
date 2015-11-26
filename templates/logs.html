@@ -10,7 +10,7 @@
           
           <h4>Invoice reminder log</h4>
           {% for reminder in invoicelog %}
-          <p>{{reminder.date_updated}} - Status: {{reminder.invoice_status}}</p>
+          <p>{{reminder.date_updated}} - Status: {{reminder.invoice_status}} - {{reminder.invoice_id}}</p>
           {% endfor %}
           
           <h4>Hourly Refreshlog</h4>
