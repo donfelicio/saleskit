@@ -4,6 +4,14 @@
     {% block content %}     <!-- show page content --->
        
  {% if user.is_authenticated %}
+ 
+ <!-- show notification if it's set -->
+     {% if notification != False %}
+    <script>
+      var n = noty({text: '{{notification}}'});
+    </script>
+    {% endif %}
+ <!-- end notification -->   
 <div id="row" class="col-md-9">
      {% if userprofile.res_updated == 'busy' or userprofile.loc_updated == 'busy' %}
     <h4>Please wait while loading!</h4>
@@ -136,31 +144,31 @@
                               <button type="submit" class="btn btn-danger" style="width:200px;">Failed</button>
                          </a>
                     </p>
-                    <p><form action="" method="POST">{% csrf_token %}
+                    <p><form action="/?noty=hidden" method="POST">{% csrf_token %}
                          <input type="hidden" name="res_id" value="{{reservation.res_id}}">
                          <input type="hidden" name="user_name" value="{{request.user.username}}">
                          <input type="hidden" name="hide_days" value="forever">
                          <button type="submit" class="btn btn-primary" style="width:200px;" data-toggle="tooltip" title="One of my colleagues will handle this reservation">Not my reservation</button>
                     </form></p>
-                    <p><form action="" method="POST">{% csrf_token %}
+                    <p><form action="/?noty=hour" method="POST">{% csrf_token %}
                          <input type="hidden" name="res_id" value="{{reservation.res_id}}">
                          <input type="hidden" name="user_name" value="{{request.user.username}}">
                          <input type="hidden" name="hide_days" value="today">
                          <button type="submit" class="btn btn-primary" style="width:200px;padding-left: 30px;text-align: left" data-toggle="tooltip" title="Show me this reservation again 1 hour from now">Remind in 1 hour</button>
                     </form></p>
-                    <p><form action="" method="POST">{% csrf_token %}
+                    <p><form action="/?noty=day" method="POST">{% csrf_token %}
                          <input type="hidden" name="res_id" value="{{reservation.res_id}}">
                          <input type="hidden" name="user_name" value="{{request.user.username}}">
                          <input type="hidden" name="hide_days" value="tomorrow">
                          <button type="submit" class="btn btn-primary" style="width:200px;padding-left: 30px;text-align: left" data-toggle="tooltip" title="Show me this reservation again Tomorrow">Remind in 1 day</button>
                     </form></p>
-                    <p><form action="" method="POST">{% csrf_token %}
+                    <p><form action="/?noty=week" method="POST">{% csrf_token %}
                          <input type="hidden" name="res_id" value="{{reservation.res_id}}">
                          <input type="hidden" name="user_name" value="{{request.user.username}}">
                          <input type="hidden" name="hide_days" value="week">
                          <button type="submit" class="btn btn-primary" style="width:200px;padding-left: 30px;text-align: left" data-toggle="tooltip" title="Show me this reservation again in 1 week">Remind in 1 week</button>
                     </form></p>
-                    <p><form action="" method="POST">{% csrf_token %}
+                    <p><form action="/?noty=month" method="POST">{% csrf_token %}
                          <input type="hidden" name="res_id" value="{{reservation.res_id}}">
                          <input type="hidden" name="user_name" value="{{request.user.username}}">
                          <input type="hidden" name="hide_days" value="month">

@@ -175,6 +175,26 @@ def home(request):
    critical = []
    important = []
    res_list = []
+   notification = False
+   
+   # if there, show notification
+   if request.GET.get('noty') == 'day':
+      notification = "Saved, Reservation hidden until tomorrow morning"
+   elif request.GET.get('noty') == 'after':
+      notification = "Saved, Reservation hidden until day after meeting"
+   elif request.GET.get('noty') == 'forever':
+      notification = "Saved, Reservation closed - Success/Failure"
+   elif request.GET.get('noty') == 'comment':
+      notification = "Note added"
+   elif request.GET.get('noty') == 'hour':
+      notification = "Reservation hidden for one hour"
+   elif request.GET.get('noty') == 'week':
+      notification = "Reservation hidden for one week"
+   elif request.GET.get('noty') == 'month':
+      notification = "Reservation hidden for one month"
+   elif request.GET.get('noty') == 'hidden':
+      notification = "Reservation hidden from you forever"
+   
    
    
    #is user clicked 'refresh', do the refresh.
@@ -321,7 +341,8 @@ def home(request):
          'status_list': Statuscode.objects.all(),
          'no_res': no_res,
          'userprofile': Userprofile.objects.get(user_name=request.user.username),
-         'locationlist': Userlocation.objects.all().filter(user_name=request.user.username)
+         'locationlist': Userlocation.objects.all().filter(user_name=request.user.username),
+         'notification': notification
          }
       
       if len(critical) > 0:
@@ -382,6 +403,7 @@ def res_input(request):
 
 
 def status_change(request):
+   notification = False
    #if change of sales status and note are added, save to db
    if request.method == 'POST' and 'res_id' in request.POST:
       
@@ -401,15 +423,23 @@ def status_change(request):
       if request.GET.get('res_status_sales') == '6':
          now_plus_hour = datetime.datetime.strptime('00:00', '%H:%M')
          Reservationfilter.objects.create(reservation=Reservation.objects.get(res_id=request.POST['res_id']), user_name=request.user.username, location_id=Userprofile.objects.get(user_name=request.user.username).active_location, hide_days=(Reservation.objects.get(res_id=request.POST['res_id']).res_date + datetime.timedelta(days=1)), hide_hour=now_plus_hour.strftime('%H'), hide_minute=now_plus_hour.strftime('%M'))
+         notification = 'after'
 
       elif request.GET.get('res_prev_status') != request.GET.get('res_status_sales'):
       #or else hide the reservation until tomorrow
          now_plus_hour = datetime.datetime.strptime('00:00', '%H:%M')
          Reservationfilter.objects.create(reservation=Reservation.objects.get(res_id=request.POST['res_id']), user_name=request.user.username, location_id=Userprofile.objects.get(user_name=request.user.username).active_location, hide_days=(datetime.datetime.now() + datetime.timedelta(days=1)), hide_hour=now_plus_hour.strftime('%H'), hide_minute=now_plus_hour.strftime('%M'))
+         notification = 'day'
+      else:
+         notification = 'comment'
       
       #add the statuschange instance
       instance = Statuschange.objects.create(reservation=Reservation.objects.get(res_id=request.POST['res_id']), user_name=request.user.username, res_status_sales_code=request.POST['res_status_sales'], res_status_sales=Statuscode.objects.get(status_code=request.GET.get('res_status_sales', '')).description_short, change_note=request.POST['change_note'])      
-      return redirect('/')
+      if notification != False:
+         url = "/?noty=%s" % notification
+      else:
+         url = "/"
+      return redirect(url)
    
    elif request.GET.get('res_status_sales') == '8' or request.GET.get('res_status_sales') == '9':
       #update the reservation
@@ -418,6 +448,7 @@ def status_change(request):
       instance.res_last_change_by=request.GET.get('res_last_change_by')
       instance.res_status_sales=request.GET.get('res_status_sales')
       instance.save()
+      notification = 'forever'
       
       #make sure the userprofile doesn't have an active reservation anymore that selects the res to edit
       instance = Userprofile.objects.get(user_name=request.user.username)
@@ -426,7 +457,11 @@ def status_change(request):
       
       #add the statuschange instance
       instance = Statuschange.objects.create(reservation=Reservation.objects.get(res_id=request.GET.get('res_id')), user_name=request.user.username, res_status_sales_code=request.GET.get('res_status_sales'), res_status_sales=Statuscode.objects.get(status_code=request.GET.get('res_status_sales', '')).description_short, change_note="final change - by system")      
-      return redirect('/')
+      if notification != False:
+         url = "/?noty=%s" % notification
+      else:
+         url = "/"
+      return redirect(url)
       
    else:
       context={
