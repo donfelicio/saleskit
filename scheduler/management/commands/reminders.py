@@ -1,3 +1,6 @@
+##### THIS IS AN OLD VERSION, check out V2.py
+
+
 from django.core.management.base import BaseCommand
 from django.shortcuts import render
 import time, datetime, json, requests
@@ -79,7 +82,7 @@ class Command(BaseCommand):
     #     "Cc":"",
     #     "Subject": "test: invoices",
     #     "MailText": "test: invoice tekst",
-    #     "Attachement": "",
+    #     "Attachement": "", #Invoice_id.pdf
     #     "IncludeComments": False,
     #     "LocationId": 563,
     #     }

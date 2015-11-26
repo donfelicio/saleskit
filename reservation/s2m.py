@@ -16,7 +16,6 @@ def get_s2m_res(request): #you should only do this in background, or when user p
    rowsleft = 100000 #must define but can't be zero:)
    results=[]
    while rowsleft > 0:
-   #!!!PRINT NOG DUBBEL, maar alleen bij tweede run. alleen in zelfde browser na refresh van /load. zal wel request onthouden. 
       url = 'https://apiv2.seats2meet.com/api/reservation/location/%s' % Userprofile.objects.get(user_name=request.user.username).active_location
       headers = {'content-type':'application/json', 'Connection':'close'}
       data = {
