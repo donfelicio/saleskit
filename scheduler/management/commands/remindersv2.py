@@ -106,6 +106,7 @@ class Command(BaseCommand):
         test_mode = 'no'
         
         for item in self.s2m_get_invoicelist():
+            print item.get('Code')
             # do NOT send to tax exempt people where the system thinks their tax still needs to be paid
             taxes = item.get('TotalIncludingTax') - item.get('TotalExcludingTax')
             if item.get('NoTax') == True and round(taxes,0) == round(item.get('AmountOpen'),0):
