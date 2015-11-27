@@ -103,7 +103,7 @@ class Command(BaseCommand):
         location_name = 'Meet Berlage - S2M'
         location_admin_mail = 'info@meetberlage.com'
         location_id = 563
-        test_mode = 'yes'
+        test_mode = 'no'
         
         for item in self.s2m_get_invoicelist():
             # do NOT send to tax exempt people where the system thinks their tax still needs to be paid

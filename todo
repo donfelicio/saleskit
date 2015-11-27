@@ -6,9 +6,10 @@ id live: 1256
 id dev: 5539
 
 ---met prio top to bottom:
-autocron, filter op ChangeDate: ... CreatedOn UpdatedOn op datum en alle data daarna.
-remindersv2 met werkende s2m send invoice API (staat in test.py)
-auto-reminders multi-locatie mogelijk maken
+autocron, filter op ChangeDate: ... CreatedOn UpdatedOn op datum en alle data daarna. (na update in 1e week december)
+get locationlist from good API, just still save it in DB for hourly loadcron (unless we can just get ALL of them)
+//https://www.seats2meet.com/Help/Api/GET-api-locations-profile-profileKey
+auto-invoice-reminders aan andere locaties aanbieden (eerst ombouwen)
 When user clicks lead -> reservation, make user select reservation from list (search for date or name), save comments and status to new reservation, and delete them manual added lead reservation instance 
 
 ---CRON----
