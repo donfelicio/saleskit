@@ -315,7 +315,7 @@ def home(request):
          no_res = False
       else:
          #make res list, filter out any reservations that have a filter from this user, and are final or success
-         res_list = Reservation.objects.all().filter(res_location_id=Userprofile.objects.get(user_name=request.user.username).active_location).exclude(reservationfilter__isnull=False, reservationfilter__user_name=request.user.username).exclude(res_status_sales='8').exclude(res_status_sales='9')
+         res_list = Reservation.objects.all().filter(res_location_id=Userprofile.objects.get(user_name=request.user.username).active_location).exclude(reservationfilter__isnull=False, reservationfilter__user_name=request.user.username).exclude(reservationfilter__isnull=False, reservationfilter__status='6').exclude(res_status_sales='8').exclude(res_status_sales='9')
          
          #now test for stage of critical, important or dontforget
          critical = filter(filter_over20, res_list)
@@ -422,7 +422,7 @@ def status_change(request):
       #if status_sales is 'prepared', hide until one day after the meeting.
       if request.GET.get('res_status_sales') == '6':
          now_plus_hour = datetime.datetime.strptime('00:00', '%H:%M')
-         Reservationfilter.objects.create(reservation=Reservation.objects.get(res_id=request.POST['res_id']), user_name=request.user.username, location_id=Userprofile.objects.get(user_name=request.user.username).active_location, hide_days=(Reservation.objects.get(res_id=request.POST['res_id']).res_date + datetime.timedelta(days=1)), hide_hour=now_plus_hour.strftime('%H'), hide_minute=now_plus_hour.strftime('%M'))
+         Reservationfilter.objects.create(reservation=Reservation.objects.get(res_id=request.POST['res_id']), user_name=request.user.username, location_id=Userprofile.objects.get(user_name=request.user.username).active_location, hide_days=(Reservation.objects.get(res_id=request.POST['res_id']).res_date + datetime.timedelta(days=1)), hide_hour=now_plus_hour.strftime('%H'), hide_minute=now_plus_hour.strftime('%M'), status='6')
          notification = 'after'
 
       elif request.GET.get('res_prev_status') != request.GET.get('res_status_sales'):

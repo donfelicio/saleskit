@@ -5,7 +5,7 @@
     {% block content %}     <!-- show page content --->
     
       
-    {% if request.session.lang == "nl" %} <!-- if lang is dutch -->
+    {% if reservation.LanguageId == 52 %} <!-- if lang is dutch -->
             {% autoescape off %}
         <!-- Main jumbotron for a primary marketing message or call to action -->
     
@@ -15,7 +15,6 @@
     {% if user.is_authenticated and not request.GET.hide%} <!-- admin functions when loggedin -->
     <div id="row" style="background-color: #ffffff;padding:20px;margin:5px;">
       <p>You will only see these buttons when you are logged in.</p>
-      <!--en--><a href="/show?r={{request.GET.r}}&u={{request.GET.u}}"><button class="btn btn-primary">English</button></a>
       <!--intro--><a href="/res_input?res_id={{request.GET.r}}"<button class="btn {% if intro_text|length > 0 %}btn-success" >Change {% else %} btn-primary" >Add {% endif %} intro text to offer</button></a>
       <!--hide--><a href="/show?r={{request.GET.r}}&u={{request.GET.u}}&lang=nl&hide=true"><button class="btn btn-primary">Hide this menu</button></a>
     </div>
@@ -161,7 +160,6 @@
         {% if user.is_authenticated and not request.GET.hide%} <!-- admin functions when loggedin -->
     <div id="row" style="background-color: #ffffff;padding:20px;margin:5px;">
       <p>You will only see these buttons when you are logged in.</p>
-      <!--nl--><a href="/show?r={{request.GET.r}}&u={{request.GET.u}}&lang=nl"><button class="btn btn-primary">Nederlands</button></a>
       <!--intro--><a href="/res_input?res_id={{request.GET.r}}"<button class="btn {% if intro_text|length > 0 %}btn-success" >Change {% else %} btn-primary" >Add {% endif %} intro text to offer</button></a>
 <!--hide--><a href="/show?r={{request.GET.r}}&u={{request.GET.u}}&hide=true"><button class="btn btn-primary">Hide this menu</button></a>
     </div>

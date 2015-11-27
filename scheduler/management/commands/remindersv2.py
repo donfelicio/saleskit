@@ -121,8 +121,6 @@ class Command(BaseCommand):
                 instance, created = Invoicereminder.objects.get_or_create(invoice_id=item.get('Id'))        
                 invoice_reminder = Invoicereminder.objects.get(invoice_id=item.get('Id')).invoice_status    
                 
-                print item.get('Code')
-                print item.get("ExpirationDate")
                 ####
                 #####send 1st reminder
                 ####
