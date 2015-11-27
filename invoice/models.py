@@ -9,5 +9,10 @@ class Invoicereminder(models.Model):
     date_updated = models.DateField(auto_now = True)
     class Meta:
         ordering = ['-date_updated']
+        
+class Activelocation(models.Model):
+    location_id = models.IntegerField(default=0)
+    profile_key = models.CharField(max_length=255, default=None)
+
     
     

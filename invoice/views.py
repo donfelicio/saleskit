@@ -58,4 +58,4 @@ def home(request):
            itemsleft -= items
         print itemsleft
     print results   
-    return results
+    #return results

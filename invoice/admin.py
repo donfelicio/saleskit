@@ -7,3 +7,10 @@ class Invoicereminderadmin(admin.ModelAdmin):
         model = Invoicereminder
         
 admin.site.register(Invoicereminder, Invoicereminderadmin)
+
+class Activelocationadmin(admin.ModelAdmin):
+    list_display = ['location_id', 'profile_key']
+    class Meta:
+        model = Activelocation
+        
+admin.site.register(Activelocation, Activelocationadmin)
