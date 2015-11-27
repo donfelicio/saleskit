@@ -103,10 +103,9 @@ class Command(BaseCommand):
         location_name = 'Meet Berlage - S2M'
         location_admin_mail = 'info@meetberlage.com'
         location_id = 563
-        test_mode = 'no'
+        test_mode = 'no' #set to yes if you don't want to send emails and update logs
         
         for item in self.s2m_get_invoicelist():
-            print item.get('Code')
             # do NOT send to tax exempt people where the system thinks their tax still needs to be paid
             taxes = item.get('TotalIncludingTax') - item.get('TotalExcludingTax')
             if item.get('NoTax') == True and round(taxes,0) == round(item.get('AmountOpen'),0):
@@ -122,6 +121,8 @@ class Command(BaseCommand):
                 instance, created = Invoicereminder.objects.get_or_create(invoice_id=item.get('Id'))        
                 invoice_reminder = Invoicereminder.objects.get(invoice_id=item.get('Id')).invoice_status    
                 
+                print item.get('Code')
+                print item.get("ExpirationDate")
                 ####
                 #####send 1st reminder
                 ####
