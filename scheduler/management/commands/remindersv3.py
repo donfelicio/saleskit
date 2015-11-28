@@ -113,6 +113,9 @@ class Command(BaseCommand):
                     pass 
                 else:#send them a fucking email
                     print item.get('ExpirationDate')
+                    print item.get('Code')
+                    
+                    
                     two_weeks_after = datetime.datetime.strptime(str(item.get("ExpirationDate").split("T")[0]), '%Y-%m-%d')
                     four_weeks_after = datetime.datetime.strptime(str(item.get("ExpirationDate").split("T")[0]), '%Y-%m-%d') + datetime.timedelta(weeks=2)
                     six_weeks_after = datetime.datetime.strptime(str(item.get("ExpirationDate").split("T")[0]), '%Y-%m-%d') + datetime.timedelta(weeks=4)
