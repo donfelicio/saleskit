@@ -98,7 +98,7 @@ class Command(BaseCommand):
     
     def handle(self, *args, **options):
         
-        test_mode = 'yes' #set to yes if you don't want to send emails and update logs
+        test_mode = 'no' #set to yes if you don't want to send emails and update logs
         #location = self.get_s2m_address(invoice.get('LocationId'))
         for location in Activelocation.objects.all():
             
@@ -112,10 +112,6 @@ class Command(BaseCommand):
                 elif item.get('AmountOpen') < 1.00: #als minder dan 1 euro openstaat.
                     pass 
                 else:#send them a fucking email
-                    print item.get('ExpirationDate')
-                    print item.get('Code')
-                    
-                    
                     two_weeks_after = datetime.datetime.strptime(str(item.get("ExpirationDate").split("T")[0]), '%Y-%m-%d')
                     four_weeks_after = datetime.datetime.strptime(str(item.get("ExpirationDate").split("T")[0]), '%Y-%m-%d') + datetime.timedelta(weeks=2)
                     six_weeks_after = datetime.datetime.strptime(str(item.get("ExpirationDate").split("T")[0]), '%Y-%m-%d') + datetime.timedelta(weeks=4)
@@ -128,7 +124,7 @@ class Command(BaseCommand):
                     #####send 1st reminder
                     ####
                     if datetime.datetime.today() > two_weeks_after and datetime.datetime.today() < four_weeks_after and invoice_reminder != 1:
-                        #print 'stuur deze 1e %s' % item.get('Code')
+                        print 'stuur deze 1e %s' % item.get('Code')
                         subject = '%s invoice %s - first reminder' % (location_address.get('Name'), item.get('Code'))
                         mailtext = 'Dear %s </br></br>  This is the first reminder regarding payment of the attached invoice. </br>We kindly ask you to complete payment of the invoice directly, and to inform us about the payment by replying to this email. </br></br> Kind regards, </br> The %s Team' % (item.get('SendToName'), location_address.get('Name'))
                         
@@ -150,7 +146,7 @@ class Command(BaseCommand):
                     #####send 2nd reminder
                     ####
                     if datetime.datetime.today() >= four_weeks_after and datetime.datetime.today() <= six_weeks_after and invoice_reminder != 2:
-                        #print 'stuur deze 2e %s' % item.get('Code')
+                        print 'stuur deze 2e %s' % item.get('Code')
                         subject = '%s invoice %s - second reminder' % (location_address.get('Name'), item.get('Code'))
                         mailtext = 'Dear %s </br></br>  This is the second reminder regarding payment of the attached invoice. </br>We kindly ask you to complete payment of the invoice directly, and to inform us about the payment by replying to this email. </br></br> Kind regards, </br> The %s Team' % (item.get('SendToName'), location_address.get('Name'))
                         
@@ -171,7 +167,7 @@ class Command(BaseCommand):
                     #send 3rd reminder en naar infomail
                     ####
                     if datetime.datetime.today() >= six_weeks_after and datetime.datetime.today() <= eight_weeks_after and invoice_reminder != 3:
-                        #print 'stuur deze 3e %s' % item.get('Code')
+                        print 'stuur deze 3e %s' % item.get('Code')
                         subject = 'PLEASE NOTE: %s invoice %s - third reminder' % (location_address.get('Name'), item.get('Code'))
                         mailtext = 'Dear %s </br></br>  This is the third reminder regarding payment of the attached invoice. </br>We kindly ask you to complete payment of the invoice directly, and to inform us about the payment by replying to this email. </br></br> Kind regards, </br> The %s Team' % (item.get('SendToName'), location_address.get('Name'))
     
@@ -193,7 +189,7 @@ class Command(BaseCommand):
                     #send last notice en naar infomail
                     ####
                     if datetime.datetime.today() >= eight_weeks_after and invoice_reminder != 4:
-                        #print 'stuur deze 4e %s' % (item.get('Code'))
+                        print 'stuur deze 4e %s' % (item.get('Code'))
                         subject = 'WARNING: %s invoice %s - fourth reminder' % (location_address.get('Name'), item.get('Code'))
                         mailtext = 'Dear %s </br></br>  This is the FOURTH AND FINAL REMINDER regarding payment of the attached invoice. </br>We kindly ask you to complete payment of the invoice directly, and to inform us about the payment by replying to this email. </br></br> Kind regards, </br> The %s Team' % (item.get('SendToName'), location_address.get('Name'))
     
