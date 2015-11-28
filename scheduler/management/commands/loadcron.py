@@ -12,6 +12,7 @@ from django.utils import timezone
 
 class Command(BaseCommand):
     
+    #UPDATE-API remove get_s2m_res
     def get_s2m_res(self, location_id): #you should only do this in background, or when user presses refresh, and then still in background with alert 'this might take a minute'. 
        #set datetime for future date set
        #!!!!WHEN going live, parse all data in rows. Uncomment below to do all.
@@ -61,8 +62,57 @@ class Command(BaseCommand):
                     rowsleft -= 1    
                 print "Rows Left%s" % rowsleft
             return results
+        
+        
+    def get_s2m_res_updated(self, location_id): #all reservations where CreatedOn and UpdatedOn >= today
+        page = 1 #!!!!change to 1 after testen
+        rowsleft = 100000 #must define but can't be zero:)
+        results=[]
+        userlocation = Userlocation.objects.all().filter(location_id=location_id)[:1]#need to do this to get userkey for approval of accessing reservations
+        for location in userlocation:
+            while rowsleft > 0:
+                url = 'https://apiv2.seats2meet.com/api/reservation/location/%s' % location_id
+                headers = {'content-type':'application/json', 'Connection':'close'}
+                data = {
+                "ApiKey":91216637,
+                "ProfileKey":Userprofile.objects.get(user_name=location.user_name).user_key,
+                "ChannelId":0,
+                "ProfileId":0,
+                "CompanyId":0,
+                "StatusIds":[1,2,3],
+                "MeetingTypeIds":[1],
+                "StartDate":str(datetime.date.today()),
+                "EndDate":str(datetime.date.today() + datetime.timedelta(weeks=52)),
+                "ChangeDate":str(datetime.date.today()),
+                "SearchTerm":"",
+                "ShowNoInvoice":False,
+                "ShowNoRevenue":True,
+                "ShowAmountOpen":False,
+                "ShowOptionCategory":-1,
+                "Page":page,
+                "ItemsPerPage":50
+                }                
+                r = requests.get(url, params=json.dumps(data), headers=headers)
+                r = json.loads(r.text)
+                results.extend(r)
+                #up page 1
+                page += 1
+                print page
+                
+                if rowsleft == 100000:
+                    if r == []:
+                        rowsleft = 0
+                    elif r != []:
+                        for var in r[:1]:
+                            rowsleft = var.get("MoreRows")      
+                else:
+                    rowsleft -= 1    
+                print "Rows Left%s" % rowsleft
+            return results
+        
+        
     
-    #lijst met alle locaties ophalen
+    #retrieve locationlist
     def handle(self, *args, **options):
         locationlist = Userlocation.objects.all()
         
@@ -75,6 +125,8 @@ class Command(BaseCommand):
         for location in finallist:
             
             print location
+            #UPDATE-API uncomment next line, remove 2nd line
+            #for res in self.get_s2m_res_updated(location):
             for res in self.get_s2m_res(location):
                 #cut loose date
                 res_date_created_split = res.get("CreatedOn").split("T")

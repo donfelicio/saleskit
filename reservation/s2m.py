@@ -10,8 +10,6 @@ from django.http import HttpResponse
 
 #get reservations from S2M API
 def get_s2m_res(request): #you should only do this in background, or when user presses refresh, and then still in background with alert 'this might take a minute'. 
-   #set datetime for future date set
-   #!!!!WHEN going live, parse all data in rows. Uncomment below to do all.
    page = 1 #!!!!change to 1 after testen
    rowsleft = 100000 #must define but can't be zero:)
    results=[]
@@ -28,6 +26,50 @@ def get_s2m_res(request): #you should only do this in background, or when user p
       "MeetingTypeIds":[1],
       "StartDate":str(datetime.date.today()),
       "EndDate":str(datetime.date.today() + datetime.timedelta(weeks=52)),
+      "SearchTerm":"",
+      "ShowNoInvoice":False,
+      "ShowNoRevenue":True,
+      "ShowAmountOpen":False,
+      "ShowOptionCategory":-1,
+      "Page":page,
+      "ItemsPerPage":10
+      }
+      
+      r = requests.get(url, params=json.dumps(data), headers=headers)
+      r = json.loads(r.text)
+      results.extend(r)
+      #up page 1
+      page += 1
+      
+      if rowsleft == 100000:
+         for var in r[:1]:
+            rowsleft = var.get("MoreRows")
+      else:
+         rowsleft -= 1
+      print rowsleft      
+
+   return results
+
+
+#UPDATE-API
+def get_s2m_res_updated(): #get all CreatedOn and UpdatedOn where date >= today
+   page = 1 #!!!!change to 1 after testen
+   rowsleft = 100000 #must define but can't be zero:)
+   results=[]
+   while rowsleft > 0:
+      url = 'https://apiv2.seats2meet.com/api/reservation/location/%s' % Userprofile.objects.get(user_name=request.user.username).active_location
+      headers = {'content-type':'application/json', 'Connection':'close'}
+      data = {
+      "ApiKey":91216637,
+      "ProfileKey":Userprofile.objects.get(user_name=request.user.username).user_key,
+      "ChannelId":0,
+      "ProfileId":0,
+      "CompanyId":0,
+      "StatusIds":[1,2,3],
+      "MeetingTypeIds":[1],
+      "StartDate":str(datetime.date.today()),
+      "EndDate":str(datetime.date.today() + datetime.timedelta(weeks=52)),
+      "ChangeDate":str(datetime.date.today()),
       "SearchTerm":"",
       "ShowNoInvoice":False,
       "ShowNoRevenue":True,

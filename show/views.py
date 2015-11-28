@@ -7,7 +7,7 @@ from django.http import HttpResponse
 from multiprocessing import Process
 
 #get reservation from S2M API
-def get_s2m_res(request):
+def get_s2m_res_single(request):
     url = 'https://apiv2.seats2meet.com/api/reservation/%s' % request.GET.get('r', '')
     headers = {'content-type':'application/json'}
     data = {
@@ -37,7 +37,7 @@ def get_s2m_meetingspaces(request, location):
     r = json.loads(r.text)
     return r
 
-#get user of sender
+#get profile of sender
 def get_s2m_profile(request):
     url = 'https://apiv2.seats2meet.com/api/profiles/getbykey/%s' % request.GET.get('u', '')
     headers = {'content-type':'application/json'}
@@ -70,10 +70,8 @@ def get_s2m_address(request, location):
 
 
 def show(request):    
-    # default to your native language
-    request.session['lang'] = request.GET.get('lang', 'en')
         
-    reservation = get_s2m_res(request)
+    reservation = get_s2m_res_single(request)
     offer_duration = datetime.datetime.strptime(str(reservation.get("CreatedOn").split("T")[0]), '%Y-%m-%d') + datetime.timedelta(days=14)
     startdate = datetime.datetime.strptime(str(reservation.get("StartTime").split("T")[0]), '%Y-%m-%d')
     enddate =  datetime.datetime.strptime(str(reservation.get("EndTime").split("T")[0]), '%Y-%m-%d')

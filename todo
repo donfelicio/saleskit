@@ -9,14 +9,18 @@ id dev: 5539
 'notificaties bovenin wat er gebeurt'
 filterstatus = 'prepared', niemand hoeft hem te zien tot dag erna, ook collega's niet.
 offertes zien automatisch welke taal het is
-
+auto-invoice-reminders now open to all
 
 ---met prio top to bottom:
 autocron, filter op ChangeDate: ... CreatedOn UpdatedOn op datum en alle data daarna. (na update in 1e week december)
-(TEST UIT!!) auto-invoice-reminders aan andere locaties aanbieden (eerst ombouwen) 
-When user clicks lead -> reservation, make user select reservation from list (search for date or name), save comments and status to new reservation, and delete them manual added lead reservation instance 
+#UPDATE-API tags in code activeren in:
+- reservation.views.py (testen)
+- loadcron
+- test and update scheduler to every 10 minutes
+
 
 get locationlist from good API, just still save it in DB for hourly loadcron (unless we can just get ALL of them)
+
 
 ---CRON----
 you should check user's allowed access location list every night or so if they have new locations

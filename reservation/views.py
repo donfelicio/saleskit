@@ -36,8 +36,74 @@ def loadpage(request):
    #if some other user already added the location, we don't have to do this now. There's just 1 location if this hasn't happend
    #or if user clicks refresh
    if len(Userlocation.objects.all().filter(location_id=Userprofile.objects.get(user_name=request.user.username).active_location)) == 1 or request.GET.get('refresh', '') == 'yes':
-      print 'test felix'
       for res in get_s2m_res(request):
+         #cut loose date
+         res_date_created_split = res.get("CreatedOn").split("T")
+         res_date_split = res.get("StartTime").split("T")
+         #now poor into model and save
+         
+         #if the res with s2m is cancelled, make the sales status a failure
+         if res.get("StatusId") == 3:
+            sales_status = '9'
+         elif res.get("StatusId") == 2:
+            sales_status = '5' #if status is final, set to 'second call', and add to status change that this was made online, or was handled directly. 
+         else: #status is 'attention required, so set it to the first sales status
+            sales_status = '1'
+            
+         #now check if the reservation already exists
+         try: #can we find it?
+            findres = Reservation.objects.get(res_id=res.get("Id"))
+               
+         except: #didn't find it
+            new_res = Reservation.objects.create(
+            res_id=res.get("Id"),
+            res_location_id=res.get("LocationId"),
+            res_company=res.get("CompanyName"),
+            res_user=res.get("ProfileName"),
+            res_desc=res.get("ReservationName"),
+            res_date_created=res_date_created_split[0],
+            res_date=res_date_split[0],
+            res_status_sales=sales_status,
+            res_status=res.get("StatusId"),
+            res_total_seats=res.get("TotalSeats")
+            )
+            if res.get("StatusId") == 2:
+               #if status is final, set to 'second call', and add to status change that this was made online, or was handled directly. 
+               instance = Statuschange.objects.get_or_create(reservation=Reservation.objects.get(res_id=res.get("Id")), user_name="system", res_status_sales_code='5', res_status_sales=Statuscode.objects.get(status_code='5').description_short, change_note="This reservation was created via the website, or it was finalized by your team")
+         else: #found it
+            findres.res_company=res.get("CompanyName")
+            findres.res_user=res.get("ProfileName")
+            findres.res_desc=res.get("ReservationName")
+            findres.res_date=res_date_split[0]
+            findres.res_status=res.get("StatusId")
+   
+            #if the res with s2m is updated to cancelled, make the sales status a failure
+            if res.get("StatusId") == 3:
+               findres.res_status_sales = '9'
+               
+            findres.res_total_seats=res.get("TotalSeats")
+            findres.save()
+
+   #set DB userprofile res_updated to 'done'
+   instance = Userprofile.objects.get(user_name=request.user.username)
+   instance.res_updated = 'done'
+   instance.save()
+   return redirect('/')
+
+
+def loadpage_updated(request):
+    
+   #set DB userprofile res_updated to 'busy'
+   instance = Userprofile.objects.get(user_name=request.user.username)
+   #check if firstrun, res_update is set to no by default (when created for first time)
+   ran_before = instance.res_updated
+   instance.res_updated = 'busy'
+   instance.save()
+   
+   #if some other user already added the location, we don't have to do this now. There's just 1 location if this hasn't happend
+   #or if user clicks refresh
+   if len(Userlocation.objects.all().filter(location_id=Userprofile.objects.get(user_name=request.user.username).active_location)) == 1 or request.GET.get('refresh', '') == 'yes':
+      for res in get_s2m_res_updated(request):
          #cut loose date
          res_date_created_split = res.get("CreatedOn").split("T")
          res_date_split = res.get("StartTime").split("T")
@@ -199,6 +265,8 @@ def home(request):
    
    #is user clicked 'refresh', do the refresh.
    if request.GET.get('refresh', '') == 'yes' and Userprofile.objects.get(user_name=request.user.username).res_updated != 'busy':
+      #UPDATE-API uncomment next line, remove 2nd
+      #b = Thread(target=loadpage_updated, args=(request,))
       b = Thread(target=loadpage, args=(request,)) 
       b.daemon = True
       b.start()
