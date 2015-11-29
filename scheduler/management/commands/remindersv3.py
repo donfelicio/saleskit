@@ -98,14 +98,13 @@ class Command(BaseCommand):
     
     def handle(self, *args, **options):
         
-        test_mode = 'yes' #set to yes if you don't want to send emails and update logs
+        test_mode = 'no' #set to yes if you don't want to send emails and update logs
         #location = self.get_s2m_address(invoice.get('LocationId'))
         for location in Activelocation.objects.all():
             
             location_address = self.get_s2m_address(location.location_id, location.profile_key)
             
             for item in self.s2m_get_invoicelist(location.location_id, location.profile_key):
-                print item.get('Code')
                 # do NOT send to tax exempt people where the system thinks their tax still needs to be paid
                 taxes = item.get('TotalIncludingTax') - item.get('TotalExcludingTax')
                 if item.get('NoTax') == True and round(taxes,0) == round(item.get('AmountOpen'),0):
