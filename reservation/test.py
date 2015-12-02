@@ -8,7 +8,6 @@ from .s2m import *
 
 def home(request):
     
-    s2m_locationlist(request)
     res_list =  Reservationfilter.objects.all()
         
     
