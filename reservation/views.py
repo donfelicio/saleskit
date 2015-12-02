@@ -490,7 +490,7 @@ def status_change(request):
       #if status_sales is 'prepared', hide until one day after the meeting.
       if request.GET.get('res_status_sales') == '6':
          now_plus_hour = datetime.datetime.strptime('00:00', '%H:%M')
-         Reservationfilter.objects.create(reservation=Reservation.objects.get(res_id=request.POST['res_id']), user_name=request.user.username, location_id=Userprofile.objects.get(user_name=request.user.username).active_location, hide_days=(Reservation.objects.get(res_id=request.POST['res_id']).res_date + datetime.timedelta(days=1)), hide_hour=now_plus_hour.strftime('%H'), hide_minute=now_plus_hour.strftime('%M'), status='6')
+         Reservationfilter.objects.create(reservation=Reservation.objects.get(res_id=request.POST['res_id']), user_name=request.user.username, location_id=Userprofile.objects.get(user_name=request.user.username).active_location, hide_days=(Reservation.objects.get(res_id=request.POST['res_id']).res_date + datetime.timedelta(days=1)), hide_hour=now_plus_hour.strftime('%H'), hide_minute=now_plus_hour.strftime('%M'))
          notification = 'after'
 
       elif request.GET.get('res_prev_status') != request.GET.get('res_status_sales'):
