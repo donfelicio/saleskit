@@ -223,7 +223,6 @@ def home(request):
    
    #delete all the users old hidereservation instances (older than today)
    for resfilter in Reservationfilter.objects.all():
-      print resfilter.hide_days
       if resfilter.hide_days < datetime.date.today():
          resfilter.delete()
       elif resfilter.hide_days == datetime.date.today() and (int(resfilter.hide_hour) - int(datetime.datetime.now().time().strftime('%H'))) * 60 + (int(resfilter.hide_minute) - int(datetime.datetime.now().time().strftime('%M'))) < 0:
