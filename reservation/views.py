@@ -383,7 +383,7 @@ def home(request):
          no_res = False
       else:
          #make res list, filter out any reservations that have a filter from this user, and are final or success
-         res_list = Reservation.objects.all().filter(res_location_id=Userprofile.objects.get(user_name=request.user.username).active_location).exclude(reservationfilter__isnull=False, reservationfilter__user_name=request.user.username).exclude(reservationfilter__isnull=False, reservationfilter__status='6').exclude(res_status_sales='8').exclude(res_status_sales='9')
+         res_list = Reservation.objects.all().filter(res_location_id=Userprofile.objects.get(user_name=request.user.username).active_location).exclude(reservationfilter__isnull=False, reservationfilter__user_name=request.user.username).exclude(reservationfilter__isnull=False, res_status_sales='6').exclude(res_status_sales='8').exclude(res_status_sales='9')
          
          #now test for stage of critical, important or dontforget
          critical = filter(filter_over20, res_list)
