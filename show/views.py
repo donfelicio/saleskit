@@ -44,7 +44,7 @@ def get_s2m_profile(request):
     data = {
     "profileKey": request.GET.get('u', ''),
     "ApiKey":91216637,
-    "ProfileKey":"6DE79403-D5EF-186C-9529-25ED04A66FD6",
+    "ProfileKey":request.GET.get('u', ''),
     }
       
     r = requests.get(url, params=json.dumps(data), headers=headers)
