@@ -13,6 +13,8 @@ auto-invoice-reminders now open to all
 'note' in popup, niet aparte pagina.
 'add note' knop, ipv alleen op huidige status?
 assign knop, als er meerdere accounts per locatie zijn
+notes in popup in plaats van aparte pagina
+niet meer automatisch verbergen van reservering als status wordt aangepast, alleen bij 'prepared, failed en success'. 
 
 
 ---met prio top to bottom:

@@ -45,8 +45,8 @@
                {% if reservation.res_status_sales == status.status_code %}
                                 
                <p class="col-md-1">
-               <button id="opener{{status.description|cut:' '}}" type="submit" class="btn btn-primary"  style="width:90px;font-size:12px;" data-toggle="tooltip" title="{{status.description}}">{{status.description_short}}</button>
-               <div id="dialog{{status.description|cut:' '}}" title="Add a note">
+               <button id="opener{{status.description_short|cut:' '}}" type="submit" class="btn btn-primary"  style="width:90px;font-size:12px;" data-toggle="tooltip" title="{{status.description}}">{{status.description_short}}</button>
+               <div id="dialog{{status.description_short|cut:' '}}" title="Add a note">
                     <form action="/status_change" method="POST">{% csrf_token %}
                     <input type="hidden" name="res_id" value="{{reservation.res_id}}">
                     <input type="hidden" name="res_prev_status" value="{{reservation.res_status_sales}}">
@@ -59,9 +59,9 @@
                     </form>
                </div>
                <script>
-               $( "#dialog{{status.description|cut:' '}}" ).dialog({ autoOpen: false,modal: true, width: 550 });
-               $( "#opener{{status.description|cut:' '}}" ).click(function() {
-               $( "#dialog{{status.description|cut:' '}}" ).dialog( "open" );
+               $( "#dialog{{status.description_short|cut:' '}}" ).dialog({ autoOpen: false,modal: true, width: 550 });
+               $( "#opener{{status.description_short|cut:' '}}" ).click(function() {
+               $( "#dialog{{status.description_short|cut:' '}}" ).dialog( "open" );
                 
               });
               </script>
@@ -71,8 +71,8 @@
                <!-- show nothing -->
                {% else %}
                <p class="col-md-1">
-               <button id="opener{{status.description|cut:' '}}" type="submit" class="btn btn-default"  style="width:90px;font-size:12px;" data-toggle="tooltip" title="{{status.description}}">{{status.description_short}}</button>
-               <div id="dialog{{status.description|cut:' '}}" title="Add a note">
+               <button id="opener{{status.description_short|cut:' '}}" type="submit" class="btn btn-default"  style="width:90px;font-size:12px;" data-toggle="tooltip" title="{{status.description}}">{{status.description_short}}</button>
+               <div id="dialog{{status.description_short|cut:' '}}" title="Add a note">
                     <form action="/status_change" method="POST">{% csrf_token %}
                     <input type="hidden" name="status_change" value="yes">
                     <input type="hidden" name="res_id" value="{{reservation.res_id}}">
@@ -86,9 +86,9 @@
                     </form>
                </div>
                <script>
-               $( "#dialog{{status.description|cut:' '}}" ).dialog({ autoOpen: false,modal: true, width: 550 });
-               $( "#opener{{status.description|cut:' '}}" ).click(function() {
-               $( "#dialog{{status.description|cut:' '}}" ).dialog( "open" );
+               $( "#dialog{{status.description_short|cut:' '}}" ).dialog({ autoOpen: false,modal: true, width: 550 });
+               $( "#opener{{status.description_short|cut:' '}}" ).click(function() {
+               $( "#dialog{{status.description_short|cut:' '}}" ).dialog( "open" );
                 
               });
               </script>
