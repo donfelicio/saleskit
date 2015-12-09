@@ -45,28 +45,56 @@
                {% if reservation.res_status_sales == status.status_code %}
                                 
                <p class="col-md-1">
-                    <a href="/status_change?res_id={{reservation.res_id}}&res_prev_status={{reservation.res_status_sales}}&res_last_change_by={{request.user.first_name}} {{request.user.last_name}}&res_status_sales={{status.status_code}}">
-                         <button type="submit" class="btn btn-primary" style="width:90px;font-size:12px;" data-toggle="tooltip" title="{{ status.description }}">{{status.description_short}}
-                         <span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span>
-                         </button>
-                    </a>
+               <button id="opener{{status.description|cut:' '}}" type="submit" class="btn btn-primary"  style="width:90px;font-size:12px;" data-toggle="tooltip" title="{{status.description}}">{{status.description_short}}</button>
+               <div id="dialog{{status.description|cut:' '}}" title="Add a note">
+                    <form action="/status_change" method="POST">{% csrf_token %}
+                    <input type="hidden" name="res_id" value="{{reservation.res_id}}">
+                    <input type="hidden" name="res_prev_status" value="{{reservation.res_status_sales}}">
+                    <input type="hidden" name="res_last_change_by" value="{{request.user.first_name}} {{request.user.last_name}}">
+                    <input type="hidden" name="res_status_sales" value="{{status.status_code}}">
+                    
+                    <p><textarea name="change_note" placeholder="I've spoken to Jim Jones, he is quite grumpy! He really doesn't want the big room, just the small one." rows="10" cols="80">{% if res_intro != None %}{{res_intro}} {% endif %}</textarea></p>
+                    
+                    <input type="submit" class="btn btn-primary"></input>
+                    </form>
+               </div>
+               <script>
+               $( "#dialog{{status.description|cut:' '}}" ).dialog({ autoOpen: false,modal: true, width: 550 });
+               $( "#opener{{status.description|cut:' '}}" ).click(function() {
+               $( "#dialog{{status.description|cut:' '}}" ).dialog( "open" );
+                
+              });
+              </script>
                </p>
-
-               
                     
                {% elif status.description_short == 'Success' or status.description_short == 'Failed' %}
                <!-- show nothing -->
                {% else %}
-               
-
                <p class="col-md-1">
-                    <a href="/status_change?res_id={{reservation.res_id}}&res_prev_status={{reservation.res_status_sales}}&res_last_change_by={{request.user.first_name}} {{request.user.last_name}}&res_status_sales={{status.status_code}}">
-                         <button type="submit" class="btn btn-default" style="width:90px;font-size:12px;" data-toggle="tooltip" title="{{ status.description }}">{{status.description_short}}
-                         <span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span>
-                         </button>
-                    </a>
+               <button id="opener{{status.description|cut:' '}}" type="submit" class="btn btn-default"  style="width:90px;font-size:12px;" data-toggle="tooltip" title="{{status.description}}">{{status.description_short}}</button>
+               <div id="dialog{{status.description|cut:' '}}" title="Add a note">
+                    <form action="/status_change" method="POST">{% csrf_token %}
+                    <input type="hidden" name="status_change" value="yes">
+                    <input type="hidden" name="res_id" value="{{reservation.res_id}}">
+                    <input type="hidden" name="res_prev_status" value="{{reservation.res_status_sales}}">
+                    <input type="hidden" name="res_last_change_by" value="{{request.user.first_name}} {{request.user.last_name}}">
+                    <input type="hidden" name="res_status_sales" value="{{status.status_code}}">
+                    
+                    <p><textarea name="change_note" placeholder="I've spoken to Jim Jones, he is quite grumpy! He really doesn't want the big room, just the small one." rows="10" cols="80">{% if res_intro != None %}{{res_intro}} {% endif %}</textarea></p>
+                    
+                    <input type="submit" class="btn btn-primary"></input>
+                    </form>
+               </div>
+               <script>
+               $( "#dialog{{status.description|cut:' '}}" ).dialog({ autoOpen: false,modal: true, width: 550 });
+               $( "#opener{{status.description|cut:' '}}" ).click(function() {
+               $( "#dialog{{status.description|cut:' '}}" ).dialog( "open" );
+                
+              });
+              </script>
                </p>
-          
+               
+             
              {% endif %}
           {% endfor %}
      </div>
@@ -152,7 +180,7 @@
                          {% else %}
                          <button id="opener" type="submit" class="btn btn-default" style="width:200px;" data-toggle="tooltip" title="One of my colleagues will handle this reservation">Assign reservation</button>
                          {% endif %}
-                         <div id="dialog" title="Dialog Title">
+                         <div id="dialog" title="Assign reservation">
                               Assign to:
                               <form action="" method="POST">{% csrf_token %}
                               <input type="hidden" name="res_id" value="{{reservation.res_id}}">
