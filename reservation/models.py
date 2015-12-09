@@ -35,6 +35,7 @@ class Reservation(models.Model):
     res_last_change_date = models.DateField(auto_now = True)
     res_intro = models.TextField(null=True, default='')
     res_manual_added = models.CharField(max_length = 255, default='no')
+    res_assigned = models.CharField(max_length=255, default='no')
     class Meta:
         ordering = ['res_date', 'res_id']   
 

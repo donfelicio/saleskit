@@ -10,8 +10,20 @@ id dev: 5539
 filterstatus = 'prepared', niemand hoeft hem te zien tot dag erna, ook collega's niet.
 offertes zien automatisch welke taal het is
 auto-invoice-reminders now open to all
+'note' in popup, niet aparte pagina.
+'add note' knop, ipv alleen op huidige status?
+
 
 ---met prio top to bottom:
+- als aftersales is geklikt, status naar success
+- reservering toewijzen aan medewerker
+-- en notificatie kunnen sturen 'deze heeft je aandacht nodig..'
+- van status wisselen = geen hide filter, dat moet gebruiker zelf kiezen
+- review terugbrengen in aftersales
+- tonen wie de reservering heeft gemaakt (klant of gebruiker 'revisions')
+- Tarief 100,- per maand introduceren
+
+
 autocron, filter op ChangeDate: ... CreatedOn UpdatedOn op datum en alle data daarna. (na update in 1e week december)
 #UPDATE-API tags in code activeren in:
 - reservation.views.py (testen)

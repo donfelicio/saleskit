@@ -41,6 +41,7 @@ INSTALLED_APPS = (
     'show',
     'invoice',
     'scheduler',
+    'widget_tweaks',
 )
 
 MIDDLEWARE_CLASSES = (

@@ -280,6 +280,11 @@ def home(request):
       instance.save()
       return redirect('/')
    
+   #if user assigned the reservation to someone
+   if request.method == 'POST' and 'assign_to' in request.POST:
+      instance = Reservation.objects.get(res_id=request.POST['res_id'])
+      instance.res_assigned = request.POST['assign_to']
+      instance.save()
       
    #If user has selected a location when he has access to multiple, save the active_location now
    if request.method == 'POST' and 'location_id' in request.POST:
@@ -372,8 +377,8 @@ def home(request):
                     }
          template = 'select.html'
          return render(request, template, context)
-
-
+      
+      
          
 
       #get list of all reservations !! i just want the next one that isn't processed yet
@@ -383,7 +388,8 @@ def home(request):
          no_res = False
       else:
          #make res list, filter out any reservations that have a filter from this user, and are final or success
-         res_list = Reservation.objects.all().filter(res_location_id=Userprofile.objects.get(user_name=request.user.username).active_location).exclude(reservationfilter__isnull=False, reservationfilter__user_name=request.user.username).exclude(reservationfilter__isnull=False, res_status_sales='6').exclude(res_status_sales='8').exclude(res_status_sales='9')
+
+         res_list = Reservation.objects.all().filter(res_location_id=Userprofile.objects.get(user_name=request.user.username).active_location).exclude(reservationfilter__isnull=False, reservationfilter__user_name=request.user.username).exclude(reservationfilter__isnull=False, res_status_sales='6').exclude(res_status_sales='8').exclude(res_status_sales='9').filter(Q(res_assigned='no') | Q(res_assigned=request.user.username))
          
          #now test for stage of critical, important or dontforget
          critical = filter(filter_over20, res_list)
@@ -418,7 +424,8 @@ def home(request):
       if len(important) > 0:
          context['important'] = len(important)
          
-      if no_res == False: #if there is a reservation.. (might be empty list?)
+      if no_res == False: #if there is a reservation then...
+         context['location_profile_list'] = Userlocation.objects.all().filter(location_id=Userprofile.objects.get(user_name=request.user.username).active_location)
          context['status_changes'] = Statuschange.objects.all().filter(reservation=reservation)
          context['sales_tip'] = salestip(reservation.res_status_sales)
          context['short_sales_tip'] = short_salestip(reservation.res_status_sales)
