@@ -1,3 +1,5 @@
+DIT IS EEN TEST
+
 from django.shortcuts import render, redirect
 from reservation.models import *
 from reservation.forms import *
@@ -502,6 +504,11 @@ def status_change(request):
          now_plus_hour = datetime.datetime.strptime('00:00', '%H:%M')
          Reservationfilter.objects.create(reservation=Reservation.objects.get(res_id=request.POST['res_id']), user_name=request.user.username, location_id=Userprofile.objects.get(user_name=request.user.username).active_location, hide_days=(Reservation.objects.get(res_id=request.POST['res_id']).res_date + datetime.timedelta(days=1)), hide_hour=now_plus_hour.strftime('%H'), hide_minute=now_plus_hour.strftime('%M'))
          notification = 'after'
+      elif request.POST['res_status_sales'] == '7':
+         instance = Reservation.objects.get(res_id=request.POST['res_id'])
+         instance.res_status_sales='8'
+         instance.save()
+         notification = 'forever'
       elif request.POST['res_status_sales'] == '8' or request.POST['res_status_sales'] == '9':
          notification = 'forever'
       elif request.POST['res_prev_status'] != request.POST['res_status_sales']:
