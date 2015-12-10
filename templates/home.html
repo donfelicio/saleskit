@@ -213,30 +213,42 @@
                         </script>
                     </p>
                     {% endif %}
-                    <p><form action="/?noty=hour" method="POST">{% csrf_token %}
-                         <input type="hidden" name="res_id" value="{{reservation.res_id}}">
-                         <input type="hidden" name="user_name" value="{{request.user.username}}">
-                         <input type="hidden" name="hide_days" value="today">
-                         <button type="submit" class="btn btn-primary" style="width:200px;padding-left: 30px;text-align: left" data-toggle="tooltip" title="Show me this reservation again 1 hour from now">Remind in 1 hour</button>
-                    </form></p>
-                    <p><form action="/?noty=day" method="POST">{% csrf_token %}
-                         <input type="hidden" name="res_id" value="{{reservation.res_id}}">
-                         <input type="hidden" name="user_name" value="{{request.user.username}}">
-                         <input type="hidden" name="hide_days" value="tomorrow">
-                         <button type="submit" class="btn btn-primary" style="width:200px;padding-left: 30px;text-align: left" data-toggle="tooltip" title="Show me this reservation again Tomorrow">Remind in 1 day</button>
-                    </form></p>
-                    <p><form action="/?noty=week" method="POST">{% csrf_token %}
-                         <input type="hidden" name="res_id" value="{{reservation.res_id}}">
-                         <input type="hidden" name="user_name" value="{{request.user.username}}">
-                         <input type="hidden" name="hide_days" value="week">
-                         <button type="submit" class="btn btn-primary" style="width:200px;padding-left: 30px;text-align: left" data-toggle="tooltip" title="Show me this reservation again in 1 week">Remind in 1 week</button>
-                    </form></p>
-                    <p><form action="/?noty=month" method="POST">{% csrf_token %}
-                         <input type="hidden" name="res_id" value="{{reservation.res_id}}">
-                         <input type="hidden" name="user_name" value="{{request.user.username}}">
-                         <input type="hidden" name="hide_days" value="month">
-                         <button type="submit" class="btn btn-primary" style="width:200px;padding-left: 30px;text-align: left" data-toggle="tooltip" title="Show me this reservation again in 30 days">Remind in 1 month</button>
-                    </form></p>
+                    <p>
+                         <button id="opener-remind" type="submit" class="btn btn-primary" style="width:200px;" data-toggle="tooltip" title="One of my colleagues will handle this reservation">Remind me later</button>
+                         <div id="dialog-remind" title="Remind me in:">
+                              <p><form action="/?noty=hour" method="POST">{% csrf_token %}
+                                   <input type="hidden" name="res_id" value="{{reservation.res_id}}">
+                                   <input type="hidden" name="user_name" value="{{request.user.username}}">
+                                   <input type="hidden" name="hide_days" value="today">
+                                   <button type="submit" class="btn btn-primary" style="width:200px;" data-toggle="tooltip1" title="Show me this reservation again 1 hour from now">1 hour</button>
+                              </form></p>
+                              <p><form action="/?noty=day" method="POST">{% csrf_token %}
+                                   <input type="hidden" name="res_id" value="{{reservation.res_id}}">
+                                   <input type="hidden" name="user_name" value="{{request.user.username}}">
+                                   <input type="hidden" name="hide_days" value="tomorrow">
+                                   <button type="submit" class="btn btn-primary" style="width:200px;">1 day</button>
+                              </form></p>
+                              <p><form action="/?noty=week" method="POST">{% csrf_token %}
+                                   <input type="hidden" name="res_id" value="{{reservation.res_id}}">
+                                   <input type="hidden" name="user_name" value="{{request.user.username}}">
+                                   <input type="hidden" name="hide_days" value="week">
+                                   <button type="submit" class="btn btn-primary" style="width:200px;">1 week</button>
+                              </form></p>
+                              <p><form action="/?noty=month" method="POST">{% csrf_token %}
+                                   <input type="hidden" name="res_id" value="{{reservation.res_id}}">
+                                   <input type="hidden" name="user_name" value="{{request.user.username}}">
+                                   <input type="hidden" name="hide_days" value="month">
+                                   <button type="submit" class="btn btn-primary" style="width:200px;">1 month</button>
+                              </form></p>
+                         </div>
+                         <script>
+                         $( "#dialog-remind" ).dialog({ autoOpen: false,modal: true });
+                         $( "#opener-remind" ).click(function() {
+                         $( "#dialog-remind" ).dialog( "open" );
+                          
+                        });
+                        </script>
+                    </p>
 
                </td>
           </tr>
