@@ -74,7 +74,6 @@
                <button id="opener{{status.status_code}}" type="submit" class="btn btn-default"  style="width:90px;font-size:12px;" data-toggle="tooltip" title="{{status.description}}">{{status.description_short}}</button>
                <div id="dialog{{status.status_code}}" title="Add a note">
                     <form action="/status_change" method="POST">{% csrf_token %}
-                    <input type="hidden" name="status_change" value="yes">
                     <input type="hidden" name="res_id" value="{{reservation.res_id}}">
                     <input type="hidden" name="res_prev_status" value="{{reservation.res_status_sales}}">
                     <input type="hidden" name="res_last_change_by" value="{{request.user.first_name}} {{request.user.last_name}}">
@@ -164,14 +163,24 @@
                     </p>
                     {% endif %}
                     <p>
-                         <a href="/status_change?res_id={{reservation.res_id}}&res_prev_status={{reservation.res_status_sales}}&res_last_change_by={{request.user.first_name}} {{request.user.last_name}}&res_status_sales=8" data-toggle="tooltip" title="The sale was a success!">
-                              <button type="submit" class="btn btn-success" style="width:200px;">Success</button>
-                         </a>
+                         <form action="/status_change" method="POST">{% csrf_token %}
+                              <input type="hidden" name="res_id" value="{{reservation.res_id}}">
+                              <input type="hidden" name="res_prev_status" value="{{reservation.res_status_sales}}">
+                              <input type="hidden" name="res_last_change_by" value="{{request.user.first_name}} {{request.user.last_name}}">
+                              <input type="hidden" name="res_status_sales" value="8">
+                              <input type="hidden" name="change_note" value="Success">
+                              <button type="submit" class="btn btn-success" style="width:200px;" data-toggle="tooltip" title="The sale was a success!">Success</button>
+                         </form>
                     </p>
                     <p>
-                         <a href="/status_change?res_id={{reservation.res_id}}&res_prev_status={{reservation.res_status_sales}}&res_last_change_by={{request.user.first_name}} {{request.user.last_name}}&res_status_sales=9" data-toggle="tooltip" title="No luck with this sale, it failed.">
-                              <button type="submit" class="btn btn-danger" style="width:200px;">Failed</button>
-                         </a>
+                         <form action="/status_change" method="POST">{% csrf_token %}
+                              <input type="hidden" name="res_id" value="{{reservation.res_id}}">
+                              <input type="hidden" name="res_prev_status" value="{{reservation.res_status_sales}}">
+                              <input type="hidden" name="res_last_change_by" value="{{request.user.first_name}} {{request.user.last_name}}">
+                              <input type="hidden" name="res_status_sales" value="9">
+                              <input type="hidden" name="change_note" value="Failed">
+                              <button type="submit" class="btn btn-danger" style="width:200px;" data-toggle="tooltip" title="The sale didn't work out">Failed</button>
+                         </form>
                     </p>
                     {% if location_profile_list|length > 1 %}
                     <p>
