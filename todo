@@ -5,6 +5,8 @@
 id live: 1256
 id dev: 5539
 
+##VERGEET NIET, loadcron weer terug te zetten met mail stuff..
+
 TODO########TODO---met prio top to bottom---TODO########TODO
 - bij assign de user (als niet gebruiker zelf) notificatie sturen
 - van status wisselen = geen hide filter, dat moet gebruiker zelf kiezen
