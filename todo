@@ -5,7 +5,7 @@
 id live: 1256
 id dev: 5539
 
----met prio top to bottom:
+TODO########TODO---met prio top to bottom---TODO########TODO
 - bij assign de user (als niet gebruiker zelf) notificatie sturen
 - van status wisselen = geen hide filter, dat moet gebruiker zelf kiezen
 - mogelijke review laten zien in aftersales
@@ -13,10 +13,16 @@ id dev: 5539
 - Tarief 100,- per maand introduceren
 - comments van boekingen terug laten komen
 - send offer to customer per email link
-- 'add note' knop, ipv alleen op huidige status?
+
+autocron, filter op ChangeDate: ... CreatedOn UpdatedOn op datum en alle data daarna. (na update in 1e week december)
+#UPDATE-API tags in code activeren in:
+- reservation.views.py (testen)
+- loadcron
+- test and update scheduler to every 10 minutes
 
 
---aanpassingen sinds vorige update
+
+DONE######DONE--aanpassingen sinds vorige update--DONE######DONE
 notificaties bovenin van wat er gebeurt
 filterstatus = 'prepared', niemand hoeft hem te zien tot dag erna, ook collega's niet.
 offertes zien automatisch welke taal het is
@@ -25,12 +31,9 @@ auto-invoice-reminders now open to all
 niet meer automatisch verbergen van reservering als status wordt aangepast, alleen bij 'prepared, failed en success'.
 remind me in -> popup met 3 opties, met calendar picker teruggebracht
 assign knop, als er meerdere accounts per locatie zijn
+- 'add note' knop, ipv alleen door op huidige status te klikken?
 
-autocron, filter op ChangeDate: ... CreatedOn UpdatedOn op datum en alle data daarna. (na update in 1e week december)
-#UPDATE-API tags in code activeren in:
-- reservation.views.py (testen)
-- loadcron
-- test and update scheduler to every 10 minutes
+
 
 
 get locationlist from good API, just still save it in DB for hourly loadcron (unless we can just get ALL of them)

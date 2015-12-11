@@ -176,22 +176,4 @@ class Command(BaseCommand):
             
             
             
-        #and now email all users that they have to move their ass (only first 14 days)
-        for user in User.objects.all():
-            #if it's not today (brings errors)
-            if user.date_joined.replace(tzinfo=None).date() != datetime.date.today():
-                #check if within first 15 days after registration
-                if int(str(datetime.datetime.strptime(str(datetime.date.today()).split(" ")[0], '%Y-%m-%d') - datetime.datetime.strptime(str(user.date_joined).split(" ")[0], '%Y-%m-%d')).split(' ')[0]) < 15 and datetime.date.today().weekday() != 5 and datetime.date.today().weekday() != 6:
-                    #only at 7 AM CET (scheduler works every hour)
-                    if Userprofile.objects.get(user_name=user.username).reminder_sent != datetime.date.today():
-                        #save to userprofile that mail was sent today
-                        instance = Userprofile.objects.get(user_name=user.username)
-                        instance.reminder_sent = datetime.date.today()
-                        instance.save()
-                        #get email contents
-                        days_left = 14 - int(str(datetime.datetime.strptime(str(datetime.date.today()).split(" ")[0], '%Y-%m-%d') - datetime.datetime.strptime(str(user.date_joined).split(" ")[0], '%Y-%m-%d')).split(' ')[0])
-                        send_mail('Good Morning, it\'s saleskitting time!',
-                                  'Hey there, \n\n Good Morning! \nIt\'s about time to grab a cup of coffee and work your way down to the end of your Seats2meet saleskit. \nThis daily email is here to help you get used to the process, and will dissapear in %s days. \n\n http://saleskit.meetberlage.com \n\n ' % days_left,
-                                  'felix@donfelicio.com',
-                        [user.email], fail_silently=False)
-        Remindlog.objects.create(status="Success")
+       
