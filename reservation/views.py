@@ -262,6 +262,8 @@ def home(request):
       notification = "Reservation hidden from you forever"
    elif request.GET.get('noty') == 'select':
       notification = "Now hide the reservation for as long as you want"
+   elif request.GET.get('noty') == 'selected':
+      notification = "Reservation is now hidden until selected date"
    
    
    
@@ -330,6 +332,9 @@ def home(request):
          elif request.POST['hide_days'] == "week":
             now_plus_hour = datetime.datetime.strptime('00:00', '%H:%M')
             Reservationfilter.objects.create(reservation=Reservation.objects.get(res_id=request.POST['res_id']), user_name=request.user.username, location_id=Userprofile.objects.get(user_name=request.user.username).active_location, hide_days=(datetime.datetime.now() + datetime.timedelta(weeks=1)), hide_hour=now_plus_hour.strftime('%H'), hide_minute=now_plus_hour.strftime('%M'))
+         elif request.POST['method'] == "datepicker":
+            now_plus_hour = datetime.datetime.strptime('00:00', '%H:%M')
+            Reservationfilter.objects.create(reservation=Reservation.objects.get(res_id=request.POST['res_id']), user_name=request.user.username, location_id=Userprofile.objects.get(user_name=request.user.username).active_location, hide_days=request.POST['hide_days'], hide_hour=now_plus_hour.strftime('%H'), hide_minute=now_plus_hour.strftime('%M'))
          else: #tomorrow
             now_plus_hour = datetime.datetime.strptime('00:00', '%H:%M')
             Reservationfilter.objects.create(reservation=Reservation.objects.get(res_id=request.POST['res_id']), user_name=request.user.username, location_id=Userprofile.objects.get(user_name=request.user.username).active_location, hide_days=(datetime.datetime.now() + datetime.timedelta(days=1)), hide_hour=now_plus_hour.strftime('%H'), hide_minute=now_plus_hour.strftime('%M'))

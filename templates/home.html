@@ -239,11 +239,15 @@
                                    <input type="hidden" name="hide_days" value="month">
                                    <button type="submit" class="btn btn-primary" style="width:200px;">1 month</button>
                               </form></p>
-                              <p><form style="margin-top:15px;" action="" method="POST" class="col-md-3">{% csrf_token %}
+
+                              <p>
+                              <h4>Or select date</h4>
+                              <form action="/?noty=selected" method="POST">{% csrf_token %}
                                    <input type="hidden" name="res_id" value="{{reservation.res_id}}">
                                    <input type="hidden" name="user_name" value="{{request.user.username}}">
-                                   <input type="text" name="hide_days" id="datepicker">
-                                   <button type="submit" class="btn btn-primary">Next</button>  
+                                   <input type="hidden" name="method" value="datepicker">
+                                   <p><input type="text" name="hide_days" id="datepicker"></p>
+                                   <button type="submit" class="btn btn-primary">Save</button>  
                               </form></p>
                          </div>
                          <script>
