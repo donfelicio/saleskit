@@ -116,7 +116,7 @@
           {% endif %}
      {% endfor %}
 
-
+          <!-- add a little note button -->
           <button id="opener-note" type="submit" class="btn btn-primary btn-xs" data-toggle="tooltip" title="Add a note">Add note</button>
           <div id="dialog-note" title="Add a note">
                <form action="/status_change" method="POST">{% csrf_token %}
