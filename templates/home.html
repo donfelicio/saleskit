@@ -18,7 +18,7 @@
     
     {% elif no_res == True %}
     <h4>There are no reservations to process, enjoy your day!</h4>
-    </div><div class="col-md-1"><test><a href="/add_lead"><button class="btn btn-primary btn-lg">Add lead</button></a></div>
+    </div><div class="col-md-1"><a href="/add_lead"><button class="btn btn-primary btn-lg">Add lead</button></a></div>
         
     {% else %}
          
@@ -238,6 +238,12 @@
                                    <input type="hidden" name="user_name" value="{{request.user.username}}">
                                    <input type="hidden" name="hide_days" value="month">
                                    <button type="submit" class="btn btn-primary" style="width:200px;">1 month</button>
+                              </form></p>
+                              <p><form style="margin-top:15px;" action="" method="POST" class="col-md-3">{% csrf_token %}
+                                   <input type="hidden" name="res_id" value="{{reservation.res_id}}">
+                                   <input type="hidden" name="user_name" value="{{request.user.username}}">
+                                   <input type="text" name="hide_days" id="datepicker">
+                                   <button type="submit" class="btn btn-primary">Next</button>  
                               </form></p>
                          </div>
                          <script>

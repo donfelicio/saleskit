@@ -12,12 +12,12 @@ offertes zien automatisch welke taal het is
 auto-invoice-reminders now open to all
 'note' in popup, niet aparte pagina.
 niet meer automatisch verbergen van reservering als status wordt aangepast, alleen bij 'prepared, failed en success'.
-
+remind me in -> popup met 3 opties
 
 
 
 ---met prio top to bottom:
-- remind me in -> popup met 3 opties en calendar picker
+- remind me in, terugbrengen calendar picker
 - bij assign de user (als niet gebruiker zelf) notificatie sturen
 - van status wisselen = geen hide filter, dat moet gebruiker zelf kiezen
 - mogelijke review laten zien in aftersales
