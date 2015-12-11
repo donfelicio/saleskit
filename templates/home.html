@@ -156,9 +156,14 @@
                     </p>
                     {% if reservation.res_manual_added == 'yes' %}
                     <p>
-                         <a href="/status_change?res_id={{reservation.res_id}}&res_prev_status={{reservation.res_status_sales}}&res_last_change_by={{request.user.first_name}} {{request.user.last_name}}&res_status_sales=8" data-toggle="tooltip" title="This manually added lead became a reservation. We'll remove it to prevent double leads!">
-                              <button type="submit" class="btn btn-primary" style="width:200px;">Lead > Reservation</button>
-                         </a>
+                         <form action="/status_change" method="POST">{% csrf_token %}
+                              <input type="hidden" name="res_id" value="{{reservation.res_id}}">
+                              <input type="hidden" name="res_prev_status" value="{{reservation.res_status_sales}}">
+                              <input type="hidden" name="res_last_change_by" value="{{request.user.first_name}} {{request.user.last_name}}">
+                              <input type="hidden" name="res_status_sales" value="8">
+                              <input type="hidden" name="change_note" value="Lead to reservation">
+                              <button type="submit" class="btn btn-success" style="width:200px;" data-toggle="tooltip" title="This lead turned into a reservation!">Lead > Reservation</button>
+                         </form>
                     </p>
                     {% endif %}
                     <p>
