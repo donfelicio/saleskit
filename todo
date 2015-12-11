@@ -5,6 +5,17 @@
 id live: 1256
 id dev: 5539
 
+---met prio top to bottom:
+- bij assign de user (als niet gebruiker zelf) notificatie sturen
+- van status wisselen = geen hide filter, dat moet gebruiker zelf kiezen
+- mogelijke review laten zien in aftersales
+- tonen wie de reservering heeft gemaakt (klant of gebruiker 'revisions')
+- Tarief 100,- per maand introduceren
+- comments van boekingen terug laten komen
+- send offer to customer per email link
+- 'add note' knop, ipv alleen op huidige status?
+
+
 --aanpassingen sinds vorige update
 notificaties bovenin van wat er gebeurt
 filterstatus = 'prepared', niemand hoeft hem te zien tot dag erna, ook collega's niet.
@@ -12,24 +23,8 @@ offertes zien automatisch welke taal het is
 auto-invoice-reminders now open to all
 'note' in popup, niet aparte pagina.
 niet meer automatisch verbergen van reservering als status wordt aangepast, alleen bij 'prepared, failed en success'.
-remind me in -> popup met 3 opties
-
-
-
----met prio top to bottom:
-- remind me in, terugbrengen calendar picker
-- bij assign de user (als niet gebruiker zelf) notificatie sturen
-- van status wisselen = geen hide filter, dat moet gebruiker zelf kiezen
-- mogelijke review laten zien in aftersales
-- tonen wie de reservering heeft gemaakt (klant of gebruiker 'revisions')
-- Tarief 100,- per maand introduceren
-comments van boekingen terug laten komen
-send offer to customer per email link
-remind me in -> popup met 3 opties en calendar picker
-'add note' knop, ipv alleen op huidige status?
+remind me in -> popup met 3 opties, met calendar picker teruggebracht
 assign knop, als er meerdere accounts per locatie zijn
-
-
 
 autocron, filter op ChangeDate: ... CreatedOn UpdatedOn op datum en alle data daarna. (na update in 1e week december)
 #UPDATE-API tags in code activeren in:
