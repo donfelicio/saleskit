@@ -62,8 +62,8 @@
                $( "#opener{{status.status_code}}" ).click(function() {
                $( "#dialog{{status.status_code}}" ).dialog( "open" );
                 
-              });
-              </script>
+               });
+               </script>
                </p>
                     
                {% elif status.description_short == 'Success' or status.description_short == 'Failed' %}
@@ -95,10 +95,15 @@
              
              {% endif %}
           {% endfor %}
+     
+     
+     
+     
+     
      </div>
      </div>
-     <div id="row" class="col-md-12 col-md-offset-2">
-          
+     
+     <div id="row" class="col-md-12 col-md-offset-2">     
      <!-- if manual, show note here -->
      {% if reservation.res_manual_added == 'yes' %}
      <p style="font-size:12px;"><strong>This reservation was added manually</strong></p>
@@ -107,9 +112,31 @@
      {% for change in status_changes %}
           {% if change.change_note|length > 0 %}
     
-     <p style="font-size:12px;">{{change.change_date}}: {{change.change_note}}</p>
+     <p style="font-size:12px;"><strong>{{change.change_date}}</strong> - {{change.change_note}}</p>
           {% endif %}
      {% endfor %}
+
+
+          <button id="opener-note" type="submit" class="btn btn-primary btn-xs" data-toggle="tooltip" title="Add a note">Add note</button>
+          <div id="dialog-note" title="Add a note">
+               <form action="/status_change" method="POST">{% csrf_token %}
+               <input type="hidden" name="res_id" value="{{reservation.res_id}}">
+               <input type="hidden" name="res_prev_status" value="{{reservation.res_status_sales}}">
+               <input type="hidden" name="res_last_change_by" value="{{request.user.first_name}} {{request.user.last_name}}">
+               <input type="hidden" name="res_status_sales" value="{{reservation.res_status_sales}}">
+               
+               <p><textarea name="change_note" placeholder="I've spoken to Jim Jones, he is quite grumpy! He really doesn't want the big room, just the small one." rows="10" cols="80">{% if res_intro != None %}{{res_intro}} {% endif %}</textarea></p>
+               
+               <input type="submit" class="btn btn-primary"></input>
+               </form>
+          </div>
+          <script>
+          $( "#dialog-note" ).dialog({ autoOpen: false,modal: true, width: 550 });
+          $( "#opener-note" ).click(function() {
+          $( "#dialog-note" ).dialog( "open" );
+           
+          });
+          </script>
      </div>
 
       <!-- show reservation info -->
