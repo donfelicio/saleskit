@@ -5,16 +5,14 @@
 id live: 1256
 id dev: 5539
 
-##VERGEET NIET, loadcron weer terug te zetten met mail stuff..
-
 TODO########TODO---met prio top to bottom---TODO########TODO
 - bij assign de user (als niet gebruiker zelf) notificatie sturen
-- van status wisselen = geen hide filter, dat moet gebruiker zelf kiezen
-- mogelijke review laten zien in aftersales
 - tonen wie de reservering heeft gemaakt (klant of gebruiker 'revisions')
 - Tarief 100,- per maand introduceren
 - comments van boekingen terug laten komen
 - send offer to customer per email link
+- mogelijke review laten zien in aftersales
+
 
 autocron, filter op ChangeDate: ... CreatedOn UpdatedOn op datum en alle data daarna. (na update in 1e week december)
 #UPDATE-API tags in code activeren in:
@@ -33,7 +31,7 @@ auto-invoice-reminders now open to all
 niet meer automatisch verbergen van reservering als status wordt aangepast, alleen bij 'prepared, failed en success'.
 remind me in -> popup met 3 opties, met calendar picker teruggebracht
 assign knop, als er meerdere accounts per locatie zijn
-- 'add note' knop, ipv alleen door op huidige status te klikken?
+'add note' knop, ipv alleen door op huidige status te klikken?
 
 
 

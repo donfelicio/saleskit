@@ -8,7 +8,7 @@ from django.http import HttpResponse
 
 #all s2m api requests
 
-#get reservations from S2M API
+#get reservation list from S2M API
 def get_s2m_res(request): #you should only do this in background, or when user presses refresh, and then still in background with alert 'this might take a minute'. 
    page = 1 #!!!!change to 1 after testen
    rowsleft = 100000 #must define but can't be zero:)
@@ -154,6 +154,69 @@ def s2m_locationlist():
     r = json.loads(r.text)
     return r
    
+#get reservation from S2M API
+def get_s2m_res_single(request, res_id):
+   if res_id == None:
+      url = 'https://apiv2.seats2meet.com/api/reservation/%s' % request.GET.get('r', '')
+   else:
+      url = 'https://apiv2.seats2meet.com/api/reservation/%s' % res_id
+   headers = {'content-type':'application/json'}
+   data = {
+   "ApiKey":91216637,
+   "ProfileKey":"6DE79403-D5EF-186C-9529-25ED04A66FD6",
+   }
+     
+   r = requests.get(url, params=json.dumps(data), headers=headers)
+   r = json.loads(r.text)
+   return r
 
+#get meetingspaces from S2M API
+def get_s2m_meetingspaces(request, location):
+    url = 'https://apiv2.seats2meet.com/api/unit/meetingspaces/%s' % location
+    headers = {'content-type':'application/json'}
+    data = {
+    "locationId": location,
+    "ApiKey":91216637,
+    "AuthorizedProfileKey":"6DE79403-D5EF-186C-9529-25ED04A66FD6",
+    "LanguageId": 65,
+    "SearchTerm": "",
+    "Page": 1,
+    "ItemsPerPage": 50
+    }
+      
+    r = requests.get(url, params=json.dumps(data), headers=headers)
+    r = json.loads(r.text)
+    return r
+
+#get profile of sender
+def get_s2m_profile(request):
+    url = 'https://apiv2.seats2meet.com/api/profiles/getbykey/%s' % request.GET.get('u', '')
+    headers = {'content-type':'application/json'}
+    data = {
+    "profileKey": request.GET.get('u', ''),
+    "ApiKey":91216637,
+    "ProfileKey":request.GET.get('u', ''),
+    }
+      
+    r = requests.get(url, params=json.dumps(data), headers=headers)
+    r = json.loads(r.text)
+    
+    return r
+
+
+#get directions to location
+def get_s2m_address(request, location):
+    url = 'https://apiv2.seats2meet.com/api/locations/%s' % location
+    headers = {'content-type':'application/json'}
+    data = {
+    "ApiKey":91216637,
+    "ProfileKey":"6DE79403-D5EF-186C-9529-25ED04A66FD6",
+    "locationId": location,
+    }
+      
+    r = requests.get(url, params=json.dumps(data), headers=headers)
+    r = json.loads(r.text)
+    
+    return r
 
  

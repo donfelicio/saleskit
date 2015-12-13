@@ -3,6 +3,7 @@
 
     {% block content %}     <!-- show page content --->
 
+
  {% if user.is_authenticated %}
  
  <!-- show notification if it's set -->
@@ -171,8 +172,13 @@
                          <tr><td>Seats:</td><td> {{reservation.res_total_seats}}pax</td></tr>
                          <tr><td>S2M status:</td><td> {{reservation.get_res_status_display}}</td></tr>
                          
-                       
                     </table>
+                         {%for item in reservation_s2m.Comments%}
+                         <p class="small_text">
+                              <strong>{{item.ProfileName}}</strong>: {{item.CommentText}}
+                         </p>
+                         {%endfor%}
+
                
                </td>
                
