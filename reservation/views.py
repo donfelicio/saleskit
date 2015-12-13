@@ -433,7 +433,7 @@ def home(request):
          context['important'] = len(important)
          
       if no_res == False: #if there is a reservation then...
-         context['reservation_s2m'] = get_s2m_res_single(request,reservation.res_id),
+         context['reservation_s2m'] = get_s2m_res_single(request,reservation.res_id)
          context['location_profile_list'] = Userlocation.objects.all().filter(location_id=Userprofile.objects.get(user_name=request.user.username).active_location)
          context['status_changes'] = Statuschange.objects.all().filter(reservation=reservation)
          context['sales_tip'] = salestip(reservation.res_status_sales)
