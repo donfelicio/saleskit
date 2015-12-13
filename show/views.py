@@ -16,6 +16,12 @@ def show(request):
         request.POST['send_message'],
         request.POST['send_from'],
         [request.POST['send_to']], fail_silently=False)
+        
+    #if user adds tekst, add it here
+    if request.method == "POST" and 'add_intro' in request.POST:
+        instance=Reservation.objects.get(res_id=request.POST['res_id'])
+        instance.res_intro = request.POST['intro_text']
+        instance.save()
     
     reservation = get_s2m_res_single(request, None)
     offer_duration = datetime.datetime.strptime(str(reservation.get("CreatedOn").split("T")[0]), '%Y-%m-%d') + datetime.timedelta(days=14)

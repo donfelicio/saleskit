@@ -467,26 +467,6 @@ def help(request):
 
 
 
-def res_input(request):
-   #Let user add input to offer site
-   if request.method == 'POST' and 'res_id' in request.POST:
-      
-      #update the reservation.
-      instance = Reservation.objects.get(res_id=request.POST['res_id'])
-      instance.res_intro=request.POST['res_intro']
-      instance.save()
-      return redirect('/show?r=%s&u=%s' % (request.POST['res_id'],Userprofile.objects.get(user_name=request.user.username).user_key))
-   
-   context={
-      'res_id':request.GET.get('res_id', ''),
-      'res_intro':Reservation.objects.get(res_id=request.GET.get('res_id', '')).res_intro
-     }
-   template="res_input.html"
-   return render(request, template, context)
-
-
-
-
 def status_change(request):
    notification = False
    #if change of sales status and note are added, save to db

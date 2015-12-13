@@ -6,7 +6,6 @@ id live: 1256
 id dev: 5539
 
 TODO########TODO---met prio top to bottom---TODO########TODO
-- send offer to customer per email link
 - in show, popup bij add intro text ipv aparte pagina
 - bij assign de user (als niet gebruiker zelf) notificatie sturen
 - mogelijke review laten zien in aftersales
@@ -22,6 +21,7 @@ autocron, filter op ChangeDate: ... CreatedOn UpdatedOn op datum en alle data da
 
 
 DONE######DONE--aanpassingen sinds vorige update--DONE######DONE
+send offer to customer per email link
 notificaties bovenin van wat er gebeurt
 filterstatus = 'prepared', niemand hoeft hem te zien tot dag erna, ook collega's niet.
 offertes zien automatisch welke taal het is
