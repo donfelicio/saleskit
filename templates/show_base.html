@@ -14,6 +14,8 @@
     {% else %} <!-- if lang is dutch -->
     <title>Your reservation with Seats2meet.com</title>   
     {% endif %}
+    
+ 
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="static/show/bootstrap/css/bootstrap.min.css">
     
@@ -38,23 +40,21 @@
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
     
-    <!-- script for hover tooltip -->
-    <script>
-    $(document).ready(function(){
-        $('[data-toggle="tooltip"]').tooltip();
-    });
-    </script>
+  <!-- script for hover tooltip -->
+  <script>
+  $(document).ready(function(){
+      $('[data-toggle="tooltip"]').tooltip();
+  });
+  </script>
+         <!-- Jquery -->
+    <link rel="stylesheet" href="static/css/jquery-ui.css">
+    <script src="static/js/jquery.min.js"></script>
+    <script src="static/js/jquery-ui.js"></script>
 
   
-    
   </head>
-
   <body>
-    
- 
-
-    
-  
+   
             {% block header %}
     
             {% endblock %}
@@ -62,16 +62,11 @@
             {% block content %}
     
             {% endblock %}
-
-    
-
       <hr>
 
-      <footer>
-        <p></p>
-      </footer>
-
-
+    <footer>
+      <p></p>
+    </footer>
 
     <!-- Bootstrap core JavaScript
     ================================================== -->

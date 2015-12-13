@@ -6,9 +6,17 @@ from django.utils.html import strip_tags
 from django.http import HttpResponse
 from multiprocessing import Process
 from reservation.s2m import *
+from django.core.mail import send_mail
 
 def show(request):    
-        
+    
+    #if user sent the offer, send it
+    if request.method == "POST" and 'send_to' in request.POST:
+        send_mail(request.POST['send_subject'],
+        request.POST['send_message'],
+        request.POST['send_from'],
+        [request.POST['send_to']], fail_silently=False)
+    
     reservation = get_s2m_res_single(request, None)
     offer_duration = datetime.datetime.strptime(str(reservation.get("CreatedOn").split("T")[0]), '%Y-%m-%d') + datetime.timedelta(days=14)
     startdate = datetime.datetime.strptime(str(reservation.get("StartTime").split("T")[0]), '%Y-%m-%d')
@@ -24,6 +32,7 @@ def show(request):
         'endtime':  "%s:%s" % (reservation.get("EndTime").split("T")[1].split(':')[0], reservation.get("EndTime").split("T")[1].split(':')[1]),
         'meetingspaces': get_s2m_meetingspaces(request, reservation.get("LocationId")),
         'profile': get_s2m_profile(request),
+        'profile_to': get_s2m_profile_by_id(request, reservation.get("ProfileId")),
         'location': get_s2m_address(request, reservation.get("LocationId")),
         }
     if request.GET.get('pdf') == 'yes':

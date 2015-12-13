@@ -201,7 +201,7 @@ def get_s2m_meetingspaces(request, location):
     r = json.loads(r.text)
     return r
 
-#get profile of sender
+#get profile of sender by key
 def get_s2m_profile(request):
     url = 'https://apiv2.seats2meet.com/api/profiles/getbykey/%s' % request.GET.get('u', '')
     headers = {'content-type':'application/json'}
@@ -216,6 +216,23 @@ def get_s2m_profile(request):
     
     return r
 
+
+#get profile by id
+def get_s2m_profile_by_id(request, profile_id):
+    url = 'https://apiv2.seats2meet.com/api/profiles/getbyid/%s' % profile_id
+    headers = {'content-type':'application/json'}
+    data = {
+    "profileId": profile_id,
+    "ApiKey":91216637,
+    "ProfileKey":Userprofile.objects.get(user_name=request.user.username).user_key,
+    }
+      
+    r = requests.get(url, params=json.dumps(data), headers=headers)
+    r = json.loads(r.text)
+    
+    return r
+   
+   
 
 #get directions to location
 def get_s2m_address(request, location):

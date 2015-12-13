@@ -17,7 +17,44 @@
       <p>You will only see these buttons when you are logged in.</p>
       <!--intro--><a href="/res_input?res_id={{request.GET.r}}"<button class="btn {% if intro_text|length > 0 %}btn-success" >Change {% else %} btn-primary" >Add {% endif %} intro text to offer</button></a>
       <!--hide--><a href="/show?r={{request.GET.r}}&u={{request.GET.u}}&hide=true"><button class="btn btn-primary">Hide this menu</button></a>
-    </div>
+      <button id="opener" type="submit" class="btn btn-default" data-toggle="tooltip" title="Send an email with the offer">Send offer</button>
+        <div id="dialog" title="Send offer">
+          <form action="" method="POST">{% csrf_token %}
+             <p><label>To</label>
+             <input type="text" name="send_to" value="{{profile_to.Email}}"></p>
+             <p><label>From</label>
+             <input type="text" name="send_from" value="{{profile.Email}}"></p>
+             <p><label>Subject</label>
+             <input type="text" size="50" name="send_subject" value="Uw persoonlijke offerte op {{startdate}} #{{reservation.Id}}"></p>
+             <p><label>Message</label>
+             <p><textarea name="send_message" rows="10" cols="80">
+Beste {{reservation.ProfileName|capfirst}},
+
+Wat fijn dat je aan {{reservation.LocationName}} denkt voor je meeting of event: {{reservation.ReservationName}}.
+
+{% if intro_text != None %}{{intro_text}} {% endif %}
+
+We bieden een dynamische omgeving waar je kunt werken en ontmoeten, met een diverse keuze aan ruimtes. Hiernaast bieden we de mogelijkheid om onze coworking space kosteloos te gebruiken. De kans op onverwachtte relevante ontmoetingen is hier groot, wat een geweldige bijdrage kan leveren aan je meeting of event.
+Hieronder vind je de link naar ons aanbod voor de bijeenkomst op {{startdate}}. Het voorstel is gebaseerd op {{reservation.TotalSeats}} personen, en zal je de ruimtes, opties en verdere setup voor je bijeenkomst toelichten. Dit aanbod is geldig t/m: {{offer_duration}}
+
+http://www.experiences2m.com/show?r={{request.GET.r}}&u={{request.GET.u}}
+
+Met vriendelijke groet,
+{{profile.FirstName|capfirst}} {{profile.LastName|capfirst}}
+{{profile.Email}}
+{{reservation.LocationName}}         
+             </textarea></p>
+            <button type="submit" class="btn btn-primary">Send</button>
+          </form>
+        </div>
+        <script>
+        $( "#dialog" ).dialog({ autoOpen: false,modal: true, width: 550});
+        $( "#opener" ).click(function() {
+        $( "#dialog" ).dialog( "open" );
+         
+       });
+       </script>
+      </div>
     {% endif %}
         
         <p class="pdf"><a href="http://pdfmyurl.com/api?license=vTgy23O3vDoO&url=http://saleskit.meetberlage.com/show?r={{reservation.Id}}&u={{profile.Key}}&pdf=yes" target="_blank"><button class="btn btn-primary">Download PDF</button></a></p>
@@ -160,8 +197,47 @@
         {% if user.is_authenticated and not request.GET.hide%} <!-- admin functions when loggedin -->
     <div id="row" style="background-color: #ffffff;padding:20px;margin:5px;">
       <p>You will only see these buttons when you are logged in.</p>
-      <!--intro--><a href="/res_input?res_id={{request.GET.r}}"<button class="btn {% if intro_text|length > 0 %}btn-success" >Change {% else %} btn-primary" >Add {% endif %} intro text to offer</button></a>
-<!--hide--><a href="/show?r={{request.GET.r}}&u={{request.GET.u}}&hide=true"><button class="btn btn-primary">Hide this menu</button></a>
+      <!--intro--><a href="/res_input?res_id={{request.GET.r}}"<button class="btn {% if intro_text|length > 0 %}btn-success" >Change {% else %} btn-primary" >Add {% endif %} intro text</button></a>
+      <!--hide--><a href="/show?r={{request.GET.r}}&u={{request.GET.u}}&hide=true"><button class="btn btn-primary">Hide this menu</button></a>
+      
+        <button id="opener" type="submit" class="btn btn-default" data-toggle="tooltip" title="Send an email with the offer">Send offer</button>
+        <div id="dialog" title="Send offer">
+          <form action="" method="POST">{% csrf_token %}
+             <p><label>To</label>
+             <input type="text" name="send_to" value="{{profile_to.Email}}"></p>
+             <p><label>From</label>
+             <input type="text" name="send_from" value="{{profile.Email}}"></p>
+             <p><label>Subject</label>
+             <input type="text" size="50" name="send_subject" value="Your personal offer for {{startdate}} #{{reservation.Id}}"></p>
+             <p><label>Message</label>
+             <p><textarea name="send_message" rows="10" cols="80">
+Dear {{reservation.ProfileName|capfirst}},
+
+We are so happy you have reached out to {{reservation.LocationName}} regarding your event: {{reservation.ReservationName}}.
+
+{% if intro_text != None %}{{intro_text}} {% endif %}
+
+We offer a dynamic environment to work and meet, in a diverse range of spaces. Beside this, we offer you the opportunity to use our coworking spaces free of charge. This might just lead to a great unexpected encounter that will bring your meeting or event to the next level.
+In the link below, you'll find our offer for your event at {{startdate}}. The proposal is based on {{reservation.TotalSeats}} persons, and will show you the rooms and settings we have in mind for your event. This offer is valid until: {{offer_duration}}
+
+http://www.experiences2m.com/show?r={{request.GET.r}}&u={{request.GET.u}}
+
+Kind regards,
+{{profile.FirstName|capfirst}} {{profile.LastName|capfirst}}
+{{profile.Email}}
+{{reservation.LocationName}}         
+             </textarea></p>
+            <button type="submit" class="btn btn-primary">Send</button>
+          </form>
+        </div>
+        <script>
+        $( "#dialog" ).dialog({ autoOpen: false,modal: true, width: 550});
+        $( "#opener" ).click(function() {
+        $( "#dialog" ).dialog( "open" );
+         
+       });
+       </script>
+    
     </div>
     {% endif %}
         
