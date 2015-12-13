@@ -35,7 +35,7 @@
      <h4>{{res_open}} reservations to go!</h4>
      <i>Showing all reservations that you really shouldn't forget about</i><hr>
      {%endif%}
-     </div><div class="col-md-1"><test><a href="/add_lead"><button class="btn btn-primary btn-lg">Add lead</button></a></div>
+     </div><div class="col-md-1"><a href="/add_lead"><button class="btn btn-primary btn-lg">Add lead</button></a></div>
      
      <div id="row" class="col-md-12 col-md-offset-2" >
           <p class="col-md-12"><h4>{{reservation.res_desc}}</h4>
@@ -113,7 +113,7 @@
      {% for change in status_changes %}
           {% if change.change_note|length > 0 %}
     
-     <p style="font-size:12px;"><strong>{{change.change_date}}</strong> - {{change.change_note}}</p>
+     <p class="small_text"><strong>{{change.change_date}}</strong> - {{change.change_note}}</p>
           {% endif %}
      {% endfor %}
 
