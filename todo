@@ -6,6 +6,7 @@ id live: 1256
 id dev: 5539
 
 TODO########TODO---met prio top to bottom---TODO########TODO
+- comments en revisions in uitklap menu
 - bij assign de user (als niet gebruiker zelf) notificatie sturen
 - tonen wie de reservering heeft gemaakt (klant of gebruiker 'revisions')
 - Tarief 100,- per maand introduceren

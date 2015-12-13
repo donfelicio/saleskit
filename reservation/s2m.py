@@ -170,6 +170,19 @@ def get_s2m_res_single(request, res_id):
    r = json.loads(r.text)
    return r
 
+#get reservation revisions from S2M API
+def get_s2m_res_single_revisions(request, res_id):
+   url = 'https://apiv2.seats2meet.com/api/reservation/revisions/%s' % res_id
+   headers = {'content-type':'application/json'}
+   data = {
+   "ApiKey":91216637,
+   "ProfileKey":"6DE79403-D5EF-186C-9529-25ED04A66FD6",
+   }
+
+   r = requests.get(url, params=json.dumps(data), headers=headers)
+   r = json.loads(r.text)
+   return r
+
 #get meetingspaces from S2M API
 def get_s2m_meetingspaces(request, location):
     url = 'https://apiv2.seats2meet.com/api/unit/meetingspaces/%s' % location
