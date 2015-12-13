@@ -113,7 +113,7 @@
      {% for change in status_changes %}
           {% if change.change_note|length > 0 %}
     
-     <p class="small_text"><strong>{{change.change_date}}</strong> - {{change.change_note}}</p>
+     <p class="small_text"><strong>{{change.user_name}}</strong> - {{change.change_note}} - <strong>{{change.change_date}}</strong></p>
           {% endif %}
      {% endfor %}
 
