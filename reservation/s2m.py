@@ -146,7 +146,6 @@ def s2m_locationlist():
     headers = {'content-type':'application/json'}
     data = {
     "ApiKey":91216637,
-    "ProfileKey":Userprofile.objects.get(user_name=request.user.username).user_key,
     }
     
     r = requests.post(url, data=json.dumps(data), headers=headers)
