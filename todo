@@ -6,7 +6,6 @@ id live: 1256
 id dev: 5539
 
 TODO########TODO---met prio top to bottom---TODO########TODO
-- in show, popup bij add intro text ipv aparte pagina
 - bij assign de user (als niet gebruiker zelf) notificatie sturen
 - mogelijke review laten zien in aftersales
 - Tarief 100,- per maand introduceren
@@ -21,25 +20,14 @@ autocron, filter op ChangeDate: ... CreatedOn UpdatedOn op datum en alle data da
 
 
 DONE######DONE--aanpassingen sinds vorige update--DONE######DONE
-send offer to customer per email link
-notificaties bovenin van wat er gebeurt
-filterstatus = 'prepared', niemand hoeft hem te zien tot dag erna, ook collega's niet.
-offertes zien automatisch welke taal het is
-auto-invoice-reminders now open to all
-'note' in popup, niet aparte pagina.
-niet meer automatisch verbergen van reservering als status wordt aangepast, alleen bij 'prepared, failed en success'.
-remind me in -> popup met 3 opties, met calendar picker teruggebracht
-assign knop, als er meerdere accounts per locatie zijn
-'add note' knop, ipv alleen door op huidige status te klikken?
-tonen wie de reservering heeft gemaakt (klant of gebruiker 'revisions')
-comments van boekingen terug laten komen
 
 
 
 
 
 
-get locationlist from good API, just still save it in DB for hourly loadcron (unless we can just get ALL of them)
+
+get locationlist from good API, just still save it in DB for hourly loadcron (unless we can just get ALL of them). Right now you are just getting the full list and then running a 'has access check..'
 
 
 ---CRON----

@@ -160,7 +160,6 @@ def loadpage_updated(request):
 
 
 def create_locationlist(request, userprofile, locationlist):
-   print 'nolocationhere'
    #set DB userprofile res_updated to 'busy'
    instance = Userprofile.objects.get(user_name=request.user.username)
    instance.loc_updated = 'busy'

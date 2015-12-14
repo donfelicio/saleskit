@@ -104,7 +104,7 @@ def s2m_login(request):
    headers = {'content-type':'application/json', 'Connection':'close'}
    data = {
    "ApiKey":91216637,
-   "ProfileKey":"6DE79403-D5EF-186C-9529-25ED04A66FD6",
+   "ProfileKey":Userprofile.objects.get(user_name=request.user.username).user_key,
    "UserName": request.POST["username"],
    "Password": request.POST["pass"]
    }
@@ -147,7 +147,7 @@ def s2m_locationlist():
     headers = {'content-type':'application/json'}
     data = {
     "ApiKey":91216637,
-    "ProfileKey":"6DE79403-D5EF-186C-9529-25ED04A66FD6",
+    "ProfileKey":Userprofile.objects.get(user_name=request.user.username).user_key,
     }
     
     r = requests.post(url, data=json.dumps(data), headers=headers)
@@ -163,7 +163,7 @@ def get_s2m_res_single(request, res_id):
    headers = {'content-type':'application/json'}
    data = {
    "ApiKey":91216637,
-   "ProfileKey":"6DE79403-D5EF-186C-9529-25ED04A66FD6",
+   "ProfileKey":Userprofile.objects.get(user_name=request.user.username).user_key,
    }
      
    r = requests.get(url, params=json.dumps(data), headers=headers)
@@ -176,7 +176,7 @@ def get_s2m_res_single_revisions(request, res_id):
    headers = {'content-type':'application/json'}
    data = {
    "ApiKey":91216637,
-   "ProfileKey":"6DE79403-D5EF-186C-9529-25ED04A66FD6",
+   "ProfileKey":Userprofile.objects.get(user_name=request.user.username).user_key,
    }
 
    r = requests.get(url, params=json.dumps(data), headers=headers)
