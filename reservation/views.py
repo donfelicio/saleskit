@@ -28,8 +28,6 @@ def loadpage(request):
     
    #set DB userprofile res_updated to 'busy'
    instance = Userprofile.objects.get(user_name=request.user.username)
-   #check if firstrun, res_update is set to no by default (when created for first time)
-   ran_before = instance.res_updated
    instance.res_updated = 'busy'
    instance.save()
    
@@ -91,19 +89,17 @@ def loadpage(request):
    return redirect('/')
 
 
-def loadpage_updated(request):
+def loadpage_updated(request, refresh):
     
    #set DB userprofile res_updated to 'busy'
    instance = Userprofile.objects.get(user_name=request.user.username)
-   #check if firstrun, res_update is set to no by default (when created for first time)
-   ran_before = instance.res_updated
    instance.res_updated = 'busy'
    instance.save()
    
    #if some other user already added the location, we don't have to do this now. There's just 1 location if this hasn't happend
    #or if user clicks refresh
    if len(Userlocation.objects.all().filter(location_id=Userprofile.objects.get(user_name=request.user.username).active_location)) == 1 or request.GET.get('refresh', '') == 'yes':
-      for res in get_s2m_res_updated(request):
+      for res in get_s2m_res_updated(request, refresh):
          #cut loose date
          res_date_created_split = res.get("CreatedOn").split("T")
          res_date_split = res.get("StartTime").split("T")
@@ -269,7 +265,7 @@ def home(request):
    #is user clicked 'refresh', do the refresh.
    if request.GET.get('refresh', '') == 'yes' and Userprofile.objects.get(user_name=request.user.username).res_updated != 'busy':
       #UPDATE-API uncomment next line, remove 2nd
-      #b = Thread(target=loadpage_updated, args=(request,))
+      #b = Thread(target=loadpage_updated, args=(request, True))
       b = Thread(target=loadpage, args=(request,)) 
       b.daemon = True
       b.start()

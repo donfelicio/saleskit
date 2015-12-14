@@ -175,8 +175,11 @@
                               <td>Date:</td><td> {{reservation.res_date|date:'Y-m-d'}} - Meeting is in <b>{{days_to_res}} </b>days</td>
                          </tr> 
                          <tr><td>Company/Customer:</td><td>{{reservation.res_company}} / {{reservation.res_user}}</td></tr>
-                         <tr><td>Seats:</td><td> {{reservation.res_total_seats}}pax</td></tr>
+                         <tr><td>Seats/Revenue:</td><td> {{reservation.res_total_seats}}pax / {% autoescape off %}
+                         {{reservation_s2m.CurrencySymbol}} {{reservation_s2m.TotalExcl|floatformat:"2"}}
+                         {% endautoescape %}</td></tr>
                          <tr><td>S2M status:</td><td> {{reservation.get_res_status_display}}</td></tr>
+                         
                          
                     </table>
                {% if reservation_s2m.Comments %}     

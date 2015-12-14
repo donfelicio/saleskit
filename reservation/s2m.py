@@ -52,7 +52,7 @@ def get_s2m_res(request): #you should only do this in background, or when user p
 
 
 #UPDATE-API
-def get_s2m_res_updated(): #get all CreatedOn and UpdatedOn where date >= today
+def get_s2m_res_updated(request, refresh): #get all CreatedOn and UpdatedOn where date >= today
    page = 1 #!!!!change to 1 after testen
    rowsleft = 100000 #must define but can't be zero:)
    results=[]
@@ -69,7 +69,6 @@ def get_s2m_res_updated(): #get all CreatedOn and UpdatedOn where date >= today
       "MeetingTypeIds":[1],
       "StartDate":str(datetime.date.today()),
       "EndDate":str(datetime.date.today() + datetime.timedelta(weeks=52)),
-      "ChangeDate":str(datetime.date.today()),
       "SearchTerm":"",
       "ShowNoInvoice":False,
       "ShowNoRevenue":True,
@@ -78,6 +77,9 @@ def get_s2m_res_updated(): #get all CreatedOn and UpdatedOn where date >= today
       "Page":page,
       "ItemsPerPage":10
       }
+      if refresh == True:
+         data["ChangeDate"] = str(datetime.date.today())
+
       
       r = requests.get(url, params=json.dumps(data), headers=headers)
       r = json.loads(r.text)
@@ -165,6 +167,7 @@ def get_s2m_res_single(request, res_id):
    }
      
    r = requests.get(url, params=json.dumps(data), headers=headers)
+   print r.text
    r = json.loads(r.text)
    return r
 

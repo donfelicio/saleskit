@@ -6,7 +6,6 @@ id live: 1256
 id dev: 5539
 
 TODO########TODO---met prio top to bottom---TODO########TODO
-- reservation go to 'get data from API', en haal lokale DB leeg. eigenlijk alleen res_id volgens mij.
 - add total revenue and revenue per person to overview
 - bij assign de user (als niet gebruiker zelf) notificatie sturen
 - mogelijke review laten zien in aftersales
@@ -15,6 +14,7 @@ TODO########TODO---met prio top to bottom---TODO########TODO
 
 autocron, filter op ChangeDate: ... CreatedOn UpdatedOn op datum en alle data daarna. (na update in 1e week december)
 #UPDATE-API tags in code activeren in:
+---zet alles om naar loadpage_updated, als refresh = True, dan doet is alleen ChangedOn > today, als False, doet ie alles.. + weghalen loadpage etc.
 - reservation.views.py (testen)
 - loadcron
 - test and update scheduler to every 10 minutes
