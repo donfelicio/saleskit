@@ -186,7 +186,6 @@ def get_s2m_meetingspaces(request, location):
     data = {
     "locationId": location,
     "ApiKey":91216637,
-    "AuthorizedProfileKey":Userprofile.objects.get(user_name=request.user.username).user_key,
     "LanguageId": 65,
     "SearchTerm": "",
     "Page": 1,
