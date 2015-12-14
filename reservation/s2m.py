@@ -188,7 +188,7 @@ def get_s2m_meetingspaces(request, location):
     data = {
     "locationId": location,
     "ApiKey":91216637,
-    "AuthorizedProfileKey":Userprofile.objects.get(user_name=request.user.username).user_key,
+    "AuthorizedProfileKey":request.GET.get('u', ''),
     "LanguageId": 65,
     "SearchTerm": "",
     "Page": 1,
@@ -222,7 +222,6 @@ def get_s2m_profile_by_id(request, profile_id):
     data = {
     "profileId": profile_id,
     "ApiKey":91216637,
-    "ProfileKey":Userprofile.objects.get(user_name=request.user.username).user_key,
     }
       
     r = requests.get(url, params=json.dumps(data), headers=headers)
@@ -238,7 +237,6 @@ def get_s2m_address(request, location):
     headers = {'content-type':'application/json'}
     data = {
     "ApiKey":91216637,
-    "ProfileKey":Userprofile.objects.get(user_name=request.user.username).user_key,
     "locationId": location,
     }
       
