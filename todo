@@ -6,6 +6,8 @@ id live: 1256
 id dev: 5539
 
 TODO########TODO---met prio top to bottom---TODO########TODO
+- reservation go to 'get data from API', en haal lokale DB leeg. eigenlijk alleen res_id volgens mij.
+- add total revenue and revenue per person to overview
 - bij assign de user (als niet gebruiker zelf) notificatie sturen
 - mogelijke review laten zien in aftersales
 - Tarief 100,- per maand introduceren
