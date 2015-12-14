@@ -161,6 +161,7 @@ def get_s2m_res_single(request, res_id):
    headers = {'content-type':'application/json'}
    data = {
    "ApiKey":91216637,
+
    }
      
    r = requests.get(url, params=json.dumps(data), headers=headers)
@@ -173,6 +174,7 @@ def get_s2m_res_single_revisions(request, res_id):
    headers = {'content-type':'application/json'}
    data = {
    "ApiKey":91216637,
+   "ProfileKey":Userprofile.objects.get(user_name=request.user.username).user_key,
    }
 
    r = requests.get(url, params=json.dumps(data), headers=headers)
@@ -186,6 +188,7 @@ def get_s2m_meetingspaces(request, location):
     data = {
     "locationId": location,
     "ApiKey":91216637,
+    "AuthorizedProfileKey":Userprofile.objects.get(user_name=request.user.username).user_key,
     "LanguageId": 65,
     "SearchTerm": "",
     "Page": 1,
