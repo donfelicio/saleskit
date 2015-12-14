@@ -167,7 +167,6 @@ def get_s2m_res_single(request, res_id):
    }
      
    r = requests.get(url, params=json.dumps(data), headers=headers)
-   print r.text
    r = json.loads(r.text)
    return r
 
