@@ -282,27 +282,26 @@ def home(request):
       instance.active_location = False
       instance.save()
       return redirect('/')
+      
+   #If user has selected a location when he has access to multiple, save the active_location now
+   if request.method == 'POST' and 'location_id' in request.POST:
+      #if needed create userprofile and always update active location.
+      instance, created = Userprofile.objects.get_or_create(user_name=request.user.username)
+      instance.active_location=request.POST['location_id']
+      instance.save()
+
+      if Userprofile.objects.get(user_name=request.user.username).res_updated == 'no' or len(Reservation.objects.all().filter(res_location_id=request.POST['location_id'])) == 0:      
+         b = Thread(target=loadpage, args=(request,)) 
+         b.daemon = True
+         b.start()
+         time.sleep(1)
+      return redirect('/')
    
    #if user assigned the reservation to someone
    if request.method == 'POST' and 'assign_to' in request.POST:
       instance = Reservation.objects.get(res_id=request.POST['res_id'])
       instance.res_assigned = request.POST['assign_to']
       instance.save()
-      
-   #If user has selected a location when he has access to multiple, save the active_location now
-   if request.method == 'POST' and 'location_id' in request.POST:
-      
-      #if needed create and always update active location.
-      instance, created = Userprofile.objects.get_or_create(user_name=request.user.username)
-      instance.active_location=request.POST['location_id']
-      instance.save()
-
-      if Userprofile.objects.get(user_name=request.user.username).res_updated == 'no':      
-         b = Thread(target=loadpage, args=(request,)) 
-         b.daemon = True
-         b.start()
-         time.sleep(1)
-      return redirect('/')
    
    #if a specific reservation is selected from the list to edit, update DB to this res
    if request.GET.get('active_res'):
@@ -313,12 +312,7 @@ def home(request):
    #when a user clicks 'next', save the items's last change date as today 
    if request.method == 'POST' and 'hide_days' in request.POST:
       if request.POST['hide_days'] != '':
-         
-         # #old version with datepicker
-         # if datetime.datetime.strptime(request.POST['hide_days'], '%m/%d/%Y').strftime('%Y-%m-%d') == str(datetime.date.today()):
-         #    now_plus_hour = datetime.datetime.now() + datetime.timedelta(hours=1)
-         # else:
-         #    now_plus_hour = datetime.datetime.strptime('00:00', '%H:%M')
+      
          if request.POST['hide_days'] == "today":
             now_plus_hour = datetime.datetime.now() + datetime.timedelta(hours=1)
             Reservationfilter.objects.create(reservation=Reservation.objects.get(res_id=request.POST['res_id']), user_name=request.user.username, location_id=Userprofile.objects.get(user_name=request.user.username).active_location, hide_days=(datetime.datetime.now()), hide_hour=now_plus_hour.strftime('%H'), hide_minute=now_plus_hour.strftime('%M'))
@@ -369,13 +363,6 @@ def home(request):
             instance, created = Userprofile.objects.get_or_create(user_name=request.user.username)
             instance.active_location=Userlocation.objects.get(user_name=request.user.username).location_id
             instance.save()
-      
-            if Userprofile.objects.get(user_name=request.user.username).res_updated == 'no':      
-               b = Thread(target=loadpage, args=(request,)) 
-               b.daemon = True
-               b.start()
-               time.sleep(1)
-            return redirect('/')
             
          context = {
             'locationlist': Userlocation.objects.all().filter(user_name=request.user.username),
