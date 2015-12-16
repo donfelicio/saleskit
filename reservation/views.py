@@ -264,9 +264,7 @@ def home(request):
    
    #is user clicked 'refresh', do the refresh.
    if request.GET.get('refresh', '') == 'yes' and Userprofile.objects.get(user_name=request.user.username).res_updated != 'busy':
-      #UPDATE-API uncomment next line, remove 2nd
-      #b = Thread(target=loadpage_updated, args=(request, True))
-      b = Thread(target=loadpage, args=(request,)) 
+      b = Thread(target=loadpage_updated, args=(request, True))
       b.daemon = True
       b.start()
       time.sleep(1)

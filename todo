@@ -6,23 +6,27 @@ id live: 1256
 id dev: 5539
 
 TODO########TODO---met prio top to bottom---TODO########TODO
-- add total revenue and revenue per person to overview
+BUG: wanneer in _active_res mode, werkt assignen niet.
+BUG: in list view, switch location
 - bij assign de user (als niet gebruiker zelf) notificatie sturen
 - mogelijke review laten zien in aftersales
 - Tarief 100,- per maand introduceren
 
 
-autocron, filter op ChangeDate: ... CreatedOn UpdatedOn op datum en alle data daarna. (na update in 1e week december)
+autocron, filter op ChangeDate: ... CreatedOn UpdatedOn op datum en alle data daarna. (na update in 15 december)
 #UPDATE-API tags in code activeren in:
 ---zet alles om naar loadpage_updated, als refresh = True, dan doet is alleen ChangedOn > today, als False, doet ie alles.. + weghalen loadpage etc.
 - reservation.views.py (testen)
-- loadcron
+- loadcron (maakt gebruik van eigen functies, niet van s2m.py. Daar kan de oude dus gewoon weg.)
 - test and update scheduler to every 10 minutes
+
+NOTE!! updated.. SINDS LAST LOGIN, niet vandaag -- ook als loadcron altijd aanstaat?
 
 
 
 
 DONE######DONE--aanpassingen sinds vorige update--DONE######DONE
+- add total revenue to overview
 
 
 
