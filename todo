@@ -6,22 +6,11 @@ id live: 1256
 id dev: 5539
 
 TODO########TODO---met prio top to bottom---TODO########TODO
-BUG: wanneer in _active_res mode, werkt assignen niet.
-BUG: in list view, switch location
-- bij assign de user (als niet gebruiker zelf) notificatie sturen
-- mogelijke review laten zien in aftersales
+
 - Tarief 100,- per maand introduceren
 
 
-autocron, filter op ChangeDate: ... CreatedOn UpdatedOn op datum en alle data daarna. (na update in 15 december)
-#UPDATE-API tags in code activeren in:
----zet alles om naar loadpage_updated, als refresh = True, dan doet is alleen ChangedOn > today, als False, doet ie alles.. + weghalen loadpage etc.
-- reservation.views.py (testen)
-
-
-
 DONE######DONE--aanpassingen sinds vorige update--DONE######DONE
-- add total revenue to overview
 
 
 
@@ -37,6 +26,7 @@ you should check user's allowed access location list every night or so if they h
 
 
 -------wannahaves
+- mogelijke review laten zien in aftersales
 aftersales status -> success geen success -> invloed op proactieve sales
 grove stats 'annuleringsratio, omzet vs budget, etc...'.
 amount of money in reservations (realtime budget) VS

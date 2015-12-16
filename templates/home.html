@@ -242,12 +242,13 @@
                     </p>
                     {% if location_profile_list|length > 1 %}
                     <p>
-                         {% if reservation.res_assigned == user.username %}
-                         <button id="opener" type="submit" class="btn btn-success" style="width:200px;" data-toggle="tooltip" title="I am handling this reservation">Assigned to you, change</button>
+                         {% if reservation.res_assigned != 'no' %}
+                         <button id="opener" type="submit" class="btn btn-success" style="width:200px;" data-toggle="tooltip" title="I am handling this reservation">{% if reservation.res_assigned == user.username %}Assigned to you, change{% else %} Assigned to a colleague {% endif %}</button>
                          {% else %}
                          <button id="opener" type="submit" class="btn btn-default" style="width:200px;" data-toggle="tooltip" title="One of my colleagues will handle this reservation">Assign reservation</button>
                          {% endif %}
                          <div id="dialog" title="Assign reservation">
+                              <p>Assigned to {% if reservation.res_assigned == 'no' %}Nobody {% else %}{{reservation.res_assigned}}{%endif%}</p>
                               Assign to:
                               <form action="" method="POST">{% csrf_token %}
                               <input type="hidden" name="res_id" value="{{reservation.res_id}}">
