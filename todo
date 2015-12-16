@@ -17,11 +17,6 @@ autocron, filter op ChangeDate: ... CreatedOn UpdatedOn op datum en alle data da
 #UPDATE-API tags in code activeren in:
 ---zet alles om naar loadpage_updated, als refresh = True, dan doet is alleen ChangedOn > today, als False, doet ie alles.. + weghalen loadpage etc.
 - reservation.views.py (testen)
-- loadcron (maakt gebruik van eigen functies, niet van s2m.py. Daar kan de oude dus gewoon weg.)
-- test and update scheduler to every 10 minutes
-
-NOTE!! updated.. SINDS LAST LOGIN, niet vandaag -- ook als loadcron altijd aanstaat?
-
 
 
 

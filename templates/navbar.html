@@ -6,6 +6,9 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
+          {% if user.is_authenticated %}
+
+          {% if userprofile.res_updated != 'busy' and userprofile.loc_updated != 'busy' %}
           <a class="navbar-brand" href="/">Sales kit</a>
           <a class="navbar-brand" href="/listall">List</a>
           <!-- <a class="navbar-brand" href="/listall">Show list</a> -->
@@ -13,7 +16,6 @@
         </div>
 
       <div id="navbar" class="navbar-collapse collapse">
-          {% if user.is_authenticated %}
 
           <form method="post" action="/logout" class="navbar-form navbar-right">{% csrf_token %}
             <div class="form-group">
@@ -22,11 +24,12 @@
             <button type="submit" class="btn btn-success">Logout</button>
           </form>
           <a href="/?refresh=yes" class="navbar-form navbar-right"><button class="btn btn-primary">Refresh</button></a>
+         
           {% if locationlist|length > 1 %}
           <a href="/?loc_change=yes" class="navbar-form navbar-right"><button class="btn btn-primary">Switch location</button></a>
 
           {% endif %}
-          
+           {% endif %}
 
           {% else %}
           <form method="post" action="login" class="navbar-form navbar-right">{% csrf_token %}
@@ -56,7 +59,7 @@
            <meta http-equiv="refresh" content="5; URL=/">
         </div>
  
-  {% endif %}
+        {% endif %}
 
     </nav>
      
