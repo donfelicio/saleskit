@@ -36,6 +36,7 @@ def loadpage_updated(request, refresh):
    #or if user clicks refresh
    if len(Userlocation.objects.all().filter(location_id=Userprofile.objects.get(user_name=request.user.username).active_location)) == 1 or request.GET.get('refresh', '') == 'yes':
       for res in get_s2m_res_updated(request, refresh):
+         
          #cut loose date
          res_date_created_split = res.get("CreatedOn").split("T")
          res_date_split = res.get("StartTime").split("T")
@@ -78,7 +79,7 @@ def loadpage_updated(request, refresh):
    
             #if the res with s2m is updated to cancelled, make the sales status a failure
             if res.get("StatusId") == 3:
-               findres.res_status_sales = '9'
+               findres.res_status_sales='9'
                
             findres.res_total_seats=res.get("TotalSeats")
             findres.save()
