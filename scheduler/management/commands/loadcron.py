@@ -48,11 +48,11 @@ class Command(BaseCommand):
                 print page
                 
                 if rowsleft == 100000:
-                    if r == []:
-                        rowsleft = 0
-                    elif r != []:
-                        for var in r[:1]:
-                            rowsleft = var.get("MoreRows")      
+                    if len(r) == 0:
+                       rowsleft=0
+                    else:
+                       for var in r[:1]:
+                          rowsleft = var.get("MoreRows")
                 else:
                     rowsleft -= 1    
                 print "Rows Left%s" % rowsleft

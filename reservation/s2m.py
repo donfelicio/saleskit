@@ -42,10 +42,14 @@ def get_s2m_res_updated(request, refresh): #get all CreatedOn and UpdatedOn wher
       results.extend(r)
       #up page 1
       page += 1
+
       
       if rowsleft == 100000:
-         for var in r[:1]:
-            rowsleft = var.get("MoreRows")
+         if len(r) == 0:
+            rowsleft=0
+         else:
+            for var in r[:1]:
+               rowsleft = var.get("MoreRows")
       else:
          rowsleft -= 1
       print rowsleft      

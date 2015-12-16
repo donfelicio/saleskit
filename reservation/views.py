@@ -22,8 +22,6 @@ def filter_request_received(element):
     return element.res_status_sales == '1'
    
 
-   
-
 
 def loadpage_updated(request, refresh):
     
