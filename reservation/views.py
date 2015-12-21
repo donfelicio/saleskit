@@ -179,7 +179,7 @@ def home(request):
    elif request.GET.get('noty') == 'after':
       notification = "Saved, reservation hidden until day after meeting"
    elif request.GET.get('noty') == 'forever':
-      notification = "Saved, reservation closed - Success/Failure"
+      notification = "Reservation removed from saleskit"
    elif request.GET.get('noty') == 'comment':
       notification = "Note added"
    elif request.GET.get('noty') == 'hour':
@@ -410,7 +410,7 @@ def status_change(request):
          instance.res_status_sales='8'
          instance.save()
          notification = 'forever'
-      elif request.POST['res_status_sales'] == '8' or request.POST['res_status_sales'] == '9':
+      elif request.POST['res_status_sales'] == '8' or request.POST['res_status_sales'] == '9' or request.POST['res_status_sales'] == '10':
          notification = 'forever'
       elif request.POST['res_prev_status'] != request.POST['res_status_sales']:
       #or else hide the reservation until tomorrow

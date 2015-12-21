@@ -43,7 +43,6 @@ def get_s2m_res_updated(request, refresh): #get all CreatedOn and UpdatedOn wher
       #up page 1
       page += 1
 
-      
       if rowsleft == 100000:
          if len(r) == 0:
             rowsleft=0

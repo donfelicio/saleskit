@@ -26,7 +26,8 @@ class Reservation(models.Model):
         ('6', 'Prepared meeting'),
         ('7', 'Aftersales'),
         ('8', 'Deal success'),
-        ('9', 'Deal failed'),   
+        ('9', 'Deal failed'),
+        ('10', 'Removed'),
     )
     res_status_sales = models.CharField(max_length = 255, choices=res_status_sales_choices, default='1')
     res_total_seats = models.CharField(max_length = 255, null=True)

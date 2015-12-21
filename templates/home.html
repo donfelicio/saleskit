@@ -67,7 +67,7 @@
                </script>
                </p>
                     
-               {% elif status.description_short == 'Success' or status.description_short == 'Failed' %}
+               {% elif status.status_code == '8' or status.status_code == '9'  or status.status_code == '10'%}
                <!-- show nothing -->
                {% else %}
                <p class="col-md-1">
@@ -220,26 +220,7 @@
                          </form>
                     </p>
                     {% endif %}
-                    <p>
-                         <form action="/status_change" method="POST">{% csrf_token %}
-                              <input type="hidden" name="res_id" value="{{reservation.res_id}}">
-                              <input type="hidden" name="res_prev_status" value="{{reservation.res_status_sales}}">
-                              <input type="hidden" name="res_last_change_by" value="{{request.user.first_name}} {{request.user.last_name}}">
-                              <input type="hidden" name="res_status_sales" value="8">
-                              <input type="hidden" name="change_note" value="Success">
-                              <button type="submit" class="btn btn-success" style="width:200px;" data-toggle="tooltip" title="The sale was a success!">Success</button>
-                         </form>
-                    </p>
-                    <p>
-                         <form action="/status_change" method="POST">{% csrf_token %}
-                              <input type="hidden" name="res_id" value="{{reservation.res_id}}">
-                              <input type="hidden" name="res_prev_status" value="{{reservation.res_status_sales}}">
-                              <input type="hidden" name="res_last_change_by" value="{{request.user.first_name}} {{request.user.last_name}}">
-                              <input type="hidden" name="res_status_sales" value="9">
-                              <input type="hidden" name="change_note" value="Failed">
-                              <button type="submit" class="btn btn-danger" style="width:200px;" data-toggle="tooltip" title="The sale didn't work out">Failed</button>
-                         </form>
-                    </p>
+                    
                     {% if location_profile_list|length > 1 %}
                     <p>
                          {% if reservation.res_assigned != 'no' %}
@@ -317,6 +298,16 @@
                           
                         });
                         </script>
+                    </p>
+                    <p>
+                         <form action="/status_change" method="POST">{% csrf_token %}
+                              <input type="hidden" name="res_id" value="{{reservation.res_id}}">
+                              <input type="hidden" name="res_prev_status" value="{{reservation.res_status_sales}}">
+                              <input type="hidden" name="res_last_change_by" value="{{request.user.first_name}} {{request.user.last_name}}">
+                              <input type="hidden" name="res_status_sales" value="10">
+                              <input type="hidden" name="change_note" value="Removed">
+                              <button type="submit" class="btn btn-danger" style="width:200px;" data-toggle="tooltip" title="Delete this reservation from the saleskit (not from s2m)!">Remove lead</button>
+                         </form>
                     </p>
 
                </td>
