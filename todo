@@ -5,9 +5,15 @@
 id live: 1256
 id dev: 5539
 
-TODO########TODO---met prio top to bottom---TODO########TODO
+##WORKING ON###
+- Acties rechts gaan over HELE traject, voelt nu per stap. dus success = next step.
+Misschien succes/failed weghalen, en alleen 'never show again'
 
+TODO########TODO---met prio top to bottom---TODO########TODO
 - Tarief 100,- per maand introduceren
+- sales leads zonder datum (pro-actieve sales) kun je niet zonder datum toevoegen
+- firstrun niet alles toevoegen, gewoon dan starten. verleden is verleden. als je een 'oude' reservering later aanpast, verschijnt deze alsnog. check vooral of dat goed gaat.
+- Offerte v2 afmaken en toevoegen
 
 
 DONE######DONE--aanpassingen sinds vorige update--DONE######DONE
@@ -18,20 +24,21 @@ DONE######DONE--aanpassingen sinds vorige update--DONE######DONE
 
 
 
-get locationlist from good API, just still save it in DB for hourly loadcron (unless we can just get ALL of them). Right now you are just getting the full list and then running a 'has access check..'
-
-
 ---CRON----
 you should check user's allowed access location list every night or so if they have new locations
 
 
 -------wannahaves
-- mogelijke review laten zien in aftersales
+general view (critical, money in pipeline, where in pipeline?)
+list of statussen of colleagues (last login, amount done, money in pipeline,etc)
+mogelijke review laten zien in aftersales
 aftersales status -> success geen success -> invloed op proactieve sales
 grove stats 'annuleringsratio, omzet vs budget, etc...'.
 amount of money in reservations (realtime budget) VS
 https://www.seats2meet.com/Help/Api/GET-api-budget-locationId-year
 https://www.seats2meet.com/Help/Api/POST-api-stats-meetingspaceoccupancy
+get locationlist from good API, just still save it in DB for hourly loadcron (unless we can just get ALL of them). Right now you are just getting the full list and then running a 'has access check..'
+
 
 
 -------just an idea
