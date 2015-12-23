@@ -81,10 +81,14 @@ a:link, a:visited, a:hover, a:active {
     background: #ffffff url("/static/css/images/website.png") center center/40% no-repeat;
     min-height:250px;
 }
-.block15{
-    
+.block13_small{
+    background: #45b384 url("/static/css/images/route.png") center center/80% no-repeat;
+    min-height:250px;
 }
-
+.block14_small{
+    background: #ffffff url("/static/css/images/website.png") center center/80% no-repeat;
+    min-height:250px;
+}
 .info_header{
     border: solid 2px #45b384;
     margin-top:15px;

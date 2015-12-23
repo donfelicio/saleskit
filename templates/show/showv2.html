@@ -19,12 +19,12 @@
     <div id="row" style="background-color: #ffffff;padding:20px;margin:5px;">
       <p>You will only see these buttons when you are logged in.</p>
       
-      <!--intro button --><button id="opener-intro" type="submit" class="btn {% if intro_text|length > 0 %}btn-success" >Change {% else %} btn-primary" >Add {% endif %} intro text</button>
+    <!--intro button --><button id="opener-intro" type="submit" class="btn {% if res_kit.res_intro|length > 0 %}btn-success" >Change {% else %} btn-primary" >Add {% endif %} intro text</button>
         <div id="dialog-intro" title="Offer introduction text">
           <form action="" method="POST">{% csrf_token %}
             <input type="hidden" name="res_id" value="{{request.GET.r}}">
             <input type="hidden" name="add_intro" value="yes">
-             <p><textarea name="intro_text" rows="10" cols="80">{{intro_text}}</textarea></p>
+             <p><textarea name="intro_text" rows="10" cols="80">{{res_kit.res_intro}}</textarea></p>
             <button type="submit" class="btn btn-primary">Save</button>
           </form>
         </div>
@@ -32,6 +32,23 @@
         $( "#dialog-intro" ).dialog({ autoOpen: false,modal: true, width: 550});
         $( "#opener-intro" ).click(function() {
         $( "#dialog-intro" ).dialog( "open" );
+         
+       });
+       </script>
+        
+    <!--video url button --><button id="opener-video" type="submit" class="btn {% if video_url|length > 0 %}btn-success" >Change {% else %} btn-primary" >Add {% endif %} Video url</button>
+        <div id="dialog-video" title="Add a link to your location video">
+          <form action="" method="POST">{% csrf_token %}
+            <input type="hidden" name="res_id" value="{{request.GET.r}}">
+            <input type="hidden" name="add_video" value="yes">
+             <p><input size="50" name="video_url" {% if video_url != "" %}value="{{video_url}}"{% else %} placeholder="http://youtube.com..."{% endif %}"></p>
+            <button type="submit" class="btn btn-primary">Save</button>
+          </form>
+        </div>
+        <script>
+        $( "#dialog-video" ).dialog({ autoOpen: false,modal: true, width: 550});
+        $( "#opener-video" ).click(function() {
+        $( "#dialog-video" ).dialog( "open" );
          
        });
        </script>
@@ -51,7 +68,7 @@
 {{snippets.block5_offer_1}} {{reservation.ProfileName|capfirst}},
 
 {{snippets.block5_offer_2}} {{reservation.LocationName}} {{snippets.block5_offer_3}} {{reservation.ReservationName}}.
-{% if intro_text != None %}{{intro_text}} {% endif %}
+{% if res_kit.res_intro != None %}{{res_kit.res_intro}} {% endif %}
 {{snippets.block5_offer_4}}
 {{snippets.block5_offer_5}} {{startdate}}. {{snippets.block5_offer_6}} {{reservation.TotalSeats}} {{snippets.block5_offer_7}}
 {{snippets.block5_offer_8}} {{offer_duration}}
@@ -99,14 +116,14 @@ http://www.experiences2m.com/show?r={{request.GET.r}}&u={{request.GET.u}}
     <div class="row">
         <div class="col-md-6">
             <div class="col-md-12 block3">
-              <a href="http://pdfmyurl.com/api?license=vTgy23O3vDoO&url=http://experiences2m.com/show?r={{reservation.Id}}&u={{profile.Key}}&pdf=yes" target="_blank">
+              <a href="http://pdfmyurl.com/api?license=vTgy23O3vDoO&url=http://www.experiences2m.com/show?r={{reservation.Id}}&u={{profile.Key}}&pdf=yes" target="_blank">
                 <div class="block3"><h3>DOWNLOAD PDF <img src="static/css/images/download.png" style="width:15px;"></h3></div>
               </a>
             </div>
             <div class="col-md-12 block4">
               {{snippets.block5_offer_1}} {{reservation.ProfileName|capfirst}},
               <p>{{snippets.block5_offer_2}} {{reservation.LocationName}} {{snippets.block5_offer_3}} {{reservation.ReservationName}}.</p>
-              <p>{% if intro_text != None %}{{intro_text}} {% endif %}</p>
+              <p>{% if res_kit.res_intro != None %}{{res_kit.res_intro}} {% endif %}</p>
               <p>{{snippets.block5_offer_4}}</p>
               <p>{{snippets.block5_offer_5}} {{startdate}}. {{snippets.block5_offer_6}} {{reservation.TotalSeats}} {{snippets.block5_offer_7}}</p> 
               <p>{{snippets.block5_offer_8}} {{offer_duration}}</p>
@@ -117,17 +134,30 @@ http://www.experiences2m.com/show?r={{request.GET.r}}&u={{request.GET.u}}
             </div>
         </div>
         <div class="col-md-6">
-            <div class="col-md-12 block5"></div>
-            <div class="">
+            {% if video_url != "" %}
+            <a href="{{video_url}}" target="_blank">
+                <div class="col-md-12 block5"></div>
+            </a>
+            {% else %}
+            <div class="row">
+                <a href="https://www.google.com/maps/place/{{location.Address}}+{{location.Zipcode}}+{{location.City}}" target="_blank">
+                    <div class="col-md-6" style="padding-left:15px;"><div class="col-md-12 block13_small"></div></div>
+                </a>
+                <a href="http://{{location.Url}}" target="_blank">
+                    <div class="col-md-6"><div class="col-md-12 block14_small"></div></div>
+                </a>
+            </div>
+            {% endif %}
+            <div class="row">
               <a href="http://betervergaderen.meetberlage.com" target="_blank">
-                <div class="col-md-6 block6"></div>
+                <div class="col-md-6" style="padding-left:15px;"><div class="col-md-12 block6"></div></div>
               </a>
               <a href="http://now.seats2meet.com" target="_blank">
-                <div class="col-md-6 block7"></div>
+                <div class="col-md-6"><div class="col-md-12 block7"></div></div>
               </a>
-              <div class="col-md-6 block8" style="background: url('https://d3817ykd1rv0p7.cloudfront.net/{{profile.Image}}') center center/cover no-repeat"></div>
+              <div class="col-md-6" style="padding-left:15px;"><div class="col-md-12 block8" style="background: url('https://d3817ykd1rv0p7.cloudfront.net/{{profile.Image}}') center center/cover no-repeat"></div></div>
               <a href="http://www.seats2meet.com" target="_blank">
-                <div class="col-md-6 block9"></div>
+                <div class="col-md-6"><div class="col-md-12 block9"></div></div>
               </a>
             </div>
         </div>
@@ -214,7 +244,7 @@ http://www.experiences2m.com/show?r={{request.GET.r}}&u={{request.GET.u}}
         </div></div>
     </div>
     
-    
+    {% if video_url != "" %}
     <div class="row">
         <a href="https://www.google.com/maps/place/{{location.Address}}+{{location.Zipcode}}+{{location.City}}" target="_blank">
             <div class="col-md-6"><div class="col-md-12 block13"></div></div>
@@ -223,6 +253,7 @@ http://www.experiences2m.com/show?r={{request.GET.r}}&u={{request.GET.u}}
             <div class="col-md-6"><div class="col-md-12 block14"></div></div>
         </a>
     </div>
+    {% endif %}
     
 </div>
 

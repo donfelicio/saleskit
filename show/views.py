@@ -17,21 +17,28 @@ def show(request):
         request.POST['send_message'],
         request.POST['send_from'],
         [request.POST['send_to']], fail_silently=False)
-        
-    #if user adds tekst, add it here
-    if request.method == "POST" and 'add_intro' in request.POST:
-        instance=Reservation.objects.get(res_id=request.POST['res_id'])
-        instance.res_intro = request.POST['intro_text']
-        instance.save()
-    
+     
     reservation = get_s2m_res_single(request, None)
     offer_duration = datetime.datetime.strptime(str(reservation.get("CreatedOn").split("T")[0]), '%Y-%m-%d') + datetime.timedelta(days=14)
     startdate = datetime.datetime.strptime(str(reservation.get("StartTime").split("T")[0]), '%Y-%m-%d')
     enddate =  datetime.datetime.strptime(str(reservation.get("EndTime").split("T")[0]), '%Y-%m-%d')
     
+    #if user adds tekst, add it here
+    if request.method == "POST" and 'add_intro' in request.POST:
+        instance=Reservation.objects.get(res_id=request.POST['res_id'])
+        instance.res_intro = request.POST['intro_text']
+        instance.save()
+        
+    #if user adds a video, add it here
+    if request.method == "POST" and 'add_video' in request.POST:
+        instance=Userlocation.objects.get(location_id=reservation.get("LocationId"), user_name=Userprofile.objects.get(user_key=request.GET['u']).user_name)
+        instance.video_url = request.POST['video_url']
+        instance.save()
+        
     context={
         'reservation': reservation,
-        'intro_text': Reservation.objects.get(res_id=reservation.get("Id")).res_intro,
+        'video_url': Userlocation.objects.get(location_id=reservation.get("LocationId"), user_name=Userprofile.objects.get(user_key=request.GET['u']).user_name).video_url,
+        'res_kit': Reservation.objects.get(res_id=reservation.get("Id")),
         'startdate': startdate.strftime('%d-%b-%Y'),
         'offer_duration': offer_duration.strftime('%d-%b-%Y'), 
         'starttime': "%s:%s" % (reservation.get("StartTime").split("T")[1].split(':')[0], reservation.get("StartTime").split("T")[1].split(':')[1]),
