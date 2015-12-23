@@ -60,6 +60,6 @@ def show(request):
     if reservation.get("TotalSeats") != 0:
         context['price_per_person'] = reservation.get("TotalExcl") / reservation.get("TotalSeats")
 
-    template="show/showv2.html"
+    template="show/show.html"
     return render(request, template, context)
 
