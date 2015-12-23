@@ -115,12 +115,14 @@ http://www.experiences2m.com/show?r={{request.GET.r}}&u={{request.GET.u}}
     </div>
     <div class="row">
         <div class="col-md-6">
+            <!-- download pdf werkt nu niet
             <div class="col-md-12 block3">
               <a href="http://pdfmyurl.com/saveaspdf" target="_blank">
-                <!-- http://pdfmyurl.com/api?license=vTgy23O3vDoO&url=http://www.experiences2m.com/show?r={{reservation.Id}}&u={{profile.Key}}&pdf=yes --->
+                http://pdfmyurl.com/api?license=vTgy23O3vDoO&url=http://www.experiences2m.com/show?r={{reservation.Id}}&u={{profile.Key}}&pdf=yes
                 <div class="block3"><h3>DOWNLOAD PDF <img src="static/css/images/download.png" style="width:15px;"></h3></div>
               </a>
             </div>
+            --->
             <div class="col-md-12 block4">
               {{snippets.block5_offer_1}} {{reservation.ProfileName|capfirst}},
               <p>{{snippets.block5_offer_2}} {{reservation.LocationName}} {{snippets.block5_offer_3}} {{reservation.ReservationName}}.</p>
