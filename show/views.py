@@ -7,9 +7,10 @@ from django.http import HttpResponse
 from multiprocessing import Process
 from reservation.s2m import *
 from django.core.mail import send_mail
+from snippets import *
 
-def show(request):    
-    
+
+def show(request):
     #if user sent the offer, send it
     if request.method == "POST" and 'send_to' in request.POST:
         send_mail(request.POST['send_subject'],
@@ -41,12 +42,17 @@ def show(request):
         'profile_to': get_s2m_profile_by_id(request, reservation.get("ProfileId")),
         'location': get_s2m_address(request, reservation.get("LocationId")),
         }
+    
+    if reservation.get('LanguageId') == 52:
+        context['snippets'] = get_snippets('nl')
+    else:
+        context['snippets'] = get_snippets('en')
     if request.GET.get('pdf') == 'yes':
         context['pdf_printing'] = 'yes'
 
     if reservation.get("TotalSeats") != 0:
         context['price_per_person'] = reservation.get("TotalExcl") / reservation.get("TotalSeats")
 
-    template="show.html"
+    template="show/showv2.html"
     return render(request, template, context)
 

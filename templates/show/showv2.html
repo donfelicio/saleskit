@@ -1,0 +1,234 @@
+{% extends "show/show_base.html" %}
+{% load staticfiles %}
+
+  <!-- title --->
+  {% block title %}
+  
+  {{snippets.title}}
+    
+  {% endblock %}
+  
+  <!-- show page content --->  
+  {% block content %}     
+    {% autoescape off %}
+    
+<div class="container_fluid">
+    
+    <div class="part_overlay"> 
+    {% if user.is_authenticated and not request.GET.hide%} <!-- admin functions when loggedin -->
+    <div id="row" style="background-color: #ffffff;padding:20px;margin:5px;">
+      <p>You will only see these buttons when you are logged in.</p>
+      
+      <!--intro button --><button id="opener-intro" type="submit" class="btn {% if intro_text|length > 0 %}btn-success" >Change {% else %} btn-primary" >Add {% endif %} intro text</button>
+        <div id="dialog-intro" title="Offer introduction text">
+          <form action="" method="POST">{% csrf_token %}
+            <input type="hidden" name="res_id" value="{{request.GET.r}}">
+            <input type="hidden" name="add_intro" value="yes">
+             <p><textarea name="intro_text" rows="10" cols="80">{{intro_text}}</textarea></p>
+            <button type="submit" class="btn btn-primary">Save</button>
+          </form>
+        </div>
+        <script>
+        $( "#dialog-intro" ).dialog({ autoOpen: false,modal: true, width: 550});
+        $( "#opener-intro" ).click(function() {
+        $( "#dialog-intro" ).dialog( "open" );
+         
+       });
+       </script>
+        
+      <!--hide button--><a href="/show?r={{request.GET.r}}&u={{request.GET.u}}&hide=true"><button class="btn btn-primary">Hide this menu</button></a>
+      <!--Send email button--><button id="opener" type="submit" class="btn btn-default" data-toggle="tooltip" title="Send an email with the offer">Send offer</button>
+        <div id="dialog" title="Send offer">
+          <form action="" method="POST">{% csrf_token %}
+             <p><label>To</label>
+             <input type="text" name="send_to" value="{{profile_to.Email}}"></p>
+             <p><label>From</label>
+             <input type="text" name="send_from" value="{{profile.Email}}"></p>
+             <p><label>Subject</label>
+             <input type="text" size="50" name="send_subject" value="{{snippets.block5_offer_subject}} {{startdate}} #{{reservation.Id}}"></p>
+             <p><label>Message</label>
+             <p><textarea name="send_message" rows="10" cols="80">
+{{snippets.block5_offer_1}} {{reservation.ProfileName|capfirst}},
+
+{{snippets.block5_offer_2}} {{reservation.LocationName}} {{snippets.block5_offer_3}} {{reservation.ReservationName}}.
+{% if intro_text != None %}{{intro_text}} {% endif %}
+{{snippets.block5_offer_4}}
+{{snippets.block5_offer_5}} {{startdate}}. {{snippets.block5_offer_6}} {{reservation.TotalSeats}} {{snippets.block5_offer_7}}
+{{snippets.block5_offer_8}} {{offer_duration}}
+
+http://www.experiences2m.com/show?r={{request.GET.r}}&u={{request.GET.u}}
+
+{{snippets.block5_offer_9}}
+{{profile.FirstName|capfirst}} {{profile.LastName|capfirst}}
+{{profile.Email}}
+{{reservation.LocationName}}         
+             </textarea></p>
+            <button type="submit" class="btn btn-primary">Send</button>
+          </form>
+        </div>
+        <script>
+        $( "#dialog" ).dialog({ autoOpen: false,modal: true, width: 550});
+        $( "#opener" ).click(function() {
+        $( "#dialog" ).dialog( "open" );
+         
+       });
+       </script>
+      </div>
+    {% endif %}
+    
+    
+    
+    
+    
+    
+    
+    <div class="row">
+        <div class="col-md-6"><div class="col-md-12 block1" style='background-image: url("https://az691754.vo.msecnd.net/website/{{reservation.LocationId}}/{{reservation.LocationImage}}");'></div></div>
+        <div class="col-md-6"><div class="col-md-12 block2">
+          <h3>{{snippets.block2_header}}</h3>
+          <p><strong>{{reservation.LocationName|capfirst}}</strong></p>
+          <p>{{location.PhoneNumber}}</p>
+          <p>{{location.Address}} </p>
+          <p>{{location.Zipcode}} {{location.City}}</p>
+          <br />
+          <p>{{location.CocName}} {{location.CocNumber}}</p>
+          <p><a href="mailto:{{location.Email}}">{{location.Email}}</a></p>
+          <p>{{snippets.block2_rate1}} {{location.ReviewScore|floatformat:0}} {{snippets.block2_rate2}} {{location.ReviewCount|floatformat:0}} {{snippets.block2_rate3}}</p>
+        </div></div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="col-md-12 block3">
+              <a href="http://pdfmyurl.com/api?license=vTgy23O3vDoO&url={{request.META.HTTP_HOST}}{{request.get_full_path}}&pdf=yes" target="_blank">
+                <div class="block3"><h3>DOWNLOAD PDF <img src="static/css/images/download.png" style="width:15px;"></h3></div>
+              </a>
+            </div>
+            <div class="col-md-12 block4">
+              {{snippets.block5_offer_1}} {{reservation.ProfileName|capfirst}},
+              <p>{{snippets.block5_offer_2}} {{reservation.LocationName}} {{snippets.block5_offer_3}} {{reservation.ReservationName}}.</p>
+              <p>{% if intro_text != None %}{{intro_text}} {% endif %}</p>
+              <p>{{snippets.block5_offer_4}}</p>
+              <p>{{snippets.block5_offer_5}} {{startdate}}. {{snippets.block5_offer_6}} {{reservation.TotalSeats}} {{snippets.block5_offer_7}}</p> 
+              <p>{{snippets.block5_offer_8}} {{offer_duration}}</p>
+              <p>{{snippets.block5_offer_9}}</p>
+              <p>{{profile.FirstName|capfirst}} {{profile.LastName|capfirst}} <br />
+              <a href="mailto:{{profile.Email}}">{{profile.Email}}</a> <br />
+              {{reservation.LocationName}}</p>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="col-md-12 block5"></div>
+            <div class="">
+              <a href="http://betervergaderen.meetberlage.com" target="_blank">
+                <div class="col-md-6 block6"></div>
+              </a>
+              <a href="http://now.seats2meet.com" target="_blank">
+                <div class="col-md-6 block7"></div>
+              </a>
+              <div class="col-md-6 block8" style="background: url('https://d3817ykd1rv0p7.cloudfront.net/{{profile.Image}}') center center/cover no-repeat"></div>
+              <a href="http://www.seats2meet.com" target="_blank">
+                <div class="col-md-6 block9"></div>
+              </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-12" style="padding-left:0px;"><div class="blockslider">
+            <div id="jssor_1">
+            <div data-u="slides" class="slides">
+                {% for Unit in reservation.Units %}
+                    {% for meetingspace in meetingspaces %}
+                        {% if meetingspace.Id == Unit.UnitId %}
+                <div data-p="" style="display: none;">
+                <img class="image" src="https://az691754.vo.msecnd.net/website/{{reservation.LocationId}}/{{meetingspace.Image}}" />
+                <div data-u="caption" data-t="1" class="caption"><p class="caption_text">{{ Unit.UnitName|capfirst }}</p></div>
+                <div data-u="caption" data-t="1" class="caption_setting">
+                    <p class="caption_text">
+                        {{snippets.blockslider_1}} {{ Unit.SettingName|capfirst }}
+                    </p>
+                </div>
+                <div data-u="caption" data-t="1" class="caption_price">
+                    <p class="caption_text">
+                        {{snippets.blockslider_2}} {{ Unit.CurrencySymbol }}{{ Unit.PriceTotalExclTax|floatformat:2 }}
+                    </p>
+                </div>
+                {% if Unit.Seats != 0 %}
+                  <div data-u="caption" data-t="1" class="caption_pax">
+                    <p class="caption_text">
+                        {{snippets.blockslider_3}} {{ Unit.Seats }}
+                    </p>
+                </div>
+                  {% endif %}
+                </div>
+
+                {% endif %}{% endfor %}{% endfor %}
+           
+            </div>
+            <!-- Arrow Navigator -->
+            <span data-u="arrowleft" class="jssora05l" style="top:250px;left:8px;width:40px;height:40px;"></span>
+            <span data-u="arrowright" class="jssora05r" style="top:250px;right:8px;width:40px;height:40px;"></span>
+            </div>
+        </div></div>
+    </div>    
+    
+    <div class="row">
+        <div class="col-md-4"><div class="col-md-12 block10">
+          <p class="info_header">{{snippets.block10_header}}</p>
+          <p>{{reservation.ReservationName|capfirst}}</p>
+          <p>{{reservation.CompanyName|capfirst}} - {{reservation.ProfileName|capfirst}}</p>
+          <p>{{snippets.block10_1}} {{reservation.TotalSeats}} {{snippets.block10_2}}</p>
+          <p>{{snippets.block10_3}} {{startdate}} - {{starttime}}</p>
+          <p>{{snippets.block10_4}} {{enddate}} - {{endtime}}</p>
+        </div></div>
+        <div class="col-md-4"><div class="col-md-12 block11">
+          <p class="info_header">{{snippets.block11_header}}</p> 
+          {% for Option in reservation.Options %}
+              <p>{{ Option.Amount }} x {{ Option.OptionName|capfirst }}: {{ Option.CurrencySymbol }}{{ Option.PriceTotalExclTax|floatformat:2}}
+                       
+              <p></p>
+          {% endfor %}
+        </div></div>
+        <div class="col-md-4"><div class="col-md-12 block12">
+          <p class="info_header">{{snippets.block12_header}}</p>
+          <table><tr>
+          <td><p>{{snippets.block12_1}}{{snippets.block12_spaces}}</p></td>
+          <td><p><strong> {{ reservation.CurrencySymbol }}{{reservation.TotalExcl|floatformat:2}}</strong></p></td>
+          {% for item in reservation.TaxTotals %}
+          </tr><tr>
+          <td><p>{{snippets.block12_2}} {{item.Percentage}}% {{snippets.block12_spaces}}</p></td>
+          <td><p><strong> {{ reservation.CurrencySymbol }}{{item.Total|floatformat:2}}</strong></p></td>
+          {% endfor %}  
+          </tr>
+          </table><hr><table>
+          <tr>
+          <td><p>{{snippets.block12_3}} {{snippets.block12_spaces}}</p></td>
+          <td><p><strong> {{ reservation.CurrencySymbol }}{{reservation.TotalIncl|floatformat:2}}</strong></p></td>
+          {% if reservation.TotalSeats != 0 %}
+          </tr><tr>
+          <td><p>{{snippets.block12_4}} {{snippets.block12_spaces}}</p></td>
+          <td><p><strong> {{ reservation.CurrencySymbol }}{{price_per_person|floatformat:2}}</strong></p></td>
+          {% endif %}
+          
+          </tr></table>
+        </div></div>
+    </div>
+    
+    
+    <div class="row">
+        <a href="https://www.google.com/maps/place/{{location.Address}}+{{location.Zipcode}}+{{location.City}}" target="_blank">
+            <div class="col-md-6"><div class="col-md-12 block13"></div></div>
+        </a>
+        <a href="http://{{location.Url}}" target="_blank">
+            <div class="col-md-6"><div class="col-md-12 block14"></div></div>
+        </a>
+    </div>
+    
+</div>
+
+
+
+
+    {% endautoescape %}
+  {% endblock %}     <!-- end page content -->
+  

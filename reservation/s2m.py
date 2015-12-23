@@ -203,5 +203,3 @@ def get_s2m_address(request, location):
     r = json.loads(r.text)
     
     return r
-
- 

@@ -1,15 +1,40 @@
-{% extends "test_base.html" %}
+{% extends "show/show_base.html" %}
 {% load staticfiles %}
+  {% block content %} 
+<style>
 
-    {% block content %}     <!-- show page content --->
+.col1, .col2, .col3, .col5{
+    background: #cccccc;
+    min-height:50px;
+    border: groove 1px;
+}
 
-{% for res in reslist %}
+.col-md-12{
+    margin-bottom:10px;
+}
 
-<p>{{res.hide_days}}</p>
-
-{% endfor %}
-
-    {% endblock %}     <!-- end page content -->
+.col4{
+    background: #cccccc;
+    min-height:80px;
+    border: groove 1px;
+}
+</style>
+<div class="container_fluid">
+    <div class="row">
+        <div class="col-md-6"><div class="col-md-12 col1">col 1</div></div>
+        <div class="col-md-6"><div class="col-md-12 col1">col 1</div></div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="col-md-12 col1">col 1</div>
+            <div class="col-md-12 col4">col 1</div>
+        </div>
+        <div class="col-md-6">
+            <div class="col-md-12 col4">col</div>
+            <div class="col-md-12 col1">col</div>
+        </div>
+    </div>
     
-    
+</div>
 
+{% endblock %}

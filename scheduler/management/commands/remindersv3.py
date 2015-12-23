@@ -93,9 +93,6 @@ class Command(BaseCommand):
     
     
     
-
-    
-    
     def handle(self, *args, **options):
         
         test_mode = 'no' #set to yes if you don't want to send emails and update logs
