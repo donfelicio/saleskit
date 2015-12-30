@@ -89,7 +89,6 @@ def loadpage_updated(request, refresh):
    return redirect('/')
 
 
-
 def create_locationlist(request, userprofile, locationlist):
    #set DB userprofile res_updated to 'busy'
    instance = Userprofile.objects.get(user_name=request.user.username)
@@ -150,6 +149,10 @@ def listall(request):
       
 
 def home(request):
+   
+   for location in s2m_locationlist():
+      location = Location(location_id=location.get("Id"), location_name=location.get("Name"))
+      location.save()
    
    #delete all the users old hidereservation instances (older than today)
    for resfilter in Reservationfilter.objects.all():

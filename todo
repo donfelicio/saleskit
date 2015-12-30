@@ -6,17 +6,16 @@ id live: 1256
 id dev: 5539
 
 ##WORKING ON###
-
+locations model one-to-many maken
 
 TODO########TODO---met prio top to bottom---TODO########TODO
 - Tarief 100,- per maand introduceren
 - sales leads zonder datum (pro-actieve sales) kun je niet zonder datum toevoegen
-- Offerte v2 afmaken en toevoegen
 
 
 DONE######DONE--aanpassingen sinds vorige update--DONE######DONE
 - Acties rechts gaan over HELE traject, voelt nu per stap. dus success = next step. Misschien succes/failed weghalen, en alleen 'never show again'
-
+- Offerte v2 toegevoegd + video link
 
 
 

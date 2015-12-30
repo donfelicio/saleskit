@@ -109,15 +109,11 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-#STATIC_ROOT = '/Users/jmitch/desktop/lwc/src/static/static_root/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static', 'static_root')
 
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static', 'static_dirs'),
-    #'/Users/jmitch/desktop/lwc/src/static/static_dirs/',
-    # '/Users/jmitch/desktop/lwc/src/static/static_dirs/',
-    # '/Users/jmitch/desktop/lwc/src/static/static_dirs/',
-    # '/Users/jmitch/desktop/lwc/src/static/static_dirs/',
+
 )
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')

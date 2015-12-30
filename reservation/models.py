@@ -53,6 +53,11 @@ class Userlocation(models.Model):
     location_name = models.CharField(max_length = 255, null=True)
     video_url = models.CharField(max_length=255, default='')
     
+class Location(models.Model):
+    location_id = models.CharField(max_length = 255, null=True)
+    location_name = models.CharField(max_length = 255, null=True)
+    video_url = models.CharField(max_length=255, default='')
+
 class Userprofile(models.Model):
     user_name = models.CharField(max_length = 255, null=True)
     user_key = models.CharField(max_length = 255, null=True)
@@ -62,7 +67,8 @@ class Userprofile(models.Model):
     res_updated = models.CharField(max_length = 255, default='no')
     loc_updated = models.CharField(max_length = 255, default='no')
     reminder_sent = models.DateField(null=True)
-    
+    #location = models.ForeignKey(Location)
+        
 class Reservationfilter(models.Model):
     reservation = models.ForeignKey(Reservation)
     location_id = models.CharField(max_length = 255, null=True)

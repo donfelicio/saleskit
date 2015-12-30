@@ -66,3 +66,10 @@ class Remindlogadmin(admin.ModelAdmin):
         model = Remindlog
         
 admin.site.register(Remindlog, Remindlogadmin)
+
+class Locationadmin(admin.ModelAdmin):
+    list_display = ['location_id', 'location_name']
+    class Meta:
+        model = Location
+        
+admin.site.register(Location, Locationadmin)
