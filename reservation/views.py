@@ -399,9 +399,6 @@ def status_change(request):
       instance.save()
       
       #make sure the userprofile doesn't have an active reservation anymore that selects the res to edit
-      instance = Userprofile.objects.get(user_name=request.user.username)
-      instance.active_reservation = '0'
-      instance.save()
       
       #if status_sales is 'prepared', hide until one day after the meeting.
       if request.POST['res_status_sales'] == '6':

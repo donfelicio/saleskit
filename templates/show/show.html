@@ -102,15 +102,15 @@ http://www.experiences2m.com/show?r={{request.GET.r}}&u={{request.GET.u}}
     <div class="row">
         <div class="col-md-6"><div class="col-md-12 block1" style='background-image: url("https://az691754.vo.msecnd.net/website/{{reservation.LocationId}}/{{reservation.LocationImage}}");'></div></div>
         <div class="col-md-6"><div class="col-md-12 block2">
-          <h3>{{snippets.block2_header}}</h3>
-          <p><strong>{{reservation.LocationName|capfirst}}</strong></p>
-          <p>{{location.PhoneNumber}}</p>
-          <p>{{location.Address}} </p>
-          <p>{{location.Zipcode}} {{location.City}}</p>
-          <br />
-          <p>{{location.CocName}} {{location.CocNumber}}</p>
-          <p><a href="mailto:{{location.Email}}">{{location.Email}}</a></p>
-          <p>{{snippets.block2_rate1}} {{location.ReviewScore|floatformat:0}} {{snippets.block2_rate2}} {{location.ReviewCount|floatformat:0}} {{snippets.block2_rate3}}</p>
+            <h3>{{snippets.block2_header}}</h3>
+            <p><strong>{{reservation.LocationName|capfirst}}</strong></p>
+            <p>{{location.PhoneNumber}}</p>
+            <p>{{location.Address}} </p>
+            <p>{{location.Zipcode}} {{location.City}}</p>
+            <br />
+            <p>{{location.CocName}} {{location.CocNumber}}</p>
+            <p><a href="mailto:{{location.Email}}">{{location.Email}}</a></p>
+            <p>{{snippets.block2_rate1}} {{location.ReviewScore|floatformat:0}} {{snippets.block2_rate2}} {{location.ReviewCount|floatformat:0}} {{snippets.block2_rate3}}</p>
         </div></div>
     </div>
     <div class="row">
