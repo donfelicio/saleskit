@@ -273,12 +273,6 @@
                                    <input type="hidden" name="hide_days" value="week">
                                    <button type="submit" class="btn btn-primary" style="width:200px;">1 week</button>
                               </form></p>
-                              <p><form action="/?noty=month" method="POST">{% csrf_token %}
-                                   <input type="hidden" name="res_id" value="{{reservation.res_id}}">
-                                   <input type="hidden" name="user_name" value="{{request.user.username}}">
-                                   <input type="hidden" name="hide_days" value="month">
-                                   <button type="submit" class="btn btn-primary" style="width:200px;">1 month</button>
-                              </form></p>
 
                               <p>
                               <h4>Or select date</h4>
