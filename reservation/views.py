@@ -150,10 +150,6 @@ def listall(request):
 
 def home(request):
    
-   for location in s2m_locationlist():
-      location = Location(location_id=location.get("Id"), location_name=location.get("Name"))
-      location.save()
-   
    #delete all the users old hidereservation instances (older than today)
    for resfilter in Reservationfilter.objects.all():
       if resfilter.hide_days < datetime.date.today():
