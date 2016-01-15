@@ -63,3 +63,9 @@ def show(request):
     template="show/show.html"
     return render(request, template, context)
 
+def bettermeetings(request):
+    context= {}
+    template="show/bettermeetings.html"
+    return render(request, template, context)
+
+

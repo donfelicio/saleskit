@@ -23,6 +23,7 @@ urlpatterns = [
     url(r'^test', 'reservation.test.home', name='test'),
     url(r'^logs', 'reservation.views.logs', name='logs'),
     url(r'^show', 'show.views.show', name='show'),
+    url(r'^bettermeetings', 'show.views.bettermeetings', name='bettermeetings'),
     url(r'^listall', 'reservation.views.listall', name='listall'),
     url(r'^status_change', 'reservation.views.status_change', name='status_change'),
     url(r'^add_lead', 'reservation.views.add_lead', name='add_lead'),
