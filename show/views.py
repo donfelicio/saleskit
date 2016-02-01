@@ -38,7 +38,7 @@ def show(request):
     context={
         'reservation': reservation,
         'video_url': Userlocation.objects.get(location_id=reservation.get("LocationId"), user_name=Userprofile.objects.all().filter(user_key=request.GET['u']).first().user_name).video_url,
-        #'res_kit': Reservation.objects.get(res_id=reservation.get("Id")),
+        'res_intro': Reservation.objects.get(res_id=reservation.get("Id")).res_intro,
         'startdate': startdate.strftime('%d-%b-%Y'),
         'offer_duration': offer_duration.strftime('%d-%b-%Y'), 
         'starttime': "%s:%s" % (reservation.get("StartTime").split("T")[1].split(':')[0], reservation.get("StartTime").split("T")[1].split(':')[1]),

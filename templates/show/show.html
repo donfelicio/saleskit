@@ -19,12 +19,12 @@
     <div id="row" style="background-color: #ffffff;padding:20px;margin:5px;">
       <p>You will only see these buttons when you are logged in.</p>
       
-    <!--intro button --><button id="opener-intro" type="submit" class="btn {% if res_kit.res_intro|length > 0 %}btn-success" >Change {% else %} btn-primary" >Add {% endif %} intro text</button>
+    <!--intro button --><button id="opener-intro" type="submit" class="btn {% if res_intro|length > 0 %}btn-success" >Change {% else %} btn-primary" >Add {% endif %} intro text</button>
         <div id="dialog-intro" title="Offer introduction text">
           <form action="" method="POST">{% csrf_token %}
             <input type="hidden" name="res_id" value="{{request.GET.r}}">
             <input type="hidden" name="add_intro" value="yes">
-             <p><textarea name="intro_text" rows="10" cols="80">{{res_kit.res_intro}}</textarea></p>
+             <p><textarea name="intro_text" rows="10" cols="80">{{res_intro}}</textarea></p>
             <button type="submit" class="btn btn-primary">Save</button>
           </form>
         </div>
@@ -68,7 +68,7 @@
 {{snippets.block5_offer_1}} {{reservation.ProfileName|capfirst}},
 
 {{snippets.block5_offer_2}} {{reservation.LocationName}} {{snippets.block5_offer_3}} {{reservation.ReservationName}}.
-{% if res_kit.res_intro != None %}{{res_kit.res_intro}} {% endif %}
+{% if res_intro != None %}{{res_intro}} {% endif %}
 {{snippets.block5_offer_4}}
 {{snippets.block5_offer_5}} {{startdate}}. {{snippets.block5_offer_6}} {{reservation.TotalSeats}} {{snippets.block5_offer_7}}
 {{snippets.block5_offer_8}} {{offer_duration}}
@@ -126,7 +126,7 @@ http://www.experiences2m.com/show?r={{request.GET.r}}&u={{request.GET.u}}
             <div class="col-md-12 block4">
               {{snippets.block5_offer_1}} {{reservation.ProfileName|capfirst}},
               <p>{{snippets.block5_offer_2}} {{reservation.LocationName}} {{snippets.block5_offer_3}} {{reservation.ReservationName}}.</p>
-              <p>{% if res_kit.res_intro != None %}{{res_kit.res_intro}} {% endif %}</p>
+              <p>{% if res_intro != None %}{{res_intro}} {% endif %}</p>
               <p>{{snippets.block5_offer_4}}</p>
               <p>{{snippets.block5_offer_5}} {{startdate}}. {{snippets.block5_offer_6}} {{reservation.TotalSeats}} {{snippets.block5_offer_7}}</p> 
               <p>{{snippets.block5_offer_8}} {{offer_duration}}</p>

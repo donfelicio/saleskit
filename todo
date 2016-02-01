@@ -9,6 +9,11 @@ id dev: 5539
 locations model one-to-many maken
 
 TODO########TODO---met prio top to bottom---TODO########TODO
+- als status aangepast wordt van 'critical' boekingen dan worden ze 'important' en verdwijnen ze onder je neus.
+- Kunnen we de opmaak in de uitgaande mail ook wijzigen; 
+-- met banners van Seats en een ander lettertype dan Times new Roman. 
+-- een button waarmee je wordt gelinkt naar de URL in plaats van een uitgeschreven URL
+- Persoonlijke standaard tekst in offertes
 - Tarief 100,- per maand introduceren
 - sales leads zonder datum (pro-actieve sales) kun je niet zonder datum toevoegen
 
